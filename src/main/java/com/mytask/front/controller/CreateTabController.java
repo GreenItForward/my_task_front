@@ -4,7 +4,6 @@ import com.mytask.front.model.EPage;
 import com.mytask.front.service.ScreenService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -12,39 +11,14 @@ public class CreateTabController {
     private final ScreenService screenService;
 
     @FXML
-    private Button backToMenuBtn;
-    @FXML
-    private Button joinTableBtn;
+    private Button joinTableBtn, createTableBtn, backToMenuBtn;
 
     @FXML
-    private Label joinTableLabel;
+    private Label joinTableLabel, colorLabel, labelEtiquette, descriptionLabel, nameLabel;
 
     @FXML
-    private Button createTableBtn;
+    private TextField nameTextField, descriptionTextField, joinCodeTextField, labelTextField;
 
-    @FXML
-    private TextField nameTextField;
-
-    @FXML
-    private TextField descriptionTextField;
-
-    @FXML
-    private TextField joinCodeTextField;
-
-    @FXML
-    private TextField labelTextField;
-
-    @FXML
-    private Label colorLabel;
-
-    @FXML
-    private Label labelEtiquette;
-
-    @FXML
-    private Label descriptionLabel;
-
-    @FXML
-    private Label nameLabel;
 
 
     public CreateTabController(ScreenService screenService) {
@@ -67,6 +41,5 @@ public class CreateTabController {
         nameLabel.setText("Nom");
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
     }
-
 
 }

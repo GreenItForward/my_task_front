@@ -1,8 +1,11 @@
 package com.mytask.front.model;
 
 public enum EPage {
+
+    SHOW_TAB("show_tab", "Show Tab", 1280, 720),
     INDEX("index", "MyTask", 1280, 720),
-    CREATE_TAB("create_tab", "Create Task", 1280, 720);
+    CREATE_TAB("create_tab", "Create Tab", 1280, 720);
+
 
     private String fxmlName;
     private String windowTitle;

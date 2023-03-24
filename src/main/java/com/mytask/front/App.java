@@ -2,15 +2,17 @@ package com.mytask.front;
 
 import com.mytask.front.controller.CreateTabController;
 import com.mytask.front.controller.IndexController;
+import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.model.EPage;
 import com.mytask.front.service.ScreenService;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class App extends Application {
     @Override
@@ -20,6 +22,8 @@ public class App extends Application {
         // Charger les écrans
         screenService.loadScreen(EPage.INDEX, () -> new IndexController(screenService));
         screenService.loadScreen(EPage.CREATE_TAB, () -> new CreateTabController(screenService));
+        screenService.loadScreen(EPage.SHOW_TAB, () -> new ShowTabController(screenService));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/gif.png"))));
 
         // Configurer la scène initiale
         EPage initialPage = EPage.INDEX;
@@ -30,8 +34,6 @@ public class App extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
+    public static void main(String[] args) { launch(); }
 
 }
