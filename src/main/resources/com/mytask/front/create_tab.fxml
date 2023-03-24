@@ -3,7 +3,6 @@
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.bootstrapfx.scene.layout.Panel?>
 
@@ -11,40 +10,38 @@
       xmlns:fx="http://javafx.com/fxml/1"
       xmlns="http://javafx.com/javafx/19"
       fx:controller="com.mytask.front.controller.CreateTabController">
-    <children>
-        <Button text="Retour au menu" fx:id="backToMenuBtn" />
+    <Button fx:id="backToMenuBtn"/>
 
-        <Panel>
+    <Panel>
 
-                <VBox spacing="10">
-                    <Label text="Code" />
-                    <TextField fx:id="joinCodeTextField" />
-                    <Button text="Rejoindre le tableau" fx:id="joinTableBtn" />
-                </VBox>
-        </Panel>
+        <VBox spacing="10">
+            <Label fx:id="joinTableLabel"/>
+            <TextField fx:id="joinCodeTextField"/>
+            <Button fx:id="joinTableBtn"/>
+        </VBox>
+    </Panel>
 
-        <Panel>
-                <VBox spacing="10">
-                    <Label text="Nom" />
-                    <TextField fx:id="nameTextField" />
+    <Panel>
+        <VBox spacing="10">
+            <Label fx:id="nameLabel"/>
+            <TextField fx:id="nameTextField"/>
 
-                    <Label text="Description" />
-                    <TextField fx:id="descriptionTextField" />
+            <Label fx:id="descriptionLabel"/>
+            <TextField fx:id="descriptionTextField"/>
 
-                    <Label text="Label" />
-                    <TextField fx:id="labelTextField" />
+            <Label fx:id="labelEtiquette"/>
+            <TextField fx:id="labelTextField"/>
 
-                    <Label text="Sélection de couleur" />
-                    <ColorPicker fx:id="colorPicker" />
+            <Label fx:id="colorLabel"/>
+            <ColorPicker fx:id="colorPicker"/>
 
-                    <Button text="Ajouter" fx:id="addLabelBtn" />
-                </VBox>
-        </Panel>
+            <Button text="Ajouter" fx:id="addLabelBtn"/>
+        </VBox>
+    </Panel>
 
-        <Panel>
-                <VBox fx:id="labelsList" spacing="10" />
-        </Panel>
+    <Panel>
+        <VBox fx:id="labelsList" spacing="10"/>
+    </Panel>
 
-        <Button text="Créer le tableau" fx:id="createTableBtn" />
-    </children>
+    <Button text="Créer le tableau" fx:id="createTableBtn"/>
 </VBox>
