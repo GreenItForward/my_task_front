@@ -25,12 +25,13 @@ public class IndexController {
     public void initialize() {
         voir_tableau.setOnAction(event -> {
             System.out.println("Voir tableau");
+            screenService.setScreen(EPage.SHOW_TAB);
             // envoie vers la page contenant tout les tableau
         });
 
         creer_tableau.setOnAction(event -> {
             System.out.println("Creer tableau");
-            screenService.setScreen(EPage.CREATE_TAB);
+           screenService.setScreen(EPage.CREATE_TAB);
         });
 
         quitter.setOnAction(event -> {

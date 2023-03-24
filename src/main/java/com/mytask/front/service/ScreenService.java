@@ -22,7 +22,7 @@ public class ScreenService {
 
     public void loadScreen(EPage page, Supplier<?> controllerSupplier) throws IOException {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/mytask/front/" + page.getFxmlName() + ".fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/mytask/front/view/" + page.getFxmlName() + ".fxml"));
             fxmlLoader.setControllerFactory(param -> controllerSupplier.get());
             Parent root = fxmlLoader.load();
             screens.put(page, root);
