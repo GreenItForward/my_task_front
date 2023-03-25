@@ -25,8 +25,7 @@ public class IndexController {
     public void initialize() {
         voir_tableau.setOnAction(event -> {
             System.out.println("Voir tableau");
-            screenService.setScreen(EPage.SHOW_TAB);
-            // envoie vers la page contenant tout les tableau
+            screenService.setScreen(EPage.SHOW_ALL_TAB);
         });
 
         creer_tableau.setOnAction(event -> {
