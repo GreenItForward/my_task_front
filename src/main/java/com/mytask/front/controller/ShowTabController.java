@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -72,11 +74,16 @@ public class ShowTabController {
     private HBox createRandomTask(Random random) {
         HBox taskBox = new HBox(10);
 
-        // Créer les rectangles de couleur et les Tooltips
         String labelName1 = "Étiquette " + (random.nextInt(100) + 1);
         String labelName2 = "Étiquette " + (random.nextInt(100) + 1);
         Rectangle colorRect1 = new Rectangle(20, 10, Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
         Rectangle colorRect2 = new Rectangle(20, 10, Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
+
+        colorRect1.setArcWidth(10);
+        colorRect1.setArcHeight(10);
+        colorRect2.setArcWidth(10);
+        colorRect2.setArcHeight(10);
+
         Tooltip tooltip1 = new Tooltip(labelName1);
         Tooltip tooltip2 = new Tooltip(labelName2);
         Tooltip.install(colorRect1, tooltip1);
@@ -85,15 +92,22 @@ public class ShowTabController {
         HBox colorTags = new HBox(5, colorRect1, colorRect2);
 
         Label titleLabel = new Label("[JAVA]  Mise en place de JavaFX " + (random.nextInt(100) + 1));
+
+        // icône d'horloge et date d'échéance
+        Image clockImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/horloge.png")));
+        ImageView clockImageView = new ImageView(clockImage);
+        clockImageView.setFitHeight(15);
+        clockImageView.setFitWidth(15);
         Label dueDateLabel = new Label((random.nextInt(30) + 1) + " avr");
-        dueDateLabel.getStyleClass()
-                .add("dueDateLabel");
+        dueDateLabel.getStyleClass().add("dueDateLabel");
+        HBox dueDateBox = new HBox(2, clockImageView, dueDateLabel);
 
         TextField assignedToField = new TextField("Personne " + (random.nextInt(10) + 1));
         assignedToField.setEditable(false);
-        assignedToField.setStyle("-fx-font-size: 10px; -fx-text-fill: #777;");
+        assignedToField.getStyleClass().add("dueDateLabel");
 
-        VBox titleAndTags = new VBox(colorTags, titleLabel, dueDateLabel, assignedToField); // Ajouter les étiquettes au-dessus du titre, la date d'échéance et le nom de la personne en dessous
+        VBox titleAndTags = new VBox(colorTags, titleLabel, dueDateBox, assignedToField); // Ajouter les étiquettes au-dessus du titre, la date d'échéance et le nom de la personne en dessous
+
 
         taskBox.getChildren().addAll(titleAndTags);
         configureTaskDragAndDrop(taskBox);
