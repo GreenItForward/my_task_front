@@ -2,20 +2,15 @@ package com.mytask.front.controller;
 
 import com.mytask.front.model.EPage;
 import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.TabService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
-
 import java.util.Objects;
 import java.util.Random;
 
@@ -73,72 +68,14 @@ public class ShowTabController {
     private HBox createRandomTask(Random random) {
         HBox taskBox = new HBox(10);
 
-        Color color1 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        Color color2 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        String tooltipStyle = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #ffffff; -fx-background-color: #000000; -fx-padding: 5px;";
-
-        Rectangle colorRect1 = new Rectangle(20, 10, color1);
-        Rectangle colorRect2 = new Rectangle(20, 10, color2);
-
-        for (Color color : new Color[]{color1, color2}) {
-            Rectangle colorRect = color.equals(color1) ? colorRect1 : colorRect2;
-            String labelName = "Couleur: " + color.toString().substring( 2, color.toString().length() - 2 ) + ", Titre: \"" + (random.nextInt(100) + 1)+"\"";
-            Tooltip tooltip = new Tooltip(labelName);
-            tooltip.setStyle(tooltipStyle);
-            Tooltip.install(colorRect, tooltip);
-            Tooltip.install(colorRect, tooltip);
-            tooltip.setStyle(tooltipStyle);
-            colorRect.setArcWidth(10);
-            colorRect.setArcHeight(10);
-            colorRect.setOnMouseEntered(e -> colorRect.setOpacity(0.5));
-            colorRect.setOnMouseExited(e -> colorRect.setOpacity(1));
-            tooltip.setHideDelay(Duration.seconds(0.3));
-            tooltip.setShowDelay(Duration.seconds(0.2));
-        }
-
-
-        HBox colorTags = new HBox(5, colorRect1, colorRect2);
-
-        Label titleLabel = new Label("[JAVA]  Mise en place de JavaFX " + (random.nextInt(100) + 1));
-
-        Image clockImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/horloge.png")));
-        Image clockImageChecked  = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/check.png")));
-        Image editImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/pencil.png")));
-
-        ImageView clockImageView = new ImageView(clockImage);
-        clockImageView.setFitHeight(15);
-        clockImageView.setFitWidth(15);
-        Label dueDateLabel = new Label((random.nextInt(30) + 1) + " avr");
-        dueDateLabel.getStyleClass().add("dueDateLabel");
-
-        Button dueDateButton = new Button();
-        dueDateButton.setGraphic(clockImageView);
-        dueDateButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
-
-        dueDateButton.setOnAction(e -> {
-            if (clockImageView.getImage() == clockImage) {
-                clockImageView.setImage(clockImageChecked);
-                dueDateLabel.getStyleClass().add("dueDateLabelChecked");
-            } else {
-                clockImageView.setImage(clockImage);
-                dueDateLabel.getStyleClass().remove("dueDateLabelChecked");
-            }
-        });
-
-        HBox deadlineBox = new HBox(5, dueDateButton, dueDateLabel);
-
-        TextField assignedToField = new TextField("Personne " + (random.nextInt(10) + 1));
-        assignedToField.setEditable(false);
-        assignedToField.getStyleClass().add("dueDateLabel");
+        HBox colorTags = TabService.createColorTags(random);
+        Label titleLabel = TabService.createTitleLabel(random);
+        HBox deadlineBox = TabService.createDeadlineBox(random);
+        TextField assignedToField = TabService.createAssignedToField(random);
 
         VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
-        ImageView editImageView = new ImageView(editImage);
-        editImageView.setFitHeight(15);
-        editImageView.setFitWidth(15);
-        editImageView.setVisible(false); // invisible par défaut
-
-        // event handlers pour afficher le logo d'édition
+        ImageView editImageView = TabService.createEditImageView();
         taskBox.setOnMouseEntered(e -> editImageView.setVisible(true));
         taskBox.setOnMouseExited(e -> editImageView.setVisible(false));
 
@@ -150,7 +87,6 @@ public class ShowTabController {
         taskBox.getChildren().addAll(taskContentAndEditLogo);
         configureTaskDragAndDrop(taskBox);
 
-        // margin top pour espacer les tâches
         VBox.setMargin(taskBox, new Insets(10, 0, 0, 0));
 
         return taskBox;
@@ -205,5 +141,6 @@ public class ShowTabController {
             event.consume();
         });
     }
+
 
 }
