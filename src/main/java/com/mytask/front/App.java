@@ -4,7 +4,7 @@ import com.mytask.front.controller.CreateTabController;
 import com.mytask.front.controller.IndexController;
 import com.mytask.front.controller.ShowAllTabController;
 import com.mytask.front.controller.ShowTabController;
-import com.mytask.front.model.EPage;
+import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import javafx.application.Application;
 import javafx.scene.Parent;

@@ -1,7 +1,7 @@
 package com.mytask.front.service;
 
 import com.mytask.front.App;
-import com.mytask.front.model.EPage;
+import com.mytask.front.utils.EPage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
