@@ -14,6 +14,8 @@ import javafx.util.Duration;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.mytask.front.utils.EIcon.*;
+
 public class TabService {
     public static HBox createColorTags(Random random) {
         Color color1 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
@@ -46,8 +48,8 @@ public class TabService {
     }
 
     public static HBox createDeadlineBox(Random random) {
-        Image clockImage = new Image(Objects.requireNonNull(TabService.class.getResourceAsStream("/com/mytask/front/icons/horloge.png")));
-        Image clockImageChecked = new Image(Objects.requireNonNull(TabService.class.getResourceAsStream("/com/mytask/front/icons/check.png")));
+        Image clockImage = CLOCK_ICON.getImage();
+        Image clockImageChecked = CLOCK_ICON_CHECKED.getImage();
 
         ImageView clockImageView = new ImageView(clockImage);
         clockImageView.setFitHeight(15);
@@ -80,7 +82,7 @@ public class TabService {
     }
 
     public static ImageView createEditImageView() {
-        Image editImage = new Image(Objects.requireNonNull(TabService.class.getResourceAsStream("/com/mytask/front/icons/pencil.png")));
+        Image editImage = PENCIL_ICON.getImage();
 
         ImageView editImageView = new ImageView(editImage);
         editImageView.setFitHeight(15);
