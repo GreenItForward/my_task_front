@@ -5,6 +5,7 @@ import com.mytask.front.service.ScreenService;
 import com.mytask.front.service.TabService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -76,8 +77,15 @@ public class ShowTabController {
         VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
         ImageView editImageView = TabService.createEditImageView();
-        taskBox.setOnMouseEntered(e -> editImageView.setVisible(true));
-        taskBox.setOnMouseExited(e -> editImageView.setVisible(false));
+        taskBox.setOnMouseEntered(e -> {
+                editImageView.setVisible(true);
+                taskBox.setCursor(Cursor.HAND);
+        });
+
+        taskBox.setOnMouseExited(e -> {
+                editImageView.setVisible(false);
+                taskBox.setCursor(Cursor.DEFAULT);
+        });
 
         HBox taskContentAndEditLogo = new HBox();
         taskContentAndEditLogo.getChildren().addAll(titleAndTags, editImageView);

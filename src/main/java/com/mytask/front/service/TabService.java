@@ -1,5 +1,6 @@
 package com.mytask.front.service;
 
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -10,8 +11,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-import java.util.Objects;
 import java.util.Random;
 
 import static com.mytask.front.utils.EIcon.*;
@@ -78,6 +77,7 @@ public class TabService {
         TextField assignedToField = new TextField("Personne " + (random.nextInt(10) + 1));
         assignedToField.setEditable(false);
         assignedToField.getStyleClass().add("dueDateLabel");
+        assignedToField.setOnMouseEntered(e -> assignedToField.setCursor(Cursor.HAND));
         return assignedToField;
     }
 
