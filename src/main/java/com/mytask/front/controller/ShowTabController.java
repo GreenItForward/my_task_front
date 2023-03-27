@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.model.EPage;
 import com.mytask.front.service.ScreenService;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
@@ -70,17 +71,39 @@ public class ShowTabController {
     // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
     private HBox createRandomTask(Random random) {
         HBox taskBox = new HBox(10);
-        Label titleLabel = new Label("Tâche " + (random.nextInt(100) + 1));
-        Rectangle colorRect = new Rectangle(10, 10, Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
+
+        // Créer les rectangles de couleur et les Tooltips
+        String labelName1 = "Étiquette " + (random.nextInt(100) + 1);
+        String labelName2 = "Étiquette " + (random.nextInt(100) + 1);
+        Rectangle colorRect1 = new Rectangle(20, 10, Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
+        Rectangle colorRect2 = new Rectangle(20, 10, Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
+        Tooltip tooltip1 = new Tooltip(labelName1);
+        Tooltip tooltip2 = new Tooltip(labelName2);
+        Tooltip.install(colorRect1, tooltip1);
+        Tooltip.install(colorRect2, tooltip2);
+
+        HBox colorTags = new HBox(5, colorRect1, colorRect2);
+
+        Label titleLabel = new Label("[JAVA]  Mise en place de JavaFX " + (random.nextInt(100) + 1));
+        Label dueDateLabel = new Label((random.nextInt(30) + 1) + " avr");
+        dueDateLabel.getStyleClass()
+                .add("dueDateLabel");
+
         TextField assignedToField = new TextField("Personne " + (random.nextInt(10) + 1));
         assignedToField.setEditable(false);
-        Label dueDateLabel = new Label("Échéance : " + (random.nextInt(30) + 1) + "/" + (random.nextInt(12) + 1) + "/2023");
+        assignedToField.setStyle("-fx-font-size: 10px; -fx-text-fill: #777;");
 
-        taskBox.getChildren().addAll(titleLabel, colorRect, assignedToField, dueDateLabel);
+        VBox titleAndTags = new VBox(colorTags, titleLabel, dueDateLabel, assignedToField); // Ajouter les étiquettes au-dessus du titre, la date d'échéance et le nom de la personne en dessous
+
+        taskBox.getChildren().addAll(titleAndTags);
         configureTaskDragAndDrop(taskBox);
+
+        // Ajouter un margin top pour espacer les tâches
+        VBox.setMargin(taskBox, new Insets(10, 0, 0, 0));
 
         return taskBox;
     }
+
 
     private void setupDragAndDrop() {
         ScrollPane[] scrollPanes = new ScrollPane[]{todoTask, inProgressTask, doneTask};
