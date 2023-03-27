@@ -16,6 +16,14 @@
     -fx-text-fill: #777;
 }
 
+.dueDateLabelChecked {
+    -fx-font-size: 10px;
+    -fx-text-fill: #FFF;
+    -fx-background-color: #2ecc71;
+    -fx-text-decoration: line-through;
+}
+
+
 /* Style des éléments de tâche */
 .list-cell {
     -fx-padding: 5px;

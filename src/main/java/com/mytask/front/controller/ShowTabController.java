@@ -93,20 +93,36 @@ public class ShowTabController {
 
         Label titleLabel = new Label("[JAVA]  Mise en place de JavaFX " + (random.nextInt(100) + 1));
 
-        // icône d'horloge et date d'échéance
         Image clockImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/horloge.png")));
+        Image clockImageChecked  = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/check.png")));
+
         ImageView clockImageView = new ImageView(clockImage);
         clockImageView.setFitHeight(15);
         clockImageView.setFitWidth(15);
         Label dueDateLabel = new Label((random.nextInt(30) + 1) + " avr");
         dueDateLabel.getStyleClass().add("dueDateLabel");
-        HBox dueDateBox = new HBox(2, clockImageView, dueDateLabel);
+
+        Button dueDateButton = new Button();
+        dueDateButton.setGraphic(clockImageView);
+        dueDateButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+
+        dueDateButton.setOnAction(e -> {
+            if (clockImageView.getImage() == clockImage) {
+                clockImageView.setImage(clockImageChecked);
+                dueDateLabel.getStyleClass().add("dueDateLabelChecked");
+            } else {
+                clockImageView.setImage(clockImage);
+                dueDateLabel.getStyleClass().remove("dueDateLabelChecked");
+            }
+        });
+
+        HBox deadlineBox = new HBox(5, dueDateButton, dueDateLabel);
 
         TextField assignedToField = new TextField("Personne " + (random.nextInt(10) + 1));
         assignedToField.setEditable(false);
         assignedToField.getStyleClass().add("dueDateLabel");
 
-        VBox titleAndTags = new VBox(colorTags, titleLabel, dueDateBox, assignedToField); // Ajouter les étiquettes au-dessus du titre, la date d'échéance et le nom de la personne en dessous
+        VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
 
         taskBox.getChildren().addAll(titleAndTags);
@@ -167,10 +183,5 @@ public class ShowTabController {
             event.consume();
         });
     }
-
-
-
-
-
 
 }
