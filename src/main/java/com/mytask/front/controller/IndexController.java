@@ -1,5 +1,5 @@
 package com.mytask.front.controller;
-import com.mytask.front.model.EPage;
+import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

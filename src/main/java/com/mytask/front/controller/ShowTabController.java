@@ -1,6 +1,6 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.model.EPage;
+import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import com.mytask.front.service.TabService;
 import javafx.fxml.FXML;
