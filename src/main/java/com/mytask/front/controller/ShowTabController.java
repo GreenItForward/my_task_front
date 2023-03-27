@@ -4,7 +4,6 @@ import com.mytask.front.model.EPage;
 import com.mytask.front.service.ScreenService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +13,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.util.Objects;
 import java.util.Random;
@@ -59,8 +59,6 @@ public class ShowTabController {
             doneTasksList.getChildren().add(createRandomTask(random));
         }
 
-        // Ajouter des événements de glisser-déposer
-
         setupDragAndDrop();
 
         //TODO: Initialize the controller's logic here
@@ -74,20 +72,31 @@ public class ShowTabController {
     private HBox createRandomTask(Random random) {
         HBox taskBox = new HBox(10);
 
-        String labelName1 = "Étiquette " + (random.nextInt(100) + 1);
-        String labelName2 = "Étiquette " + (random.nextInt(100) + 1);
-        Rectangle colorRect1 = new Rectangle(20, 10, Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
-        Rectangle colorRect2 = new Rectangle(20, 10, Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
+        Color color1 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        Color color2 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        String tooltipStyle = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #ffffff; -fx-background-color: #000000; -fx-padding: 5px;";
 
-        colorRect1.setArcWidth(10);
-        colorRect1.setArcHeight(10);
-        colorRect2.setArcWidth(10);
-        colorRect2.setArcHeight(10);
+        Rectangle colorRect1 = new Rectangle(20, 10, color1);
+        Rectangle colorRect2 = new Rectangle(20, 10, color2);
 
-        Tooltip tooltip1 = new Tooltip(labelName1);
-        Tooltip tooltip2 = new Tooltip(labelName2);
-        Tooltip.install(colorRect1, tooltip1);
-        Tooltip.install(colorRect2, tooltip2);
+
+        // foreach color, create a tooltip with the color name and the task title
+        for (Color color : new Color[]{color1, color2}) {
+            Rectangle colorRect = color.equals(color1) ? colorRect1 : colorRect2;
+            String labelName = "Couleur: " + color.toString().substring( 2, color.toString().length() - 2 ) + ", Titre: \"" + (random.nextInt(100) + 1)+"\"";
+            Tooltip tooltip = new Tooltip(labelName);
+            tooltip.setStyle(tooltipStyle);
+            Tooltip.install(colorRect, tooltip);
+            Tooltip.install(colorRect, tooltip);
+            tooltip.setStyle(tooltipStyle);
+            colorRect.setArcWidth(10);
+            colorRect.setArcHeight(10);
+            colorRect.setOnMouseEntered(e -> colorRect.setOpacity(0.5));
+            colorRect.setOnMouseExited(e -> colorRect.setOpacity(1));
+            tooltip.setHideDelay(Duration.seconds(0.3));
+            tooltip.setShowDelay(Duration.seconds(0.2));
+        }
+
 
         HBox colorTags = new HBox(5, colorRect1, colorRect2);
 
