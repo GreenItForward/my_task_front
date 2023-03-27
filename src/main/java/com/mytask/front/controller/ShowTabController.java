@@ -4,6 +4,7 @@ import com.mytask.front.model.EPage;
 import com.mytask.front.service.ScreenService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -79,8 +80,6 @@ public class ShowTabController {
         Rectangle colorRect1 = new Rectangle(20, 10, color1);
         Rectangle colorRect2 = new Rectangle(20, 10, color2);
 
-
-        // foreach color, create a tooltip with the color name and the task title
         for (Color color : new Color[]{color1, color2}) {
             Rectangle colorRect = color.equals(color1) ? colorRect1 : colorRect2;
             String labelName = "Couleur: " + color.toString().substring( 2, color.toString().length() - 2 ) + ", Titre: \"" + (random.nextInt(100) + 1)+"\"";
@@ -104,6 +103,7 @@ public class ShowTabController {
 
         Image clockImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/horloge.png")));
         Image clockImageChecked  = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/check.png")));
+        Image editImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/pencil.png")));
 
         ImageView clockImageView = new ImageView(clockImage);
         clockImageView.setFitHeight(15);
@@ -133,11 +133,24 @@ public class ShowTabController {
 
         VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
+        ImageView editImageView = new ImageView(editImage);
+        editImageView.setFitHeight(15);
+        editImageView.setFitWidth(15);
+        editImageView.setVisible(false); // invisible par défaut
 
-        taskBox.getChildren().addAll(titleAndTags);
+        // event handlers pour afficher le logo d'édition
+        taskBox.setOnMouseEntered(e -> editImageView.setVisible(true));
+        taskBox.setOnMouseExited(e -> editImageView.setVisible(false));
+
+        HBox taskContentAndEditLogo = new HBox();
+        taskContentAndEditLogo.getChildren().addAll(titleAndTags, editImageView);
+
+        HBox.setHgrow(titleAndTags, Priority.ALWAYS);
+
+        taskBox.getChildren().addAll(taskContentAndEditLogo);
         configureTaskDragAndDrop(taskBox);
 
-        // Ajouter un margin top pour espacer les tâches
+        // margin top pour espacer les tâches
         VBox.setMargin(taskBox, new Insets(10, 0, 0, 0));
 
         return taskBox;
