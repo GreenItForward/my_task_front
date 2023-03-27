@@ -1,54 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ListView?>
-<VBox xmlns:fx="http://javafx.com/fxml/1"
-      xmlns="http://javafx.com/javafx/19"
-      fx:controller="com.mytask.front.controller.ShowTabController"
-      spacing="20" alignment="CENTER">
-    <HBox spacing="20" alignment="CENTER">
-        <VBox spacing="10">
-            <Label fx:id="tablesLabel"/>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
+<VBox alignment="CENTER" prefHeight="866.0" prefWidth="1268.0" spacing="20" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mytask.front.controller.ShowTabController" stylesheets="@../style/show_tab.css">
+    <HBox alignment="CENTER" spacing="20">
+        <VBox prefWidth="400.0" spacing="10.0">
+            <Label fx:id="tablesLabel" />
             <ScrollPane>
-                <ListView fx:id="tablesListView"/>
+                <ListView fx:id="tablesListView" />
             </ScrollPane>
-            <Button fx:id="backToMenuBtn"/>
+            <Button fx:id="backToMenuBtn" />
+         <HBox.margin>
+            <Insets right="100.0" />
+         </HBox.margin>
         </VBox>
 
-        <VBox spacing="10" fx:id="tableInfoVBox">
+        <VBox fx:id="tableInfoVBox" prefHeight="2607.0" prefWidth="488.0" spacing="10">
             <HBox spacing="10">
-                <Button fx:id="generateInviteCodeBtn"/>
-                <Button fx:id="viewMembersBtn"/>
+                <Button fx:id="generateInviteCodeBtn" />
+                <Button fx:id="viewMembersBtn" />
             </HBox>
             <HBox>
-                <Label fx:id="tableTitleLabel"/>
-                <Label fx:id="tableShareCodeLabel"/>
+                <Label fx:id="tableTitleLabel" />
+                <Label fx:id="tableShareCodeLabel" />
             </HBox>
-            <Label fx:id="tableDescriptionLabel"/>
+            <Label fx:id="tableDescriptionLabel" />
 
             <HBox>
-                <VBox fx:id="todoColumn" spacing="10">
-                    <Label fx:id="todoLabel"/>
-                    <ScrollPane>
-                        <VBox fx:id="todoTasksList"/>
-                    </ScrollPane>
-                </VBox>
-                <VBox fx:id="inProgressColumn" spacing="10">
-                    <Label fx:id="inProgressLabel"/>
-                    <ScrollPane>
-                        <VBox fx:id="inProgressTasksList"/>
-                    </ScrollPane>
-                </VBox>
-                <VBox fx:id="doneColumn" spacing="10">
-                    <Label fx:id="doneLabel"/>
-                    <ScrollPane>
-                        <VBox fx:id="doneTasksList"/>
-                    </ScrollPane>
-                </VBox>
+                <StackPane>
+                    <VBox fx:id="todoColumn" spacing="10">
+                        <Label fx:id="todoLabel" />
+                        <ScrollPane fx:id="todoTask" prefHeight="500.0" prefWidth="500.0">
+                            <VBox fx:id="todoTasksList" />
+                        </ScrollPane>
+                    </VBox>
+                    <Rectangle fill="TRANSPARENT" />
+                </StackPane>
+
+                <StackPane>
+                    <VBox fx:id="inProgressColumn" spacing="10">
+                        <Label fx:id="inProgressLabel" />
+                        <ScrollPane fx:id="inProgressTask" prefHeight="500.0" prefWidth="500.0">
+                            <VBox fx:id="inProgressTasksList" />
+                        </ScrollPane>
+                    </VBox>
+                    <Rectangle fill="TRANSPARENT" />
+                </StackPane>
+
+                <StackPane>
+                    <VBox fx:id="doneColumn" spacing="10">
+                        <Label fx:id="doneLabel" />
+                        <ScrollPane fx:id="doneTask" prefHeight="500.0" prefWidth="500.0">
+                            <VBox fx:id="doneTasksList" />
+                        </ScrollPane>
+                    </VBox>
+                    <Rectangle fill="TRANSPARENT" />
+                </StackPane>
             </HBox>
         </VBox>
     </HBox>
