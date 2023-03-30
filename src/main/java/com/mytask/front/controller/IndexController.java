@@ -4,8 +4,11 @@ import com.mytask.front.service.ScreenService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.text.Text;
 
 public class IndexController {
+    @FXML
+    private Text bienvenue;
 
     @FXML
     private Button voir_tableau;
@@ -23,6 +26,8 @@ public class IndexController {
     }
 
     public void initialize() {
+        bienvenue.setText("Bienvenue Ronan");
+
         voir_tableau.setOnAction(event -> {
             System.out.println("Voir tableau");
             screenService.setScreen(EPage.SHOW_ALL_TAB);
