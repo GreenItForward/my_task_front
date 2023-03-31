@@ -5,10 +5,15 @@ import com.mytask.front.utils.EIcon;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EPath;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,7 +35,6 @@ public class ScreenService {
     // Singleton
     public static ScreenService getInstance(Stage stage) {
         if (instance == null) {
-            instance = new ScreenService(stage);
         }
         return instance;
     }
@@ -59,7 +63,6 @@ public class ScreenService {
             throw new IllegalArgumentException("Screen not found: " + page);
         }
     }
-
 
     public void configureInitialScreen(EPage initialPage) {
         stage.setTitle(initialPage.getWindowTitle());
