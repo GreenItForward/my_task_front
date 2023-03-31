@@ -3,7 +3,7 @@ package com.mytask.front.utils;
 public enum EPage {
     SHOW_ALL_TAB("show_all_tab", "MyTask - GreenItForward", 1280, 720),
     SHOW_TAB("show_tab", "MyTask - GreenItForward", 1880, 720),
-    INDEX("index", "MyTask - GreenItForward", 1280, 720),
+    INDEX("index", "MyTask - GreenItForward", 400, 400),
     CREATE_TAB("create_tab", "MyTask - GreenItForward", 1280, 720),
     CONNECTION("connection", "MyTask - GreenItForward", 1280, 720),
     INSCRIPTION("inscription", "MyTask - GreenItForward", 1280, 720);
