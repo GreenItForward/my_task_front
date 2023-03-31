@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class IndexController {
     @FXML
@@ -19,13 +20,15 @@ public class IndexController {
     @FXML
     private Button quitter;
 
-    private final ScreenService screenService;
+    private ScreenService screenService;
 
-    public IndexController(ScreenService screenService) {
-        this.screenService = screenService;
-    }
-
+    @FXML
     public void initialize() {
+        bienvenue.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) bienvenue.getScene().getWindow());
+            }
+        });
         bienvenue.setText("Bienvenue Ronan");
 
         voir_tableau.setOnAction(event -> {

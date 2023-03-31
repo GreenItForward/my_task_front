@@ -5,6 +5,7 @@ import com.mytask.front.service.ScreenService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 public class ShowAllTabController {
 
@@ -16,11 +17,13 @@ public class ShowAllTabController {
 
     private ScreenService screenService;
 
-    public ShowAllTabController(ScreenService screenService) {
-        this.screenService = screenService;
-    }
-
+    @FXML
     public void initialize() {
+        backToMenuBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
+            }
+        });
         myTablesLabel.setText("Mes tableaux");
         tableInfoLabel.setText("Informations du tableau");
         descriptionLabel.setText("Description");

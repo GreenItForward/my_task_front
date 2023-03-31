@@ -12,6 +12,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -34,13 +36,13 @@ public class ShowTabController {
 
     private HBox draggedTask;
 
-
-    public ShowTabController(ScreenService screenService) {
-        this.screenService = screenService;
-    }
-
+    @FXML
     public void initialize() {
-        tablesLabel.setText("Mes tableaux");
+        backToMenuBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
+            }
+        });        tablesLabel.setText("Mes tableaux");
         backToMenuBtn.setText("Retour au menu");
         generateInviteCodeBtn.setText("Générer un code d'invitation");
         viewMembersBtn.setText("Voir les membres");
@@ -62,6 +64,9 @@ public class ShowTabController {
         // ex: add EventHandlers to buttons, set initial data, etc.
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
 
+        // quand on appuie sur viewMemberBTn on affiche un popup avec la liste des membres de la table
+        viewMembersBtn.setOnAction(event -> TabService.showMembers((Stage) viewMembersBtn.getScene().getWindow()));
+
     }
 
 
@@ -74,7 +79,7 @@ public class ShowTabController {
         HBox deadlineBox = TabService.createDeadlineBox(random);
         TextField assignedToField = TabService.createAssignedToField(random);
 
-        VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
+        VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField, viewMembersBtn);
 
         ImageView editImageView = TabService.createEditImageView();
         taskBox.setOnMouseEntered(e -> {

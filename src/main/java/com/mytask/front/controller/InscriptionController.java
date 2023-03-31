@@ -6,20 +6,23 @@ import com.mytask.front.utils.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class InscriptionController {
     @FXML
     private TextField email, nom, prenom, password;
     @FXML
     private Button sinscrire, seconnecter;
-    private final ScreenService screenService;
+    private ScreenService screenService;
     private User user;
 
-    public InscriptionController(ScreenService screenService) {
-        this.screenService = screenService;
-    }
-
+    @FXML
     public void initialize() {
+        sinscrire.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) sinscrire.getScene().getWindow());
+            }
+        });
         seconnecter.setOnAction(event -> {
             System.out.println("Connexion");
             screenService.setScreen(EPage.CONNECTION);

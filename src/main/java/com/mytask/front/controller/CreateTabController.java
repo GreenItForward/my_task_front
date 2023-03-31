@@ -6,9 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class CreateTabController {
-    private final ScreenService screenService;
+    private ScreenService screenService;
 
     @FXML
     private Button joinTableBtn, createTableBtn, backToMenuBtn;
@@ -21,12 +22,13 @@ public class CreateTabController {
 
 
 
-    public CreateTabController(ScreenService screenService) {
-        this.screenService = screenService;
-    }
-
     @FXML
     public void initialize() {
+        createTableBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) createTableBtn.getScene().getWindow());
+            }
+        });
         backToMenuBtn.setText("Retour au menu");
         joinTableBtn.setText("Rejoindre le tableau");
         joinTableLabel.setText("Entrez le code du tableau que vous souhaitez rejoindre :");
