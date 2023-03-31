@@ -81,7 +81,7 @@ public class ShowTabController {
         HBox deadlineBox = TabService.createDeadlineBox(random);
         TextField assignedToField = TabService.createAssignedToField(random);
 
-        VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField, viewMembersBtn);
+        VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
         ImageView editImageView = TabService.createEditImageView();
         taskBox.setOnMouseEntered(e -> {

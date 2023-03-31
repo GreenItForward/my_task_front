@@ -10,7 +10,7 @@ public enum EPage {
 
 
     private String fxmlName;
-    private String windowTitle = "MyTask - GreenItForward";
+    private String windowTitle;
     private int width;
     private int height;
 
@@ -27,6 +27,10 @@ public enum EPage {
     }
 
     public String getWindowTitle() {
+        if (windowTitle.isEmpty()) {
+            return "MyTask - GreenItForward";
+        }
+
         return windowTitle;
     }
 

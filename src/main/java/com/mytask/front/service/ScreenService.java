@@ -1,6 +1,7 @@
 package com.mytask.front.service;
 
 import com.mytask.front.App;
+import com.mytask.front.utils.EIcon;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EPath;
 import javafx.fxml.FXMLLoader;
@@ -63,7 +64,7 @@ public class ScreenService {
     public void configureInitialScreen(EPage initialPage) {
         stage.setTitle(initialPage.getWindowTitle());
         stage.setScene(new Scene((Parent) this.screens.get(initialPage), initialPage.getWidth(), initialPage.getHeight()));
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/gif.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream(EIcon.GIF.getImagePath()))));
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.show();
