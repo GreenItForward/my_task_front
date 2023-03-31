@@ -112,6 +112,6 @@ public class TabService {
     }
 
     public static void showMembers(Stage primaryStage) {
-        screenService.setPopupScreen(primaryStage, EPage.MEMBERS);
+        PopupService.setPopupScreen(primaryStage, EPopup.MEMBERS);
     }
 }
