@@ -2,6 +2,7 @@ package com.mytask.front.controller;
 
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
+import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,18 +30,18 @@ public class CreateTabController {
                 screenService = ScreenService.getInstance((Stage) createTableBtn.getScene().getWindow());
             }
         });
-        backToMenuBtn.setText("Retour au menu");
-        joinTableBtn.setText("Rejoindre le tableau");
-        joinTableLabel.setText("Entrez le code du tableau que vous souhaitez rejoindre :");
-        createTableBtn.setText("Créer le tableau");
-        nameTextField.setPromptText("Nom du tableau");
-        descriptionTextField.setPromptText("La description du tableau");
+        backToMenuBtn.setText(EString.BACK_TO_MENU.getString());
+        joinTableBtn.setText(EString.JOIN_TAB.getString());
+        joinTableLabel.setText(EString.LABEL_JOIN_TAB.getString());
+        createTableBtn.setText(EString.CREATE_TAB.getString());
+        nameTextField.setPromptText(EString.NAME_TAB.getString());
+        descriptionTextField.setPromptText(EString.DESCRIPTION_TAB.getString());
         labelTextField.setPromptText("Frond-end");
         joinCodeTextField.setPromptText("Code du tableau");
-        colorLabel.setText("Sélection de couleur");
-        labelEtiquette.setText("Etiquette");
-        descriptionLabel.setText("Description");
-        nameLabel.setText("Nom");
+        colorLabel.setText(EString.SELECT_COLOR.getString());
+        labelEtiquette.setText(EString.LABEL.getString());
+        descriptionLabel.setText(EString.DESCRIPTION.getString());
+        nameLabel.setText(EString.NAME.getString());
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
     }
 

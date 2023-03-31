@@ -2,6 +2,7 @@ package com.mytask.front.controller;
 
 import com.mytask.front.service.ScreenService;
 import com.mytask.front.utils.EPage;
+import com.mytask.front.utils.EString;
 import com.mytask.front.utils.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -27,13 +28,13 @@ public class ConnectionController {
         });
 
         sinscrire.setOnAction(event -> {
-            System.out.println("Inscription");
+            System.out.println(EString.SIGN_UP);
             screenService.setScreen(EPage.INSCRIPTION);
         });
 
         seconnecter.setOnAction(event -> {
             user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
-            System.out.println("Connection de l'utilisateur...");
+            System.out.println(EString.SIGN_IN_IN_PROGRESS.getString());
             screenService.setScreen(EPage.INDEX);
         });
     }

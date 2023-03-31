@@ -1,6 +1,7 @@
 package com.mytask.front.controller;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
+import com.mytask.front.utils.EString;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,20 +30,18 @@ public class IndexController {
                 screenService = ScreenService.getInstance((Stage) bienvenue.getScene().getWindow());
             }
         });
-        bienvenue.setText("Bienvenue Ronan");
+        bienvenue.setText(EString.WELCOME.getString() + "Ronan");
 
         voir_tableau.setOnAction(event -> {
-            System.out.println("Voir tableau");
+            System.out.println(EString.SHOW_TAB_LOG.getString());
             screenService.setScreen(EPage.SHOW_ALL_TAB);
         });
 
         creer_tableau.setOnAction(event -> {
-            System.out.println("Creer tableau");
+            System.out.println(EString.CREATE_TAB_LOG.getString());
            screenService.setScreen(EPage.CREATE_TAB);
         });
 
-        quitter.setOnAction(event -> {
-            Platform.exit();
-        });
+        quitter.setOnAction(event -> Platform.exit());
     }
 }
