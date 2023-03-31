@@ -2,26 +2,24 @@ package com.mytask.front.service;
 
 import com.mytask.front.App;
 import com.mytask.front.utils.EPage;
+import com.mytask.front.utils.EPath;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ScreenService {
     private static ScreenService instance;
 
-    public final Map<EPage, Node> screens = new HashMap<>();
+    public final Map<EPage, Node> screens = new EnumMap<>(EPage.class);
     private final Stage stage;
 
     private ScreenService(Stage stage) {
@@ -37,9 +35,9 @@ public class ScreenService {
     }
 
     
-    public void loadScreen(EPage page, Supplier<?> controllerSupplier) throws IOException {
+    public void loadScreen(EPage page, Supplier<?> controllerSupplier) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/mytask/front/view/" + page.getFxmlName() + ".fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(EPath.FXML.getPath() + page.getFxmlName()));
             fxmlLoader.setControllerFactory(param -> controllerSupplier.get());
             Parent root = fxmlLoader.load();
             screens.put(page, root);
@@ -61,20 +59,14 @@ public class ScreenService {
         }
     }
 
-    public void setPopupScreen(Stage primaryStage, EPage page) {
-        Stage popup = new Stage();
-        popup.initModality(Modality.WINDOW_MODAL);
-        popup.initOwner(primaryStage);
-        popup.setTitle(page.getWindowTitle());
-        Label label = new Label("Modifier les droits ou supprimer les utilisateurs");
-        Button closeButton = new Button("Fermer");
-        closeButton.setOnAction(e -> popup.close());
-        VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, closeButton);
-        layout.setAlignment(Pos.CENTER);
-        Scene popupScene = new Scene(layout, 300, 200);
-        popup.setScene(popupScene);
-        popup.showAndWait();
+
+    public void configureInitialScreen(EPage initialPage) {
+        stage.setTitle(initialPage.getWindowTitle());
+        stage.setScene(new Scene((Parent) this.screens.get(initialPage), initialPage.getWidth(), initialPage.getHeight()));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/mytask/front/icons/gif.png"))));
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.show();
     }
 
 

@@ -1,6 +1,7 @@
 package com.mytask.front.service;
 
 import com.mytask.front.utils.EPage;
+import com.mytask.front.utils.EPopup;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -103,6 +104,6 @@ public class TabService {
 
 
     public static void showMembers(Stage primaryStage) {
-        screenService.setPopupScreen(primaryStage, EPage.MEMBERS);
+        PopupService.setPopupScreen(primaryStage, EPopup.MEMBERS);
     }
 }
