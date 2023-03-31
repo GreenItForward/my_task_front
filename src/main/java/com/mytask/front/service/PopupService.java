@@ -4,12 +4,10 @@ import com.mytask.front.utils.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -26,6 +24,13 @@ public class PopupService {
 
     public static void setPopupScreen(Stage primaryStage, EPopup page) {
         Stage popup = new Stage();
+        ScrollPane scrollPane = new ScrollPane();
+        VBox userContainer = new VBox();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.getStyleClass().add("scroll-pane");
+        userContainer.setSpacing(10);
+        userContainer.setStyle("-fx-padding: 10;");
         popup.initModality(Modality.WINDOW_MODAL);
         popup.initOwner(primaryStage);
         popup.setTitle(page.getWindowTitle());
@@ -54,31 +59,30 @@ public class PopupService {
             roleComboBox.getItems().addAll(EString.getRoleStrings());
             roleComboBox.setValue(users.get(i)[2]);
 
-            // TODO: Ajouter un écouteur d'événements pour mettre à jour le rôle de l'utilisateur (à implémenter)
+            HBox userInfo = new HBox(10);
+            userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
+            userContainer.getChildren().add(userInfo);
+
             int finalI = i;
             roleComboBox.setOnAction(e -> {
-                // Mettre à jour le rôle de l'utilisateur
-
                 if (roleComboBox.getValue().equals(EString.SUPPRIMER.getString())) {
                     ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.getString(), EString.DELETE_USER_CONFIRMATION.getString());
                     if (AlertService.isConfirmed(result)) {
-                        gridPane.getChildren().removeAll(nameLabel, emailLabel, roleComboBox);
-                    }else {
+                        userContainer.getChildren().remove(userInfo);
+                    } else {
                         roleComboBox.setValue(users.get(finalI)[2]);
                     }
                 }
             });
 
             roleComboBox.getStyleClass().add("combo-box");
-
-            gridPane.add(nameLabel, 0, i);
-            gridPane.add(emailLabel, 1, i);
-            gridPane.add(roleComboBox, 2, i);
         }
 
+        gridPane.add(userContainer, 0, 0, 3, 1);
+        scrollPane.setContent(gridPane);
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, gridPane, closeButton);
+        layout.getChildren().addAll(label, scrollPane, closeButton);
         layout.setAlignment(Pos.TOP_CENTER);
 
         Scene popupScene = new Scene(layout, EPopup.MEMBERS.getWidth(), EPopup.MEMBERS.getHeight());
