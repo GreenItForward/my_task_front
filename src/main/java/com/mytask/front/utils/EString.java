@@ -58,7 +58,6 @@ public enum EString {
     CREATE_TAB_LOG("Créer tableau"),
     SHOW_TABLES("Afficher les tableaux");
 
-
     private String string;
 
     EString(String string) {
@@ -83,5 +82,6 @@ public enum EString {
     public static String getNameTimestamp() {
         return NAME_APP.string + "-" + System.currentTimeMillis();
     }
+
 
 }
