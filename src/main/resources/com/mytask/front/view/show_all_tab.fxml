@@ -7,10 +7,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import java.net.URL?>
 <VBox xmlns:fx="http://javafx.com/fxml/1"
       xmlns="http://javafx.com/javafx/19"
       fx:controller="com.mytask.front.controller.ShowAllTabController"
       spacing="20" alignment="CENTER">
+    <stylesheets>
+        <URL value="@../style/styles.css" />
+    </stylesheets>
     <HBox spacing="20" alignment="CENTER">
         <VBox spacing="10">
             <Label fx:id="myTablesLabel"/>
