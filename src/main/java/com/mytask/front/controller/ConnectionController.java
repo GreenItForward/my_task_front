@@ -1,6 +1,7 @@
 package com.mytask.front.controller;
 
 import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.UserService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.User;
@@ -34,8 +35,10 @@ public class ConnectionController {
 
         seconnecter.setOnAction(event -> {
             user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
-            System.out.println(EString.SIGN_IN_IN_PROGRESS.getString());
-            screenService.setScreen(EPage.INDEX);
+            if(UserService.connectUser(email.getText(), password.getText())) {
+                System.out.println(EString.SIGN_IN_IN_PROGRESS.getString());
+                screenService.setScreen(EPage.INDEX);
+            }
         });
     }
 }
