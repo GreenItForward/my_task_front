@@ -6,7 +6,8 @@ public enum EPage {
     INDEX("index", "MyTask - GreenItForward", 400, 400),
     CREATE_TAB("create_tab", "MyTask - GreenItForward", 1280, 720),
     CONNECTION("connection", "MyTask - GreenItForward", 1280, 720),
-    INSCRIPTION("inscription", "MyTask - GreenItForward", 1280, 720);
+    INSCRIPTION("inscription", "MyTask - GreenItForward", 1280, 720),
+    TASK_DETAILS("task_details", "MyTask - GreenItForward", 500, 500);
 
 
     private String fxmlName;

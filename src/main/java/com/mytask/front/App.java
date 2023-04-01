@@ -24,6 +24,7 @@ public class App extends Application {
         screenService.loadScreen(EPage.CREATE_TAB, () -> new CreateTabController(screenService));
         screenService.loadScreen(EPage.SHOW_ALL_TAB, () -> new ShowAllTabController(screenService));
         screenService.loadScreen(EPage.SHOW_TAB, () -> new ShowTabController(screenService));
+        screenService.loadScreen(EPage.TASK_DETAILS, () -> new TaskDetailsController(screenService));
 
 
 
