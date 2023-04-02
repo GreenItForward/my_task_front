@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+
+<?import java.net.URL?>
+<VBox alignment="CENTER" prefHeight="720.0" prefWidth="1280.0" spacing="20.0"
+      xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/19"
+      fx:controller="com.mytask.front.controller.CreateTabController">
+    <stylesheets>
+        <URL value="@../style/styles.css" />
+    </stylesheets>
+    <Button fx:id="backToMenuBtn"/>
+
+    <Panel>
+
+        <VBox spacing="10">
+            <Label fx:id="joinTableLabel"/>
+            <TextField fx:id="joinCodeTextField"/>
+            <Button fx:id="joinTableBtn"/>
+        </VBox>
+    </Panel>
+
+    <Panel>
+        <VBox spacing="10">
+            <Label fx:id="nameLabel"/>
+            <TextField fx:id="nameTextField"/>
+
+            <Label fx:id="descriptionLabel"/>
+            <TextField fx:id="descriptionTextField"/>
+
+            <Label fx:id="labelEtiquette"/>
+            <TextField fx:id="labelTextField"/>
+
+            <Label fx:id="colorLabel"/>
+            <ColorPicker fx:id="colorPicker"/>
+
+            <Button text="Ajouter" fx:id="addLabelBtn"/>
+        </VBox>
+    </Panel>
+
+    <Panel>
+        <VBox fx:id="labelsList" spacing="10"/>
+    </Panel>
+
+    <Button text="Créer le tableau" fx:id="createTableBtn"/>
+</VBox>

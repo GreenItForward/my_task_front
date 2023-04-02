@@ -1,0 +1,12 @@
+/* Style des boutons */
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: #fff;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
