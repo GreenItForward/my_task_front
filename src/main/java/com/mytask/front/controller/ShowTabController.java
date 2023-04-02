@@ -77,6 +77,9 @@ public class ShowTabController {
         VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
         ImageView editImageView = TabService.createEditImageView();
+        editImageView.setOnMouseClicked(e -> {
+            System.out.println("Edit");
+        });
         taskBox.setOnMouseEntered(e -> {
                 editImageView.setVisible(true);
                 taskBox.setCursor(Cursor.HAND);
