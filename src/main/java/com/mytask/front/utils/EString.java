@@ -10,6 +10,7 @@ public enum EString {
     CONNECTION("Connexion"),
     SIGN_UP("Inscription"),
     VIEW_MEMBERS("Voir les membres"),
+    COPY_INVITE_CODE("Copier le code d'invitation"),
 
     // Labels
     MY_TABS("Mes tableaux"),
@@ -28,6 +29,7 @@ public enum EString {
     INFORMATION_TAB("Informations du tableau"),
     OPEN_TABLE("Ouvrir le tableau"),
     EDIT_USER_ROLE("Modifier les droits ou supprimer les utilisateurs"),
+    INVITE_CODE("Code d'invitation : "),
 
 
     // Roles and actions
@@ -39,12 +41,17 @@ public enum EString {
     DELETE_USER_TITLE("Supprimer un utilisateur"),
     ALERT_VERIFICATION("Etes-vous sûr de vouloir continuer ?"),
     DELETE_USER_CONFIRMATION("Voulez-vous vraiment supprimer cet utilisateur ?"),
+    //popup
+    INVITE_CODE_COPIED_TITLE("Code d'invitation copié"),
+    INVITE_CODE_COPIED_MESSAGE("Le code d'invitation a été copié dans le presse-papier"),
 
     // Messages LOGS
     SIGN_IN_IN_PROGRESS("Connexion en cours..."),
     SIGN_UP_IN_PROGRESS("Inscription en cours..."),
     SHOW_TAB_LOG("Voir tableau"),
     CREATE_TAB_LOG("Créer tableau");
+
+
 
     private String string;
 

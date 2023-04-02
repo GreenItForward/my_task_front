@@ -4,7 +4,8 @@ public enum EStyle {
     STYLES("styles.css"),
     SHOW_TAB("show_tab.css"),
     INDEX("index.css"),
-    POPUP("popup.css");
+    POPUP("popup.css"),
+    CREATE_INVITE_CODE("create_invite_code.css");
 
     private String cssName;
 

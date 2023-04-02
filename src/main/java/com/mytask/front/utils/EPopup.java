@@ -1,7 +1,8 @@
 package com.mytask.front.utils;
 
 public enum EPopup {
-    MEMBERS("members", "Gestion des membres", 420, 500);
+    MEMBERS("members", "Gestion des membres", 420, 500),
+    INVITE_CODE("invite_code", "Gestion des codes d'invitation", 420, 500);
 
     private String fxmlName;
     private String windowTitle;

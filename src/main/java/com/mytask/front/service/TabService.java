@@ -102,8 +102,11 @@ public class TabService {
         return editImageView;
     }
 
-
     public static void showMembers(Stage primaryStage) {
         PopupService.showMemberPopup(primaryStage);
+    }
+
+    public static void showInviteCode(Stage primaryStage) {
+        PopupService.showInviteCodePopup(primaryStage);
     }
 }

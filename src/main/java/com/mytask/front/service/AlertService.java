@@ -14,6 +14,13 @@ public class AlertService {
         return alert.showAndWait().orElse(ButtonType.CANCEL);
     }
 
+    public static void showAlertInfo(String title, String body) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(body);
+        alert.showAndWait();
+    }
+
     public static boolean isConfirmed(ButtonType buttonType) {
         return buttonType == ButtonType.OK;
     }
