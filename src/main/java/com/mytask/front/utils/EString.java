@@ -11,6 +11,7 @@ public enum EString {
     SIGN_UP("Inscription"),
     VIEW_MEMBERS("Voir les membres"),
     COPY_INVITE_CODE("Copier le code d'invitation"),
+    ADD_TASK("Ajouter une tâche"),
 
     // Labels
     MY_TABS("Mes tableaux"),
@@ -50,7 +51,6 @@ public enum EString {
     SIGN_UP_IN_PROGRESS("Inscription en cours..."),
     SHOW_TAB_LOG("Voir tableau"),
     CREATE_TAB_LOG("Créer tableau");
-
 
 
     private String string;

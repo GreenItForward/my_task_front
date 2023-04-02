@@ -45,3 +45,14 @@
     -fx-max-width: 10px;
     -fx-pref-width: 10px;
 }
+
+.add-task-field {
+    -fx-background-color: #f7f7f7;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+    -fx-min-width: 400px;
+    -fx-margin: 5px;
+}
