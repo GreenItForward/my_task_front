@@ -31,11 +31,7 @@ public class IndexController {
                 screenService = ScreenService.getInstance((Stage) bienvenue.getScene().getWindow());
             }
         });
-        if (UserService.getCurrentUser() != null) {
-            bienvenue.setText(EString.WELCOME.getString() + UserService.getCurrentUser().getPrenom());
-        } else {
-            bienvenue.setText("");
-        }
+        bienvenue.setText(EString.WELCOME.getString() + UserService.getCurrentUser().getPrenom());
 
         voir_tableau.setOnAction(event -> {
             System.out.println(EString.SHOW_TAB_LOG.getString());

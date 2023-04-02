@@ -5,13 +5,8 @@ import com.mytask.front.utils.User;
 import java.util.ArrayList;
 
 public class UserService {
-    private static User currentUser;
-    private static ArrayList<User> allUsers;
-
-    private UserService() {
-        currentUser = new User();
-        allUsers = new ArrayList<>();
-    }
+    private static User currentUser = new User();
+    private static final ArrayList<User> allUsers = new ArrayList<>();
 
     public static User getCurrentUser() {
         return currentUser;
