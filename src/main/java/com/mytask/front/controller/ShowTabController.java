@@ -20,6 +20,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import javafx.scene.control.TextField;
@@ -93,11 +95,11 @@ public class ShowTabController {
         TextField addDoneTaskField = createAddTaskField(doneTasksList);
 
         // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-        /*
+
         todoTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         inProgressTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         doneTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
-        */
+
 
         todoTasksList.getChildren().add(0, addTodoTaskField);
         inProgressTasksList.getChildren().add(0, addInProgressTaskField);
@@ -114,11 +116,21 @@ public class ShowTabController {
         // quand on appuie sur generateInviteCodeBtn on affiche un popup avec le code d'invitation
         generateInviteCodeBtn.setOnAction(event -> TabService.showInviteCode((Stage) generateInviteCodeBtn.getScene().getWindow()));
 
+        List<VBox> tasksByColumn = new ArrayList<>();
+
+        VBox todoVbox = (VBox) todoTasksList.getChildren().get(1);
+        VBox inProgressVbox = (VBox) inProgressTasksList.getChildren().get(1);
+        VBox doneVbox = (VBox) doneTasksList.getChildren().get(1);
+
+        tasksByColumn.add(todoVbox);
+        tasksByColumn.add(inProgressVbox);
+        tasksByColumn.add(doneVbox);
+
         // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
         showTablesBtn.setOnAction(event -> showTablesPopup());
         
         // quand on appuie sur exportToPdfBtn on exporte la table en pdf
-        exportToPdfBtn.setOnAction(event -> PdfExportService.exportToPdf());
+       exportToPdfBtn.setOnAction(event -> PdfExportService.exportToPdf(tasksByColumn));
 
     }
 
@@ -230,6 +242,7 @@ public class ShowTabController {
                 if (draggedTask != null && !Objects.equals(draggedTask.getParent(), column)) {
                     column.getChildren().add(draggedTask);
                     event.setDropCompleted(true);
+                    // TODO: update task status in list
                 } else {
                     event.setDropCompleted(false);
                 }
