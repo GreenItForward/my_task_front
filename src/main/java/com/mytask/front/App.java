@@ -16,13 +16,12 @@ public class App extends Application {
         TabService.init(stage);
 
         // Charger les écrans
-        screenService.loadScreen(EPage.CONNECTION, () -> new ConnectionController(screenService));
-        screenService.loadScreen(EPage.INSCRIPTION, () -> new InscriptionController(screenService));
-        screenService.loadScreen(EPage.INDEX, () -> new IndexController(screenService));
-        screenService.loadScreen(EPage.CREATE_TAB, () -> new CreateTabController(screenService));
-        screenService.loadScreen(EPage.SHOW_ALL_TAB, () -> new ShowAllTabController(screenService));
-        screenService.loadScreen(EPage.SHOW_TAB, () -> new ShowTabController(screenService));
-        screenService.loadScreen(EPage.TASK_DETAILS, () -> new TaskDetailsController(screenService));
+        screenService.loadScreen(EPage.CONNECTION, ConnectionController::new);
+        screenService.loadScreen(EPage.INSCRIPTION, InscriptionController::new);
+        screenService.loadScreen(EPage.INDEX, IndexController::new);
+        screenService.loadScreen(EPage.CREATE_TAB, CreateTabController::new);
+        screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
+        screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
 
         // Configurer la scène initiale
         EPage initialPage = EPage.CONNECTION;

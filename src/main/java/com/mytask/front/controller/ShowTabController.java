@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.service.PopupService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import com.mytask.front.service.TabService;
@@ -159,7 +160,8 @@ public class ShowTabController {
 
         ImageView editImageView = TabService.createEditImageView();
         editImageView.setOnMouseClicked(e -> {
-            System.out.println("Edit");
+            System.out.println("Edit task");
+            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow());
         });
         taskBox.setOnMouseEntered(e -> {
                 editImageView.setVisible(true);

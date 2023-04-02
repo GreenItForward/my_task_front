@@ -19,11 +19,10 @@ import java.util.Random;
 import static com.mytask.front.utils.EIcon.*;
 
 public class TabService {
-    private static ScreenService screenService;
 
     // Singleton
     public static void init(Stage primaryStage) {
-        screenService = ScreenService.getInstance(primaryStage);
+        ScreenService screenService = ScreenService.getInstance(primaryStage);
     }
 
     public static HBox createColorTags(Random random) {

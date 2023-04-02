@@ -1,8 +1,11 @@
 package com.mytask.front.service;
 
+import com.mytask.front.App;
 import com.mytask.front.utils.*;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -14,10 +17,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class PopupService {
 
@@ -138,4 +143,20 @@ public class PopupService {
 
         return inviteCodeContainer;
     }
+
+    public static void showTaskDetailPopup(Stage primaryStage) {
+        try {
+            Parent taskDetailContent = loadFXML(EPopup.TASK_DETAILS.getFxmlPath());
+            VBox taskDetailContainer = new VBox(taskDetailContent);
+            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, taskDetailContainer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Parent loadFXML(String fxmlPath) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(PopupService.class.getResource(fxmlPath));
+        return fxmlLoader.load();
+    }
+
 }
