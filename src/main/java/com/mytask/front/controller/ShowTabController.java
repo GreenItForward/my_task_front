@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import com.mytask.front.service.TabService;
+import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -12,6 +13,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -34,19 +37,20 @@ public class ShowTabController {
 
     private HBox draggedTask;
 
-
-    public ShowTabController(ScreenService screenService) {
-        this.screenService = screenService;
-    }
-
+    @FXML
     public void initialize() {
-        tablesLabel.setText("Mes tableaux");
-        backToMenuBtn.setText("Retour au menu");
-        generateInviteCodeBtn.setText("Générer un code d'invitation");
-        viewMembersBtn.setText("Voir les membres");
-        todoLabel.setText("TODO");
-        inProgressLabel.setText("IN PROGRESS");
-        doneLabel.setText("DONE");
+        backToMenuBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
+            }
+        });
+        tablesLabel.setText(EString.MY_TABS.getString());
+        backToMenuBtn.setText(EString.BACK_TO_MENU.getString());
+        generateInviteCodeBtn.setText(EString.GENERATE_INVITE_CODE.getString());
+        viewMembersBtn.setText(EString.VIEW_MEMBERS.getString());
+        todoLabel.setText(EString.TODO.getString());
+        inProgressLabel.setText(EString.IN_PROGRESS.getString());
+        doneLabel.setText(EString.DONE.getString());
 
         // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
         Random random = new Random();
@@ -61,6 +65,9 @@ public class ShowTabController {
         //TODO: Initialize the controller's logic here
         // ex: add EventHandlers to buttons, set initial data, etc.
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
+
+        // quand on appuie sur viewMemberBTn on affiche un popup avec la liste des membres de la table
+        viewMembersBtn.setOnAction(event -> TabService.showMembers((Stage) viewMembersBtn.getScene().getWindow()));
 
     }
 
