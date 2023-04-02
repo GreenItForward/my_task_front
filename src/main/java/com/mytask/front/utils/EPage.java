@@ -2,7 +2,7 @@ package com.mytask.front.utils;
 
 public enum EPage {
     SHOW_ALL_TAB("show_all_tab", "", 1280, 720),
-    SHOW_TAB("show_tab", "", 1880, 720),
+    SHOW_TAB("show_tab", "", 1280, 720),
     INDEX("index", "", 400, 400),
     CREATE_TAB("create_tab", "", 1280, 720),
     CONNECTION("connection", "", 1280, 720),

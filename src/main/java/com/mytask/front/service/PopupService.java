@@ -1,8 +1,11 @@
 package com.mytask.front.service;
 
+import com.mytask.front.App;
 import com.mytask.front.utils.*;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -14,10 +17,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class PopupService {
 
@@ -138,4 +143,35 @@ public class PopupService {
 
         return inviteCodeContainer;
     }
+
+    public static void showTaskDetailPopup(Stage primaryStage) {
+        try {
+            Parent taskDetailContent = loadFXML(EPopup.TASK_DETAILS.getFxmlPath());
+            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showTablesPopup() {
+        ListView<String> tablesPopupListView = new ListView<>();
+
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle(EString.MY_TABS.getString());
+
+        VBox popupVBox = new VBox(10);
+        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.getString()), tablesPopupListView);
+        popupVBox.setPadding(new Insets(10, 10, 10, 10));
+
+        Scene popupScene = new Scene(popupVBox, EPopup.TABLE_LIST.getWidth(), EPopup.TABLE_LIST.getHeight());
+        popupStage.setScene(popupScene);
+        popupStage.show();
+    }
+
+    private static Parent loadFXML(String fxmlPath) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(PopupService.class.getResource(fxmlPath));
+        return fxmlLoader.load();
+    }
+
 }
