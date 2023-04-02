@@ -31,7 +31,11 @@ public class IndexController {
                 screenService = ScreenService.getInstance((Stage) bienvenue.getScene().getWindow());
             }
         });
-        bienvenue.setText(EString.WELCOME.getString() + UserService.getCurrentUser().getPrenom());
+        if (UserService.getCurrentUser() != null) {
+            bienvenue.setText(EString.WELCOME.getString() + UserService.getCurrentUser().getPrenom());
+        } else {
+            bienvenue.setText("");
+        }
 
         voir_tableau.setOnAction(event -> {
             System.out.println(EString.SHOW_TAB_LOG.getString());
@@ -40,7 +44,7 @@ public class IndexController {
 
         creer_tableau.setOnAction(event -> {
             System.out.println(EString.CREATE_TAB_LOG.getString());
-           screenService.setScreen(EPage.CREATE_TAB);
+            screenService.setScreen(EPage.CREATE_TAB);
         });
 
         quitter.setOnAction(event -> Platform.exit());
