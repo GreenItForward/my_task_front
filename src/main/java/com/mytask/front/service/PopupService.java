@@ -18,27 +18,53 @@ import java.util.Objects;
 
 public class PopupService {
 
+
     private PopupService() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void setPopupScreen(Stage primaryStage, EPopup page) {
+    public static void setPopupScreen(Stage primaryStage, EPopup page, VBox content) {
         Stage popup = new Stage();
         ScrollPane scrollPane = new ScrollPane();
-        VBox userContainer = new VBox();
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         scrollPane.getStyleClass().add("scroll-pane");
-        userContainer.setSpacing(10);
-        userContainer.setStyle("-fx-padding: 10;");
+
         popup.initModality(Modality.WINDOW_MODAL);
         popup.initOwner(primaryStage);
         popup.setTitle(page.getWindowTitle());
 
-        Label label = new Label(EString.EDIT_USER_ROLE.getString());
+        Label label = new Label(page.getWindowTitle());
         label.getStyleClass().add("popup-title");
         Button closeButton = new Button(EString.CLOSE.getString());
         closeButton.setOnAction(e -> popup.close());
+
+        scrollPane.setContent(content);
+
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, scrollPane, closeButton);
+        layout.setAlignment(Pos.TOP_CENTER);
+
+        Scene popupScene = new Scene(layout, page.getWidth(), page.getHeight());
+        popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.STYLES.getCssPath())).toExternalForm());
+        popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.POPUP.getCssPath())).toExternalForm());
+
+        popup.setScene(popupScene);
+        popup.getIcons().add(new Image(Objects.requireNonNull(PopupService.class.getResourceAsStream(EIcon.GIF.getImagePath()))));
+        popup.centerOnScreen();
+        popup.setResizable(false);
+        popup.showAndWait();
+    }
+
+    public static void showMemberPopup(Stage primaryStage) {
+        VBox userContainer = createMemberContent();
+        setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
+    }
+
+    private static VBox createMemberContent() {
+        VBox userContainer = new VBox();
+        userContainer.setSpacing(10);
+        userContainer.setStyle("-fx-padding: 10;");
 
         // Exemple de données utilisateur
         List<String[]> users = Arrays.asList(
@@ -79,21 +105,8 @@ public class PopupService {
         }
 
         gridPane.add(userContainer, 0, 0, 3, 1);
-        scrollPane.setContent(gridPane);
 
-        VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, scrollPane, closeButton);
-        layout.setAlignment(Pos.TOP_CENTER);
-
-        Scene popupScene = new Scene(layout, EPopup.MEMBERS.getWidth(), EPopup.MEMBERS.getHeight());
-        popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.STYLES.getCssPath())).toExternalForm());
-        popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.POPUP.getCssPath())).toExternalForm());
-
-        popup.setScene(popupScene);
-        popup.getIcons().add(new Image(Objects.requireNonNull(PopupService.class.getResourceAsStream(EIcon.GIF.getImagePath()))));
-        popup.centerOnScreen();
-        popup.setResizable(false);
-        popup.showAndWait();
+        return userContainer;
     }
 
 }
