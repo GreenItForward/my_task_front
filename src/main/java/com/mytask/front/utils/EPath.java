@@ -3,7 +3,8 @@ package com.mytask.front.utils;
 public enum EPath {
     FXML("/com/mytask/front/view/"),
     CSS("/com/mytask/front/style/"),
-    ICONS("/com/mytask/front/icons/");
+    ICONS("/com/mytask/front/icons/"),
+    PDF("out/pdf/");
 
     private String path;
 

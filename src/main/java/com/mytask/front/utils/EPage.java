@@ -28,7 +28,7 @@ public enum EPage {
 
     public String getWindowTitle() {
         if (windowTitle.isEmpty()) {
-            return "MyTask - GreenItForward";
+            return EString.getCompleteNameApp();
         }
 
         return windowTitle;

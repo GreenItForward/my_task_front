@@ -5,6 +5,7 @@ import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import com.mytask.front.service.TabService;
 import com.mytask.front.utils.EString;
+import com.mytask.front.utils.PdfExportService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -42,6 +43,8 @@ public class ShowTabController {
     private Button generateInviteCodeBtn;
     @FXML
     private Button viewMembersBtn;
+    @FXML
+    private Button exportToPdfBtn;
     
     @FXML
     private VBox todoTasksList;
@@ -83,6 +86,7 @@ public class ShowTabController {
         inProgressLabel.setText(EString.IN_PROGRESS.getString());
         doneLabel.setText(EString.DONE.getString());
         showTablesBtn.setText(EString.SHOW_TABLES.getString());
+        exportToPdfBtn.setText(EString.EXPORT_TO_PDF.getString());
 
         TextField addTodoTaskField = createAddTaskField(todoTasksList);
         TextField addInProgressTaskField = createAddTaskField(inProgressTasksList);
@@ -112,6 +116,10 @@ public class ShowTabController {
 
         // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
         showTablesBtn.setOnAction(event -> showTablesPopup());
+        
+        // quand on appuie sur exportToPdfBtn on exporte la table en pdf
+        exportToPdfBtn.setOnAction(event -> PdfExportService.exportToPdf());
+
     }
 
 
