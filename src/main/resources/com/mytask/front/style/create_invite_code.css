@@ -1,0 +1,9 @@
+.invite-code {
+    fx-text-fill:#3498db;
+    fx-font-size: 16px;
+    fx-font-weight: bold;
+    fx-padding: 10px;
+    fx-border-radius: 5px;
+    fx-background-radius: 5px;
+    fx-background-color: #f7f7f7;
+}

@@ -6,6 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -15,6 +17,7 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class PopupService {
 
@@ -59,6 +62,12 @@ public class PopupService {
     public static void showMemberPopup(Stage primaryStage) {
         VBox userContainer = createMemberContent();
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
+    }
+
+    public static void showInviteCodePopup(Stage primaryStage) {
+        VBox inviteCodeContainer = createInviteCodeContent();
+
+        setPopupScreen(primaryStage, EPopup.INVITE_CODE, inviteCodeContainer);
     }
 
     private static VBox createMemberContent() {
@@ -109,4 +118,24 @@ public class PopupService {
         return userContainer;
     }
 
+    private static VBox createInviteCodeContent() {
+        VBox inviteCodeContainer = new VBox();
+        HBox inviteCodeBox = new HBox(10);
+        HBox buttonBox = new HBox(10);
+        inviteCodeContainer.setSpacing(10);
+        inviteCodeContainer.setStyle("-fx-padding: 10;");
+        Label inviteCodeLabel = new Label(EString.INVITE_CODE.getString());
+        Label inviteLabel = new Label("");
+        Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.getString());
+        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(AppUtils.generateRandomInviteCode()));
+
+        Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.getString());
+        copyInviteCodeButton.setOnAction(e -> AppUtils.copyToClipboard(inviteLabel));
+
+        buttonBox.getChildren().addAll(generateInviteCodeButton, copyInviteCodeButton);
+        inviteCodeBox.getChildren().addAll(inviteCodeLabel, inviteLabel);
+        inviteCodeContainer.getChildren().addAll(inviteCodeBox, buttonBox);
+
+        return inviteCodeContainer;
+    }
 }

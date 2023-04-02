@@ -69,6 +69,9 @@ public class ShowTabController {
         // quand on appuie sur viewMemberBTn on affiche un popup avec la liste des membres de la table
         viewMembersBtn.setOnAction(event -> TabService.showMembers((Stage) viewMembersBtn.getScene().getWindow()));
 
+        // quand on appuie sur generateInviteCodeBtn on affiche un popup avec le code d'invitation
+        generateInviteCodeBtn.setOnAction(event -> TabService.showInviteCode((Stage) generateInviteCodeBtn.getScene().getWindow()));
+
     }
 
 
