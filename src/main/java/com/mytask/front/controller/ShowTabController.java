@@ -8,6 +8,8 @@ import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -15,22 +17,19 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Random;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
+import static com.mytask.front.service.PopupService.showTablesPopup;
 
 public class ShowTabController {
 
     ScreenService screenService;
 
     @FXML
-    private Label tablesLabel;
+    private Label tableLabel;
     @FXML
     private Label todoLabel;
     @FXML
@@ -58,6 +57,9 @@ public class ShowTabController {
     @FXML
     private ScrollPane doneTask;
 
+    @FXML
+    private Button showTablesBtn;
+
     private HBox draggedTask;
     private static SecureRandom rand;
 
@@ -73,13 +75,14 @@ public class ShowTabController {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
             }
         });
-        tablesLabel.setText(EString.MY_TABS.getString());
+        tableLabel.setText(EString.MY_TABS.getString());
         backToMenuBtn.setText(EString.BACK_TO_MENU.getString());
         generateInviteCodeBtn.setText(EString.GENERATE_INVITE_CODE.getString());
         viewMembersBtn.setText(EString.VIEW_MEMBERS.getString());
         todoLabel.setText(EString.TODO.getString());
         inProgressLabel.setText(EString.IN_PROGRESS.getString());
         doneLabel.setText(EString.DONE.getString());
+        showTablesBtn.setText(EString.SHOW_TABLES.getString());
 
         TextField addTodoTaskField = createAddTaskField(todoTasksList);
         TextField addInProgressTaskField = createAddTaskField(inProgressTasksList);
@@ -107,7 +110,10 @@ public class ShowTabController {
         // quand on appuie sur generateInviteCodeBtn on affiche un popup avec le code d'invitation
         generateInviteCodeBtn.setOnAction(event -> TabService.showInviteCode((Stage) generateInviteCodeBtn.getScene().getWindow()));
 
+        // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
+        showTablesBtn.setOnAction(event -> showTablesPopup());
     }
+
 
     private TextField createAddTaskField(VBox taskList) {
         TextField addTaskField = new TextField(EString.ADD_TASK.getString());

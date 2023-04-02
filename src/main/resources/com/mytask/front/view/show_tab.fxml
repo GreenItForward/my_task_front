@@ -17,29 +17,22 @@
         <URL value="@../style/styles.css" />
     </stylesheets>
     <HBox spacing="20">
-        <VBox prefWidth="400.0" spacing="10.0">
-            <Label fx:id="tablesLabel" styleClass="label" />
-            <ScrollPane>
-                <ListView fx:id="tablesListView" />
-            </ScrollPane>
-            <Button fx:id="backToMenuBtn" />
-            <HBox.margin>
-                <Insets right="100.0" />
-            </HBox.margin>
-        </VBox>
-
         <VBox fx:id="tableInfoVBox" prefHeight="2607.0" prefWidth="488.0" spacing="10">
+            <Label fx:id="tableLabel" styleClass="label" />
+
             <HBox spacing="10">
                 <Button fx:id="generateInviteCodeBtn" />
                 <Button fx:id="viewMembersBtn" />
+                <Button fx:id="showTablesBtn" />
+                <Button fx:id="backToMenuBtn" />
             </HBox>
-            <HBox>
+            <HBox spacing="10">
                 <Label fx:id="tableTitleLabel" />
                 <Label fx:id="tableShareCodeLabel" />
             </HBox>
             <Label fx:id="tableDescriptionLabel" />
 
-            <HBox>
+            <HBox spacing="15">
                 <VBox fx:id="todoColumn" minWidth="400" maxWidth="500" prefWidth="400" spacing="10">
                     <Label fx:id="todoLabel" styleClass="label" />
                     <StackPane fx:id="todoTaskParent">

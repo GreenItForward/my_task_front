@@ -147,11 +147,26 @@ public class PopupService {
     public static void showTaskDetailPopup(Stage primaryStage) {
         try {
             Parent taskDetailContent = loadFXML(EPopup.TASK_DETAILS.getFxmlPath());
-            VBox taskDetailContainer = new VBox(taskDetailContent);
-            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, taskDetailContainer);
+            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void showTablesPopup() {
+        ListView<String> tablesPopupListView = new ListView<>();
+
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle(EString.MY_TABS.getString());
+
+        VBox popupVBox = new VBox(10);
+        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.getString()), tablesPopupListView);
+        popupVBox.setPadding(new Insets(10, 10, 10, 10));
+
+        Scene popupScene = new Scene(popupVBox, EPopup.TABLE_LIST.getWidth(), EPopup.TABLE_LIST.getHeight());
+        popupStage.setScene(popupScene);
+        popupStage.show();
     }
 
     private static Parent loadFXML(String fxmlPath) throws IOException {
