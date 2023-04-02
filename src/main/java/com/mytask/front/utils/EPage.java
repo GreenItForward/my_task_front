@@ -1,19 +1,20 @@
 package com.mytask.front.utils;
 
 public enum EPage {
-    SHOW_ALL_TAB("show_all_tab", "MyTask - GreenItForward", 1280, 720),
-    SHOW_TAB("show_tab", "MyTask - GreenItForward", 1880, 720),
-    INDEX("index", "MyTask - GreenItForward", 400, 400),
-    CREATE_TAB("create_tab", "MyTask - GreenItForward", 1280, 720),
-    CONNECTION("connection", "MyTask - GreenItForward", 1280, 720),
-    INSCRIPTION("inscription", "MyTask - GreenItForward", 1280, 720),
-    TASK_DETAILS("task_details", "MyTask - GreenItForward", 500, 500);
+    SHOW_ALL_TAB("show_all_tab", "", 1280, 720),
+    SHOW_TAB("show_tab", "", 1880, 720),
+    INDEX("index", "", 400, 400),
+    CREATE_TAB("create_tab", "", 1280, 720),
+    CONNECTION("connection", "", 1280, 720),
+    INSCRIPTION("inscription", "", 1280, 720),
+    TASK_DETAILS("task_details", "", 500, 500);
 
 
     private String fxmlName;
     private String windowTitle;
     private int width;
     private int height;
+
 
     EPage(String fxmlName, String windowTitle, int width, int height) {
         this.fxmlName = fxmlName;
@@ -23,10 +24,14 @@ public enum EPage {
     }
 
     public String getFxmlName() {
-        return fxmlName;
+        return fxmlName + ".fxml";
     }
 
     public String getWindowTitle() {
+        if (windowTitle.isEmpty()) {
+            return "MyTask - GreenItForward";
+        }
+
         return windowTitle;
     }
 
@@ -36,5 +41,9 @@ public enum EPage {
 
     public int getHeight() {
         return height;
+    }
+
+    private void setWindowTitle(String windowTitle) {
+        this.windowTitle = windowTitle;
     }
 }

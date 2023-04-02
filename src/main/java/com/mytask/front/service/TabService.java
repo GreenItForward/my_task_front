@@ -1,5 +1,7 @@
 package com.mytask.front.service;
 
+import com.mytask.front.utils.EPage;
+import com.mytask.front.utils.EPopup;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,12 +12,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.Random;
 
 import static com.mytask.front.utils.EIcon.*;
 
 public class TabService {
+    private static ScreenService screenService;
+
+    // Singleton
+    public static void init(Stage primaryStage) {
+        screenService = ScreenService.getInstance(primaryStage);
+    }
+
     public static HBox createColorTags(Random random) {
         Color color1 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
         Color color2 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
@@ -92,5 +102,11 @@ public class TabService {
         return editImageView;
     }
 
+    public static void showMembers(Stage primaryStage) {
+        PopupService.showMemberPopup(primaryStage);
+    }
 
+    public static void showInviteCode(Stage primaryStage) {
+        PopupService.showInviteCodePopup(primaryStage);
+    }
 }

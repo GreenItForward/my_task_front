@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import com.mytask.front.service.TabService;
+import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -12,65 +13,145 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Random;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TextField;
 
 public class ShowTabController {
 
     ScreenService screenService;
 
     @FXML
-    private Label tablesLabel, todoLabel, inProgressLabel, doneLabel;
+    private Label tablesLabel;
     @FXML
-    private ListView<?> tablesListView;
+    private Label todoLabel;
     @FXML
-    private Button backToMenuBtn, generateInviteCodeBtn, viewMembersBtn;
+    private Label inProgressLabel;
+    @FXML
+    private Label doneLabel;
+    @FXML
+    private Button backToMenuBtn;
+    @FXML
+    private Button generateInviteCodeBtn;
+    @FXML
+    private Button viewMembersBtn;
     
     @FXML
-    private VBox todoTasksList, inProgressTasksList, doneTasksList;
+    private VBox todoTasksList;
+    @FXML
+    private VBox inProgressTasksList;
+    @FXML
+    private VBox doneTasksList;
 
     @FXML
-    private ScrollPane todoTask, inProgressTask, doneTask;
+    private ScrollPane todoTask;
+    @FXML
+    private ScrollPane inProgressTask;
+    @FXML
+    private ScrollPane doneTask;
 
     private HBox draggedTask;
+    private static SecureRandom rand;
 
-
-    public ShowTabController(ScreenService screenService) {
-        this.screenService = screenService;
+    static {
+        try { rand = SecureRandom.getInstanceStrong(); }
+        catch (NoSuchAlgorithmException e) { rand = new SecureRandom(); }
     }
 
+    @FXML
     public void initialize() {
-        tablesLabel.setText("Mes tableaux");
-        backToMenuBtn.setText("Retour au menu");
-        generateInviteCodeBtn.setText("Générer un code d'invitation");
-        viewMembersBtn.setText("Voir les membres");
-        todoLabel.setText("TODO");
-        inProgressLabel.setText("IN PROGRESS");
-        doneLabel.setText("DONE");
+        backToMenuBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
+            }
+        });
+        tablesLabel.setText(EString.MY_TABS.getString());
+        backToMenuBtn.setText(EString.BACK_TO_MENU.getString());
+        generateInviteCodeBtn.setText(EString.GENERATE_INVITE_CODE.getString());
+        viewMembersBtn.setText(EString.VIEW_MEMBERS.getString());
+        todoLabel.setText(EString.TODO.getString());
+        inProgressLabel.setText(EString.IN_PROGRESS.getString());
+        doneLabel.setText(EString.DONE.getString());
+
+        TextField addTodoTaskField = createAddTaskField(todoTasksList);
+        TextField addInProgressTaskField = createAddTaskField(inProgressTasksList);
+        TextField addDoneTaskField = createAddTaskField(doneTasksList);
 
         // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-        Random random = new Random();
-        for (int i = 0; i < 5; i++) {
-            todoTasksList.getChildren().add(createRandomTask(random));
-            inProgressTasksList.getChildren().add(createRandomTask(random));
-            doneTasksList.getChildren().add(createRandomTask(random));
-        }
+        /*
+        todoTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
+        inProgressTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
+        doneTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
+        */
 
+        todoTasksList.getChildren().add(0, addTodoTaskField);
+        inProgressTasksList.getChildren().add(0, addInProgressTaskField);
+        doneTasksList.getChildren().add(0, addDoneTaskField);
         setupDragAndDrop();
 
         //TODO: Initialize the controller's logic here
         // ex: add EventHandlers to buttons, set initial data, etc.
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
 
+        // quand on appuie sur viewMemberBTn on affiche un popup avec la liste des membres de la table
+        viewMembersBtn.setOnAction(event -> TabService.showMembers((Stage) viewMembersBtn.getScene().getWindow()));
+
+        // quand on appuie sur generateInviteCodeBtn on affiche un popup avec le code d'invitation
+        generateInviteCodeBtn.setOnAction(event -> TabService.showInviteCode((Stage) generateInviteCodeBtn.getScene().getWindow()));
+
+    }
+
+    private TextField createAddTaskField(VBox taskList) {
+        TextField addTaskField = new TextField(EString.ADD_TASK.getString());
+        addTaskField.getStyleClass().add("add-task-field");
+
+        // Rendre le champ non modifiable jusqu'à ce que l'utilisateur clique dessus
+        addTaskField.setEditable(false);
+        addTaskField.setOnMouseClicked(event -> {
+            if (!addTaskField.isEditable()) {
+                addTaskField.setEditable(true);
+                addTaskField.setText(""); // Vider le texte lorsqu'il est cliqué
+            }
+        });
+
+        // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
+        addTaskField.setOnAction(event -> {
+            String taskText = addTaskField.getText();
+            if (!taskText.isEmpty()) {
+                HBox newTask = createRandomTask(rand, taskText);
+                taskList.getChildren().add(taskList.getChildren().size(), newTask);
+
+                // on remet le champ à son état initial
+                addTaskField.setEditable(false);
+                addTaskField.setText(EString.ADD_TASK.getString());
+            }
+        });
+
+        // quand l'utilisateur clique en dehors du champ, on remet le champ à son état initial
+        addTaskField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (Boolean.TRUE.equals(!newValue) && addTaskField.getText().isEmpty()) {
+                addTaskField.setText(EString.ADD_TASK.getString());
+                addTaskField.setEditable(false);
+            }
+        });
+
+        return addTaskField;
     }
 
 
     // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-    private HBox createRandomTask(Random random) {
+    private HBox createRandomTask(Random random, String title) {
         HBox taskBox = new HBox(10);
 
         HBox colorTags = TabService.createColorTags(random);
-        Label titleLabel = TabService.createTitleLabel(random);
+        Label titleLabel = title != null ? new Label(title) : TabService.createTitleLabel(random);
         HBox deadlineBox = TabService.createDeadlineBox(random);
         TextField assignedToField = TabService.createAssignedToField(random);
 
@@ -103,6 +184,18 @@ public class ShowTabController {
         return taskBox;
     }
 
+    private VBox createRandomTasksRecursively(Random random, int nbTasks) {
+        if (nbTasks <= 0) {
+            return new VBox();
+        }
+
+        HBox taskBox = createRandomTask(random, null);
+        VBox tasksContainer = createRandomTasksRecursively(random, nbTasks - 1);
+        tasksContainer.getChildren().add(taskBox);
+        VBox.setMargin(taskBox, new Insets(10, 0, 0, 0));
+
+        return tasksContainer;
+    }
 
     private void setupDragAndDrop() {
         ScrollPane[] scrollPanes = new ScrollPane[]{todoTask, inProgressTask, doneTask};

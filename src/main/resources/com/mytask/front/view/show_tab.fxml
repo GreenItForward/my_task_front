@@ -8,7 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import java.net.URL?>
+
 <VBox prefHeight="866.0" prefWidth="1268.0" spacing="20" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mytask.front.controller.ShowTabController">
     <stylesheets>
         <URL value="@../style/show_tab.css" />
@@ -40,29 +42,36 @@
             <HBox>
                 <VBox fx:id="todoColumn" minWidth="400" maxWidth="500" prefWidth="400" spacing="10">
                     <Label fx:id="todoLabel" styleClass="label" />
-                    <ScrollPane fx:id="todoTask" prefHeight="500.0" prefWidth="250.0" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
-                        <VBox fx:id="todoTasksList" />
-                    </ScrollPane>
+                    <StackPane fx:id="todoTaskParent">
+                        <ScrollPane fx:id="todoTask" prefHeight="500.0" prefWidth="250.0" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+                            <VBox fx:id="todoTasksList" />
+                        </ScrollPane>
+                    </StackPane>
                 </VBox>
 
                 <Region styleClass="columns-separator" />
 
                 <VBox fx:id="inProgressColumn" minWidth="400" maxWidth="500" prefWidth="400" spacing="10">
                     <Label fx:id="inProgressLabel" styleClass="label" />
-                    <ScrollPane fx:id="inProgressTask" prefHeight="500.0" prefWidth="250.0" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
-                        <VBox fx:id="inProgressTasksList" />
-                    </ScrollPane>
+                    <StackPane fx:id="inProgressTaskParent">
+                        <ScrollPane fx:id="inProgressTask" prefHeight="500.0" prefWidth="250.0" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+                            <VBox fx:id="inProgressTasksList" />
+                        </ScrollPane>
+                    </StackPane>
                 </VBox>
 
                 <Region styleClass="columns-separator" />
 
                 <VBox fx:id="doneColumn" minWidth="400" maxWidth="500" prefWidth="400" spacing="10">
                     <Label fx:id="doneLabel" styleClass="label" />
-                    <ScrollPane fx:id="doneTask" prefHeight="500.0" prefWidth="250.0" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+                    <StackPane fx:id="doneTaskParent">
+                        <ScrollPane fx:id="doneTask" prefHeight="500.0" prefWidth="250.0" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
                         <VBox fx:id="doneTasksList" />
                     </ScrollPane>
+                </StackPane>
                 </VBox>
             </HBox>
         </VBox>
     </HBox>
 </VBox>
+
