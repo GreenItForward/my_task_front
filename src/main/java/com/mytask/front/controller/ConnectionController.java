@@ -14,11 +14,10 @@ import javafx.stage.Stage;
 
 public class ConnectionController {
     @FXML
-    private TextField email, nom, prenom, password;
+    private TextField email, password;
     @FXML
     private Button sinscrire, seconnecter;
     private ScreenService screenService;
-    private User user;
 
     @FXML
     public void initialize() {
@@ -34,9 +33,9 @@ public class ConnectionController {
         });
 
         seconnecter.setOnAction(event -> {
-            user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
             if(UserService.connectUser(email.getText(), password.getText())) {
                 System.out.println(EString.SIGN_IN_IN_PROGRESS.getString());
+                screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
             }
         });

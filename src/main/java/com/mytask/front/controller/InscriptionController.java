@@ -16,7 +16,6 @@ public class InscriptionController {
     @FXML
     private Button sinscrire, seconnecter;
     private ScreenService screenService;
-    private User user;
 
     @FXML
     public void initialize() {
@@ -31,9 +30,10 @@ public class InscriptionController {
         });
 
         sinscrire.setOnAction(event -> {
-            user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
+            User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
             if(UserService.signUpUser(user)) {
                 System.out.println(EString.SIGN_UP_IN_PROGRESS.getString());
+                screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
             }
         });

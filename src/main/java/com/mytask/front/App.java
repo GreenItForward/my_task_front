@@ -15,10 +15,9 @@ public class App extends Application {
         ScreenService screenService = ScreenService.getInstance(stage);
         TabService.init(stage);
 
-        // Charger les écrans
+        // Charger les écrans (sauf index qui est chargé pendant la connexion)
         screenService.loadScreen(EPage.CONNECTION, ConnectionController::new);
         screenService.loadScreen(EPage.INSCRIPTION, InscriptionController::new);
-        screenService.loadScreen(EPage.INDEX, IndexController::new);
         screenService.loadScreen(EPage.CREATE_TAB, CreateTabController::new);
         screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
         screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);

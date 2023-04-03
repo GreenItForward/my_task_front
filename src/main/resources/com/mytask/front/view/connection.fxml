@@ -65,12 +65,8 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
                         <TextField fx:id="email" GridPane.columnIndex="3" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nom" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Prenom" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                        <TextField fx:id="nom" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <TextField fx:id="prenom" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <TextField fx:id="password" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <TextField fx:id="password" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <GridPane GridPane.rowIndex="2">
