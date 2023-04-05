@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.model.Task;
 import com.mytask.front.service.PopupService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
@@ -20,12 +21,14 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import javafx.scene.control.TextField;
 import static com.mytask.front.service.PopupService.showTablesPopup;
+import static com.mytask.front.service.TabService.createTitleLabel;
 
 public class ShowTabController {
 
@@ -152,7 +155,7 @@ public class ShowTabController {
         addTaskField.setOnAction(event -> {
             String taskText = addTaskField.getText();
             if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.getString())) {
-                HBox newTask = createRandomTask(rand, taskText);
+                HBox newTask = createRandomTask(new Task(), taskText);
                 taskList.getChildren().add(taskList.getChildren().size(), newTask);
 
                 // on remet le champ à son état initial
@@ -174,21 +177,28 @@ public class ShowTabController {
 
 
     // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-    private HBox createRandomTask(Random random, String title) {
+    private HBox createRandomTask(Task task, String title) {
         HBox taskBox = new HBox(10);
+        Random random = new Random();
 
         HBox colorTags = TabService.createColorTags(random);
-        Label titleLabel = title != null ? new Label(title) : TabService.createTitleLabel(random);
-        HBox deadlineBox = TabService.createDeadlineBox(random);
-        TextField assignedToField = TabService.createAssignedToField(random);
+        task.setTitle(title);
+        task.setDeadline(LocalDate.now().plusDays(random.nextInt(100)));
 
+        Label titleLabel = new Label(title);
+        titleLabel.textProperty().bind(task.titleProperty());
+        HBox deadlineBox = TabService.createDeadlineBox(task);
+
+        TextField assignedToField = TabService.createAssignedToField(random);
+        assignedToField.textProperty().bindBidirectional(task.assignedToProperty());
         VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
         ImageView editImageView = TabService.createEditImageView();
         editImageView.setOnMouseClicked(e -> {
             System.out.println("Edit task");
-            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow());
+            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), task);
         });
+
         taskBox.setOnMouseEntered(e -> {
                 editImageView.setVisible(true);
                 taskBox.setCursor(Cursor.HAND);
@@ -217,7 +227,7 @@ public class ShowTabController {
             return new VBox();
         }
 
-        HBox taskBox = createRandomTask(random, null);
+        HBox taskBox = createRandomTask(new Task(), "Task " + nbTasks);
         VBox tasksContainer = createRandomTasksRecursively(random, nbTasks - 1);
         tasksContainer.getChildren().add(taskBox);
         VBox.setMargin(taskBox, new Insets(10, 0, 0, 0));
@@ -274,6 +284,4 @@ public class ShowTabController {
             event.consume();
         });
     }
-
-
 }

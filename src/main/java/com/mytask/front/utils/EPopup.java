@@ -1,5 +1,7 @@
 package com.mytask.front.utils;
 
+import java.net.URL;
+
 public enum EPopup {
     MEMBERS("members", "Gestion des membres", 420, 500),
     INVITE_CODE("invite_code", "Gestion des codes d'invitation", 420, 500),
@@ -34,7 +36,7 @@ public enum EPopup {
         return height;
     }
 
-    public String getFxmlPath() {
-        return EPath.FXML.getPath() + fxmlName + ".fxml";
+    public URL getFxmlPath() {
+        return getClass().getResource(EPath.FXML.getPath() + fxmlName + ".fxml");
     }
 }

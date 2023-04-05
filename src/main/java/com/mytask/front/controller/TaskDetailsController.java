@@ -1,45 +1,60 @@
 package com.mytask.front.controller;
-import com.mytask.front.utils.EPage;
+import com.mytask.front.model.Task;
 import com.mytask.front.service.ScreenService;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class TaskDetailsController {
     @FXML
-    private Text bienvenue;
+    private TextField titleTextField;
+    @FXML
+    private TextArea detailsTextArea;
 
     @FXML
-    private Button voir_tableau;
+    private DatePicker deadlineDatePicker;
 
-    @FXML
-    private Button creer_tableau;
+    private ScreenService screenService;
+    private Task task;
 
-    @FXML
-    private Button quitter;
 
-    private final ScreenService screenService;
-
-    public TaskDetailsController(ScreenService screenService) {
-        this.screenService = screenService;
+    public TaskDetailsController() {
     }
 
-    public void initialize() {
-        bienvenue.setText("Bienvenue Ronan");
-
-        voir_tableau.setOnAction(event -> {
-            System.out.println("Voir tableau");
-            screenService.setScreen(EPage.SHOW_ALL_TAB);
+    @FXML
+    private void initialize() {
+        this.titleTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.setTitle(newValue);
+            }
         });
 
-        creer_tableau.setOnAction(event -> {
-            System.out.println("Creer tableau");
-            screenService.setScreen(EPage.CREATE_TAB);
+        this.detailsTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.setDetails(newValue);
+            }
         });
 
-        quitter.setOnAction(event -> {
-            Platform.exit();
+        deadlineDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.getdeadlineDatePicker().setValue(newValue);
+            }
         });
     }
+
+    @FXML
+    public void setTask(Task task) {
+        this.task = task;
+        updateFields();
+    }
+
+    private void updateFields() {
+        if (task != null) {
+            titleTextField.setText(task.getTitle());
+            detailsTextArea.setText(task.getDetails());
+            deadlineDatePicker.setValue(task.getDeadline());
+        }
+    }
+
 }

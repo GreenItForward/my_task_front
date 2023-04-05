@@ -37,6 +37,9 @@ public enum EString {
     NAME_APP("MyTask"),
     NAME_ORGANIZATION("GreenItForward"),
 
+    // Formatters
+    DATE_FORMAT("yyyy-MM-dd"),
+
 
     // Roles and actions
     ADMINISTRATEUR("Administrateur"),

@@ -1,6 +1,7 @@
 package com.mytask.front.service;
 
-import com.mytask.front.App;
+import com.mytask.front.controller.TaskDetailsController;
+import com.mytask.front.model.Task;
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -9,8 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,11 +17,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
-import java.util.function.Supplier;
 
 public class PopupService {
 
@@ -144,14 +142,21 @@ public class PopupService {
         return inviteCodeContainer;
     }
 
-    public static void showTaskDetailPopup(Stage primaryStage) {
+    public static void showTaskDetailPopup(Stage primaryStage, Task task) {
         try {
-            Parent taskDetailContent = loadFXML(EPopup.TASK_DETAILS.getFxmlPath());
+            URL fxmlUrl = EPopup.TASK_DETAILS.getFxmlPath();
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent taskDetailContent = loader.load();
+
+            TaskDetailsController taskDetailController = loader.getController();
+            taskDetailController.setTask(task);
+
             setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public static void showTablesPopup() {
         ListView<String> tablesPopupListView = new ListView<>();
