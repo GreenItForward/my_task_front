@@ -7,7 +7,6 @@ import com.mytask.front.utils.EPath;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -31,6 +30,7 @@ public class ScreenService {
     // Singleton
     public static ScreenService getInstance(Stage stage) {
         if (instance == null) {
+            instance = new ScreenService(stage);
         }
         return instance;
     }

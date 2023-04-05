@@ -1,7 +1,5 @@
 package com.mytask.front.service;
 
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EPopup;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,11 +17,10 @@ import java.util.Random;
 import static com.mytask.front.utils.EIcon.*;
 
 public class TabService {
-    private static ScreenService screenService;
 
     // Singleton
     public static void init(Stage primaryStage) {
-        screenService = ScreenService.getInstance(primaryStage);
+        ScreenService screenService = ScreenService.getInstance(primaryStage);
     }
 
     public static HBox createColorTags(Random random) {
@@ -111,7 +108,4 @@ public class TabService {
         PopupService.showInviteCodePopup(primaryStage);
     }
 
-    public static void showMembers(Stage primaryStage) {
-        PopupService.setPopupScreen(primaryStage, EPopup.MEMBERS);
-    }
 }
