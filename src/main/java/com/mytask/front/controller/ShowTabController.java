@@ -151,7 +151,7 @@ public class ShowTabController {
         // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
         addTaskField.setOnAction(event -> {
             String taskText = addTaskField.getText();
-            if (!taskText.isEmpty()) {
+            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.getString())) {
                 HBox newTask = createRandomTask(rand, taskText);
                 taskList.getChildren().add(taskList.getChildren().size(), newTask);
 
