@@ -28,7 +28,7 @@ public class ConnectionController {
         });
 
         sinscrire.setOnAction(event -> {
-            System.out.println(EString.SIGN_UP);
+            System.out.println(EString.SIGN_UP.getString());
             screenService.setScreen(EPage.INSCRIPTION);
         });
 
