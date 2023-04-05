@@ -36,6 +36,7 @@ public class TabService {
         for (Color color : new Color[]{color1, color2}) {
             Rectangle colorRect = color.equals(color1) ? colorRect1 : colorRect2;
             String labelName = "Couleur: " + color.toString().substring(2, color.toString().length() - 2) + ", Titre: \"" + (random.nextInt(100) + 1) + "\"";
+            colorRect.setId(labelName.substring(labelName.indexOf("e:")+2, labelName.length() - 1).replace("\"", ""));
             Tooltip tooltip = new Tooltip(labelName);
             tooltip.setStyle(tooltipStyle);
             Tooltip.install(colorRect, tooltip);
@@ -47,7 +48,7 @@ public class TabService {
             tooltip.setHideDelay(Duration.seconds(0.3));
             tooltip.setShowDelay(Duration.seconds(0.2));
         }
-
+        
         return new HBox(5, colorRect1, colorRect2);
     }
 
@@ -108,4 +109,5 @@ public class TabService {
     public static void showInviteCode(Stage primaryStage) {
         PopupService.showInviteCodePopup(primaryStage);
     }
+
 }
