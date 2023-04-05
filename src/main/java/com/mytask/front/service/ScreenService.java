@@ -60,7 +60,6 @@ public class ScreenService {
         }
     }
 
-
     public void configureInitialScreen(EPage initialPage) {
         stage.setTitle(initialPage.getWindowTitle());
         stage.setScene(new Scene((Parent) this.screens.get(initialPage), initialPage.getWidth(), initialPage.getHeight()));

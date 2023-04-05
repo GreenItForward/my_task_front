@@ -1,12 +1,15 @@
 package com.mytask.front.controller;
 
 import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.UserService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class InscriptionController {
@@ -14,8 +17,9 @@ public class InscriptionController {
     private TextField email, nom, prenom, password;
     @FXML
     private Button sinscrire, seconnecter;
+    @FXML
+    private Label error;
     private ScreenService screenService;
-    private User user;
 
     @FXML
     public void initialize() {
@@ -30,9 +34,16 @@ public class InscriptionController {
         });
 
         sinscrire.setOnAction(event -> {
-            user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
-            System.out.println(EString.SIGN_UP_IN_PROGRESS.getString());
-            screenService.setScreen(EPage.INDEX);
+            User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
+            String res = UserService.signUpUser(user);
+            if(res.equals("ok")) {
+                System.out.println(EString.SIGN_UP_IN_PROGRESS.getString());
+                screenService.loadScreen(EPage.INDEX, IndexController::new);
+                screenService.setScreen(EPage.INDEX);
+            }
+            else {
+                error.setText(res);
+            }
         });
     }
 }

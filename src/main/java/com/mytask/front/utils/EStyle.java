@@ -5,7 +5,8 @@ public enum EStyle {
     SHOW_TAB("show_tab.css"),
     INDEX("index.css"),
     POPUP("popup.css"),
-    CREATE_INVITE_CODE("create_invite_code.css");
+    CREATE_INVITE_CODE("create_invite_code.css"),
+    AUTH("auth.css");
 
     private String cssName;
 
