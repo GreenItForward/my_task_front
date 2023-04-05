@@ -11,6 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.Label?>
 <VBox alignment="CENTER" prefHeight="720.0" prefWidth="1280.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mytask.front.controller.IndexController">
     <stylesheets>
         <URL value="@../style/styles.css" />
@@ -48,7 +49,7 @@
                   <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="110.79998779296875" valignment="BASELINE" vgrow="ALWAYS" />
               </rowConstraints>
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Inscription" />
+                  <Label text="Inscription" />
                   <GridPane GridPane.rowIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="200.0" prefWidth="300.0" />
@@ -90,7 +91,7 @@
                   </GridPane>
                </children>
             </GridPane>
-            <Text fx:id="error" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <Label fx:id="error" styleClass="error" GridPane.rowIndex="2" GridPane.valignment="TOP" />
          </children>
       </GridPane>
    </children>

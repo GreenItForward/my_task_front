@@ -7,7 +7,9 @@ import com.mytask.front.utils.EString;
 import com.mytask.front.utils.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class InscriptionController {
@@ -15,6 +17,8 @@ public class InscriptionController {
     private TextField email, nom, prenom, password;
     @FXML
     private Button sinscrire, seconnecter;
+    @FXML
+    private Label error;
     private ScreenService screenService;
 
     @FXML
@@ -31,10 +35,14 @@ public class InscriptionController {
 
         sinscrire.setOnAction(event -> {
             User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
-            if(UserService.signUpUser(user)) {
+            String res = UserService.signUpUser(user);
+            if(res.equals("ok")) {
                 System.out.println(EString.SIGN_UP_IN_PROGRESS.getString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
+            }
+            else {
+                error.setText(res);
             }
         });
     }

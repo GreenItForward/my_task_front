@@ -6,3 +6,8 @@
 .button_white:hover {
     -fx-background-color: #bbbbbb;
 }
+
+.error {
+    -fx-text-fill: #ff0000;
+    -fx-font-weight: bold;
+}
