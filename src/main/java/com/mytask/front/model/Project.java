@@ -7,11 +7,11 @@ public class Project {
     private int userId;
    // private User user;
 
-    public Project(String nom, String description, String codeJoin, int userId) {
+    public Project(String nom, String description) {
         this.nom = nom;
         this.description = description;
-        this.codeJoin = codeJoin;
-        this.userId = userId;
+        this.codeJoin = "";
+        this.userId = 1;
     }
 
     public Project() {

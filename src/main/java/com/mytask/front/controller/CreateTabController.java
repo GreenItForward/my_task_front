@@ -48,7 +48,7 @@ public class CreateTabController {
 
         createTableBtn.setOnAction(event -> {
             ProjectApiClient projectApiClient = new ProjectApiClient();
-            projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText(), "10JM", 1));
+            projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText()));
             screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
             screenService.setScreen(EPage.SHOW_TAB);
         });

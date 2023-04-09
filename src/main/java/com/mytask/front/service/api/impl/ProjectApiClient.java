@@ -9,10 +9,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
 import java.time.Duration;
 
 public class ProjectApiClient implements ProjectApiClientInterface {
