@@ -51,6 +51,8 @@ public enum EString {
     INVITE_CODE_COPIED_TITLE("Code d'invitation copié"),
     INVITE_CODE_COPIED_MESSAGE("Le code d'invitation a été copié dans le presse-papier"),
 
+    // API
+    API_URI("http://localhost:3000/"),
     // Messages LOGS
     SIGN_IN_IN_PROGRESS("Connexion en cours..."),
     SIGN_UP_IN_PROGRESS("Inscription en cours..."),

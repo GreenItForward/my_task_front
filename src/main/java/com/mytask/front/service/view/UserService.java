@@ -1,6 +1,6 @@
-package com.mytask.front.service;
+package com.mytask.front.service.view;
 
-import com.mytask.front.utils.User;
+import com.mytask.front.model.User;
 
 import java.util.ArrayList;
 

@@ -8,6 +8,8 @@ module com.mytask.my_task_front {
     requires org.kordamp.bootstrapfx.core;
     requires kernel;
     requires layout;
+    requires java.net.http;
+    requires android.json;
 
     opens com.mytask.front to javafx.fxml;
     exports com.mytask.front;
