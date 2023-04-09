@@ -1,7 +1,9 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.model.Project;
+import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,6 +45,17 @@ public class CreateTabController {
         descriptionLabel.setText(EString.DESCRIPTION.getString());
         nameLabel.setText(EString.NAME.getString());
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
+
+        createTableBtn.setOnAction(event -> {
+            ProjectApiClient projectApiClient = new ProjectApiClient();
+            Project project = new Project();
+            project.setNom(nameTextField.getText());
+            project.setDescription(descriptionTextField.getText());
+            project.setUserId(1);
+            projectApiClient.createProject(project);
+            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
+            screenService.setScreen(EPage.SHOW_TAB);
+        });
     }
 
 }

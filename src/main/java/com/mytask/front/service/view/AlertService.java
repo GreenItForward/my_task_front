@@ -1,4 +1,4 @@
-package com.mytask.front.service;
+package com.mytask.front.service.view;
 
 import com.mytask.front.utils.EString;
 import javafx.scene.control.Alert;

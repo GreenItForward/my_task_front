@@ -1,12 +1,11 @@
 package com.mytask.front.utils;
 
-import com.mytask.front.service.AlertService;
+import com.mytask.front.service.view.AlertService;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import java.util.Random;
-import java.util.UUID;
 
 public class AppUtils {
 

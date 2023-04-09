@@ -1,16 +1,14 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.service.PopupService;
+import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
-import com.mytask.front.service.TabService;
+import com.mytask.front.service.view.ScreenService;
+import com.mytask.front.service.view.TabService;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.PdfExportService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -25,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import javafx.scene.control.TextField;
-import static com.mytask.front.service.PopupService.showTablesPopup;
+import static com.mytask.front.service.view.PopupService.showTablesPopup;
 
 public class ShowTabController {
 

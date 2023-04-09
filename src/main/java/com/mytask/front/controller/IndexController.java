@@ -1,7 +1,7 @@
 package com.mytask.front.controller;
-import com.mytask.front.service.UserService;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

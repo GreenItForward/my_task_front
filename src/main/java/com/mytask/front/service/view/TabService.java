@@ -1,4 +1,4 @@
-package com.mytask.front.service;
+package com.mytask.front.service.view;
 
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
