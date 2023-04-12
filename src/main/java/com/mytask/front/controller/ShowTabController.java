@@ -93,7 +93,7 @@ public class ShowTabController {
         TextField addDoneTaskField = createAddTaskField(doneTasksList);
 
         // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-        /*
+        /* // MOCK DATA TO TEST THE UI
         todoTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         inProgressTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         doneTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
@@ -116,14 +116,19 @@ public class ShowTabController {
 
         List<VBox> tasksByColumn = new ArrayList<>();
 
-        VBox todoVbox = (VBox) todoTasksList.getChildren().get(1);
-        VBox inProgressVbox = (VBox) inProgressTasksList.getChildren().get(1);
-        VBox doneVbox = (VBox) doneTasksList.getChildren().get(1);
+        // vérifier que si il sont vide alors on les ajoute pas
+        if (todoTasksList.getChildren().size() > 1) {
+            tasksByColumn.add((VBox) todoTasksList.getChildren().get(1));
+        }
 
-        tasksByColumn.add(todoVbox);
-        tasksByColumn.add(inProgressVbox);
-        tasksByColumn.add(doneVbox);
+        if (inProgressTasksList.getChildren().size() > 1) {
+            tasksByColumn.add((VBox) inProgressTasksList.getChildren().get(1));
+        }
 
+        if (doneTasksList.getChildren().size() > 1) {
+            tasksByColumn.add((VBox) doneTasksList.getChildren().get(1));
+        }
+        
         // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
         showTablesBtn.setOnAction(event -> showTablesPopup());
         
