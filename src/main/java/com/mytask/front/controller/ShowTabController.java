@@ -47,7 +47,6 @@ public class ShowTabController {
     private Button viewMembersBtn;
     @FXML
     private Button exportToPdfBtn;
-    
     @FXML
     private VBox todoTasksList;
     @FXML
@@ -89,17 +88,16 @@ public class ShowTabController {
         doneLabel.setText(EString.DONE.getString());
         showTablesBtn.setText(EString.SHOW_TABLES.getString());
         exportToPdfBtn.setText(EString.EXPORT_TO_PDF.getString());
-
         TextField addTodoTaskField = createAddTaskField(todoTasksList);
         TextField addInProgressTaskField = createAddTaskField(inProgressTasksList);
         TextField addDoneTaskField = createAddTaskField(doneTasksList);
 
         // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-
+        /*
         todoTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         inProgressTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         doneTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
-
+        */
 
         todoTasksList.getChildren().add(0, addTodoTaskField);
         inProgressTasksList.getChildren().add(0, addInProgressTaskField);
@@ -131,7 +129,6 @@ public class ShowTabController {
         
         // quand on appuie sur exportToPdfBtn on exporte la table en pdf
        exportToPdfBtn.setOnAction(event -> PdfExportService.exportToPdf(tasksByColumn));
-
     }
 
 

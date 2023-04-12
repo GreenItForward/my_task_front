@@ -46,7 +46,7 @@ public class TabService {
             tooltip.setHideDelay(Duration.seconds(0.3));
             tooltip.setShowDelay(Duration.seconds(0.2));
         }
-        
+
         return new HBox(5, colorRect1, colorRect2);
     }
 
@@ -64,7 +64,8 @@ public class TabService {
         Label dueDateLabel = new Label((random.nextInt(30) + 1) + " avr");
         dueDateLabel.getStyleClass().add("dueDateLabel");
 
-        Button dueDateButton = new Button();
+        Button dueDate
+        = new Button();
         dueDateButton.setGraphic(clockImageView);
         dueDateButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
 

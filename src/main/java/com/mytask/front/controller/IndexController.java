@@ -32,7 +32,6 @@ public class IndexController {
             }
         });
         bienvenue.setText(EString.WELCOME.getString() + UserService.getCurrentUser().getPrenom());
-
         voir_tableau.setOnAction(event -> {
             System.out.println(EString.SHOW_TAB_LOG.getString());
             screenService.setScreen(EPage.SHOW_ALL_TAB);

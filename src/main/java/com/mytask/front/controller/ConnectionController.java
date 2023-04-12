@@ -45,6 +45,9 @@ public class ConnectionController {
             else {
                 error.setText(res);
             }
+            user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
+            System.out.println(EString.SIGN_IN_IN_PROGRESS.getString());
+            screenService.setScreen(EPage.INDEX);
         });
     }
 }
