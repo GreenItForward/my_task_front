@@ -41,8 +41,7 @@ public class ConnectionController {
                 System.out.println(EString.SIGN_IN_IN_PROGRESS.getString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
-            }
-            else {
+            } else {
                 error.setText(res);
             }
         });

@@ -48,5 +48,6 @@ public class UserService {
         allUsers.add(user);
         UserService.currentUser = user;
         return "ok";
+
     }
 }

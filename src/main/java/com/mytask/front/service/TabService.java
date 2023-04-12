@@ -46,7 +46,7 @@ public class TabService {
             tooltip.setHideDelay(Duration.seconds(0.3));
             tooltip.setShowDelay(Duration.seconds(0.2));
         }
-        
+
         return new HBox(5, colorRect1, colorRect2);
     }
 

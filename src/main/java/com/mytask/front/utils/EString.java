@@ -75,6 +75,7 @@ public enum EString {
                 SUPPRIMER.string
         };
     }
+
     public static String getCompleteNameApp() {
         return NAME_APP.string + " - " + NAME_ORGANIZATION.string;
     }
@@ -82,6 +83,5 @@ public enum EString {
     public static String getNameTimestamp() {
         return NAME_APP.string + "-" + System.currentTimeMillis();
     }
-
 
 }
