@@ -5,6 +5,7 @@ import com.mytask.front.utils.EPage;
 import com.mytask.front.service.ScreenService;
 import com.mytask.front.service.TabService;
 import com.mytask.front.utils.EString;
+import com.mytask.front.utils.PdfExportService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -19,6 +20,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import javafx.scene.control.TextField;
@@ -42,7 +45,8 @@ public class ShowTabController {
     private Button generateInviteCodeBtn;
     @FXML
     private Button viewMembersBtn;
-    
+    @FXML
+    private Button exportToPdfBtn;
     @FXML
     private VBox todoTasksList;
     @FXML
@@ -83,7 +87,7 @@ public class ShowTabController {
         inProgressLabel.setText(EString.IN_PROGRESS.getString());
         doneLabel.setText(EString.DONE.getString());
         showTablesBtn.setText(EString.SHOW_TABLES.getString());
-
+        exportToPdfBtn.setText(EString.EXPORT_TO_PDF.getString());
         TextField addTodoTaskField = createAddTaskField(todoTasksList);
         TextField addInProgressTaskField = createAddTaskField(inProgressTasksList);
         TextField addDoneTaskField = createAddTaskField(doneTasksList);
@@ -110,8 +114,21 @@ public class ShowTabController {
         // quand on appuie sur generateInviteCodeBtn on affiche un popup avec le code d'invitation
         generateInviteCodeBtn.setOnAction(event -> TabService.showInviteCode((Stage) generateInviteCodeBtn.getScene().getWindow()));
 
+        List<VBox> tasksByColumn = new ArrayList<>();
+
+        VBox todoVbox = (VBox) todoTasksList.getChildren().get(1);
+        VBox inProgressVbox = (VBox) inProgressTasksList.getChildren().get(1);
+        VBox doneVbox = (VBox) doneTasksList.getChildren().get(1);
+
+        tasksByColumn.add(todoVbox);
+        tasksByColumn.add(inProgressVbox);
+        tasksByColumn.add(doneVbox);
+
         // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
         showTablesBtn.setOnAction(event -> showTablesPopup());
+        
+        // quand on appuie sur exportToPdfBtn on exporte la table en pdf
+       exportToPdfBtn.setOnAction(event -> PdfExportService.exportToPdf(tasksByColumn));
     }
 
 
@@ -131,7 +148,7 @@ public class ShowTabController {
         // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
         addTaskField.setOnAction(event -> {
             String taskText = addTaskField.getText();
-            if (!taskText.isEmpty()) {
+            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.getString())) {
                 HBox newTask = createRandomTask(rand, taskText);
                 taskList.getChildren().add(taskList.getChildren().size(), newTask);
 
@@ -222,6 +239,7 @@ public class ShowTabController {
                 if (draggedTask != null && !Objects.equals(draggedTask.getParent(), column)) {
                     column.getChildren().add(draggedTask);
                     event.setDropCompleted(true);
+                    // TODO: update task status in list
                 } else {
                     event.setDropCompleted(false);
                 }

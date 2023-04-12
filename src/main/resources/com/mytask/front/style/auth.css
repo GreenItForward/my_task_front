@@ -1,0 +1,13 @@
+.button_white {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.button_white:hover {
+    -fx-background-color: #bbbbbb;
+}
+
+.error {
+    -fx-text-fill: #ff0000;
+    -fx-font-weight: bold;
+}

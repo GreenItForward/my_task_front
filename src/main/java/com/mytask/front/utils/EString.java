@@ -31,6 +31,11 @@ public enum EString {
     OPEN_TABLE("Ouvrir le tableau"),
     EDIT_USER_ROLE("Modifier les droits ou supprimer les utilisateurs"),
     INVITE_CODE("Code d'invitation : "),
+    EXPORT_TO_PDF("Exporter en PDF"),
+
+    // Name App
+    NAME_APP("MyTask"),
+    NAME_ORGANIZATION("GreenItForward"),
 
 
     // Roles and actions
@@ -53,7 +58,6 @@ public enum EString {
     CREATE_TAB_LOG("Créer tableau"),
     SHOW_TABLES("Afficher les tableaux");
 
-
     private String string;
 
     EString(String string) {
@@ -72,6 +76,12 @@ public enum EString {
         };
     }
 
+    public static String getCompleteNameApp() {
+        return NAME_APP.string + " - " + NAME_ORGANIZATION.string;
+    }
 
+    public static String getNameTimestamp() {
+        return NAME_APP.string + "-" + System.currentTimeMillis();
+    }
 
 }

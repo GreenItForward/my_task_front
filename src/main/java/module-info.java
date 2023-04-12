@@ -6,6 +6,8 @@ module com.mytask.my_task_front {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
+    requires kernel;
+    requires layout;
 
     opens com.mytask.front to javafx.fxml;
     exports com.mytask.front;

@@ -1,7 +1,5 @@
 package com.mytask.front.service;
 
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EPopup;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,6 +34,7 @@ public class TabService {
         for (Color color : new Color[]{color1, color2}) {
             Rectangle colorRect = color.equals(color1) ? colorRect1 : colorRect2;
             String labelName = "Couleur: " + color.toString().substring(2, color.toString().length() - 2) + ", Titre: \"" + (random.nextInt(100) + 1) + "\"";
+            colorRect.setId(labelName.substring(labelName.indexOf("e:")+2, labelName.length() - 1).replace("\"", ""));
             Tooltip tooltip = new Tooltip(labelName);
             tooltip.setStyle(tooltipStyle);
             Tooltip.install(colorRect, tooltip);
@@ -65,7 +64,8 @@ public class TabService {
         Label dueDateLabel = new Label((random.nextInt(30) + 1) + " avr");
         dueDateLabel.getStyleClass().add("dueDateLabel");
 
-        Button dueDateButton = new Button();
+        Button dueDate
+        = new Button();
         dueDateButton.setGraphic(clockImageView);
         dueDateButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
 
@@ -108,4 +108,5 @@ public class TabService {
     public static void showInviteCode(Stage primaryStage) {
         PopupService.showInviteCodePopup(primaryStage);
     }
+
 }
