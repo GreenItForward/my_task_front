@@ -9,7 +9,7 @@ public class AlertService {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(confirmation.name());
         alert.setHeaderText(body);
-        alert.setContentText(EString.ALERT_VERIFICATION.getString());
+        alert.setContentText(EString.ALERT_VERIFICATION.toString());
 
         return alert.showAndWait().orElse(ButtonType.CANCEL);
     }

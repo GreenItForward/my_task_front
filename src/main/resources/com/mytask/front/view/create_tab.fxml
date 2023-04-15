@@ -39,7 +39,7 @@
             <Label fx:id="colorLabel"/>
             <ColorPicker fx:id="colorPicker"/>
 
-            <Button text="Ajouter" fx:id="addLabelBtn"/>
+            <Button fx:id="addLabelBtn"/>
         </VBox>
     </Panel>
 

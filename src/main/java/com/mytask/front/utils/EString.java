@@ -12,6 +12,7 @@ public enum EString {
     VIEW_MEMBERS("Voir les membres"),
     COPY_INVITE_CODE("Copier le code d'invitation"),
     ADD_TASK("Ajouter une tâche"),
+    ADD_LABEL("Ajouter une étiquette"),
 
     // Labels
     MY_TABS("Mes tableaux"),
@@ -53,6 +54,7 @@ public enum EString {
 
     // API
     API_URI("http://localhost:3000/"),
+
     // Messages LOGS
     SIGN_IN_IN_PROGRESS("Connexion en cours..."),
     SIGN_UP_IN_PROGRESS("Inscription en cours..."),
@@ -66,24 +68,25 @@ public enum EString {
         this.string = string;
     }
 
-    public String getString() {
+    @Override
+    public String toString() {
         return string;
     }
 
     public static String[] getRoleStrings() {
         return new String[]{
-                ADMINISTRATEUR.string,
-                MEMBRE.string,
-                SUPPRIMER.string
+                ADMINISTRATEUR.toString(),
+                MEMBRE.toString(),
+                SUPPRIMER.toString()
         };
     }
 
     public static String getCompleteNameApp() {
-        return NAME_APP.string + " - " + NAME_ORGANIZATION.string;
+        return NAME_APP + " - " + NAME_ORGANIZATION;
     }
 
     public static String getNameTimestamp() {
-        return NAME_APP.string + "-" + System.currentTimeMillis();
+        return NAME_APP + "-" + System.currentTimeMillis();
     }
 
 }

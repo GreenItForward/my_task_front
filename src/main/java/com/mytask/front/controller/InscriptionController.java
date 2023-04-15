@@ -28,7 +28,7 @@ public class InscriptionController {
             }
         });
         seconnecter.setOnAction(event -> {
-            System.out.println(EString.CONNECTION.getString());
+            System.out.println(EString.CONNECTION.toString());
             screenService.setScreen(EPage.CONNECTION);
         });
 
@@ -36,7 +36,7 @@ public class InscriptionController {
             User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
             String res = UserService.signUpUser(user);
             if(res.equals("ok")) {
-                System.out.println(EString.SIGN_UP_IN_PROGRESS.getString());
+                System.out.println(EString.SIGN_UP_IN_PROGRESS.toString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
             }

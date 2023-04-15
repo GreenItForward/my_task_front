@@ -55,7 +55,7 @@ public class AppUtils {
         ClipboardContent content = new ClipboardContent();
         content.putString(label.getText());
         clipboard.setContent(content);
-        AlertService.showAlertInfo(EString.INVITE_CODE_COPIED_TITLE.getString(), EString.INVITE_CODE_COPIED_MESSAGE.getString());
+        AlertService.showAlertInfo(EString.INVITE_CODE_COPIED_TITLE.toString(), EString.INVITE_CODE_COPIED_MESSAGE.toString());
     }
 }
 

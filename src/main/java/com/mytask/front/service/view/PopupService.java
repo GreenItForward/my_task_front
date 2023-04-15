@@ -39,7 +39,7 @@ public class PopupService {
 
         Label label = new Label(page.getWindowTitle());
         label.getStyleClass().add("popup-title");
-        Button closeButton = new Button(EString.CLOSE.getString());
+        Button closeButton = new Button(EString.CLOSE.toString());
         closeButton.setOnAction(e -> popup.close());
 
         scrollPane.setContent(content);
@@ -100,8 +100,8 @@ public class PopupService {
 
             int finalI = i;
             roleComboBox.setOnAction(e -> {
-                if (roleComboBox.getValue().equals(EString.SUPPRIMER.getString())) {
-                    ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.getString(), EString.DELETE_USER_CONFIRMATION.getString());
+                if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
+                    ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
                     if (AlertService.isConfirmed(result)) {
                         userContainer.getChildren().remove(userInfo);
                     } else {
@@ -124,12 +124,12 @@ public class PopupService {
         HBox buttonBox = new HBox(10);
         inviteCodeContainer.setSpacing(10);
         inviteCodeContainer.setStyle("-fx-padding: 10;");
-        Label inviteCodeLabel = new Label(EString.INVITE_CODE.getString());
+        Label inviteCodeLabel = new Label(EString.INVITE_CODE.toString());
         Label inviteLabel = new Label("");
-        Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.getString());
+        Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.toString());
         generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(AppUtils.generateRandomInviteCode()));
 
-        Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.getString());
+        Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.toString());
         copyInviteCodeButton.setOnAction(e -> AppUtils.copyToClipboard(inviteLabel));
 
         buttonBox.getChildren().addAll(generateInviteCodeButton, copyInviteCodeButton);
@@ -153,10 +153,10 @@ public class PopupService {
 
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.setTitle(EString.MY_TABS.getString());
+        popupStage.setTitle(EString.MY_TABS.toString());
 
         VBox popupVBox = new VBox(10);
-        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.getString()), tablesPopupListView);
+        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.toString()), tablesPopupListView);
         popupVBox.setPadding(new Insets(10, 10, 10, 10));
 
         Scene popupScene = new Scene(popupVBox, EPopup.TABLE_LIST.getWidth(), EPopup.TABLE_LIST.getHeight());
