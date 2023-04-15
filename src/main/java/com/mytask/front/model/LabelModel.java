@@ -1,16 +1,17 @@
 package com.mytask.front.model;
 
-public class Label {
-    private String nom;
-    private String couleur;
+import javafx.scene.paint.Color;
 
-    private int taskId;
+import static com.mytask.front.service.AppService.colorToHexString;
+
+public class LabelModel {
+    private String nom;
+    private Color couleur;
     private int projectId;
 
-    public Label(String nom, String couleur) {
+    public LabelModel(String nom, Color couleur) {
         this.nom = nom;
         this.couleur = couleur;
-        this.taskId = 0;
         this.projectId = 0;
     }
 
@@ -22,20 +23,12 @@ public class Label {
         this.nom = nom;
     }
 
-    public String getCouleur() {
+    public Color getCouleur() {
         return couleur;
     }
 
-    public void setCouleur(String couleur) {
+    public void setCouleur(Color couleur) {
         this.couleur = couleur;
-    }
-
-    public int getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
     }
 
     public int getProjectId() {
@@ -44,5 +37,13 @@ public class Label {
 
     public void setProjectId(int projectId) {
         this.projectId = projectId;
+    }
+
+    public String toString() {
+        return String.format("LabelModel {nom: %s, couleur: %s, projectId: %d}", nom, colorToHexString(couleur), projectId);
+    }
+
+    public String toJSON() {
+        return "{\"nom\":\"" + this.nom + "\",\"couleur\":\"" + colorToHexString(this.couleur) + "\",\"projectId\":\"" + this.projectId + "\"}";
     }
 }

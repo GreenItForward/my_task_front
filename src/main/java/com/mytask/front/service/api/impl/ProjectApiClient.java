@@ -1,5 +1,6 @@
 package com.mytask.front.service.api.impl;
 
+import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.ProjectApiClientInterface;
 
@@ -15,13 +16,22 @@ import static com.mytask.front.configuration.AppConfiguration.bearerToken;
 
 public class ProjectApiClient implements ProjectApiClientInterface {
     private final HttpClient httpClient;
+    private static ProjectApiClient instance;
 
-    public ProjectApiClient() {
+    private ProjectApiClient() {
         httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
     }
+
+    public static ProjectApiClient getInstance() {
+        if (instance == null) {
+            instance = new ProjectApiClient();
+        }
+        return instance;
+    }
+
     @Override
     public void createProject(Project project) {
         HttpResponse<String> response = null;
@@ -36,12 +46,24 @@ public class ProjectApiClient implements ProjectApiClientInterface {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        }
+        } finally {
+            if (response != null && response.statusCode() == 201) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    String[] responseArray = responseBody.split(",");
+                    String id = responseArray[responseArray.length - 1].split(":")[1].replace("}", "").trim();
+                    for (LabelModel label : LabelApiClient.getInstance().getLabels()) {
+                        label.setProjectId(Integer.parseInt(id));
+                        LabelApiClient.getInstance().createLabel(label);
+                    }
 
-        if (response.statusCode() == 201) {
-            System.out.println("Project created successfully");
-        } else {
-            System.out.println("Project creation failed");
+                    LabelApiClient.getInstance().getLabels().clear();
+                } else {
+                    System.err.println("Project creation failed: Forbidden");
+                }
+            } else {
+                System.err.println("Project creation failed, status code: " + response.statusCode() + "\body: "+ response.body());
+            }
         }
     }
 

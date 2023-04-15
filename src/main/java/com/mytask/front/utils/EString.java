@@ -38,6 +38,8 @@ public enum EString {
     NAME_APP("MyTask"),
     NAME_ORGANIZATION("GreenItForward"),
 
+    // Errors messages
+    EMPTY_FIELD("Veuillez remplir ce champ"),
 
     // Roles and actions
     ADMINISTRATEUR("Administrateur"),

@@ -50,7 +50,7 @@ public class Project {
     }
 
     // transforme un objet Project en JSON
-public String toJSON() {
+    public String toJSON() {
         return "{\"nom\":\"" + this.nom + "\",\"description\":\"" + this.description + "\",\"codeJoin\":\"" + this.codeJoin + "\",\"userId\":\"" + this.userId + "\"}";
     }
 }
