@@ -8,6 +8,10 @@ public class UserService {
     private static User currentUser = new User();
     private static final ArrayList<User> allUsers = new ArrayList<>();
 
+    static {
+        allUsers.add(new User("admin", "admin", "admin", "admin"));
+    }
+
     public static User getCurrentUser() {
         return currentUser;
     }

@@ -11,6 +11,8 @@ import java.net.http.HttpResponse;
 
 import java.time.Duration;
 
+import static com.mytask.front.configuration.AppConfiguration.bearerToken;
+
 public class ProjectApiClient implements ProjectApiClientInterface {
     private final HttpClient httpClient;
 
@@ -27,13 +29,12 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                 .uri(URI.create("http://localhost:3000/project"))
                 .POST(HttpRequest.BodyPublishers.ofString(project.toJSON()))
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + bearerToken)
                 .build();
 
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
