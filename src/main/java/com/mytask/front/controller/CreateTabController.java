@@ -8,31 +8,41 @@ import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+
+import static javafx.scene.Cursor.DEFAULT;
+import static javafx.scene.Cursor.HAND;
 
 public class CreateTabController {
     private ScreenService screenService;
 
     @FXML
     private Button joinTableBtn, createTableBtn, backToMenuBtn, addLabelBtn;
-
     @FXML
     private Label joinTableLabel, colorLabel, labelEtiquette, descriptionLabel, nameLabel;
-
     @FXML
     private TextField nameTextField, descriptionTextField, joinCodeTextField, labelTextField;
-
     @FXML
     private ColorPicker colorPicker;
+    @FXML
+    private HBox labelHBox;
+
+    LabelApiClient labelApiClient;
 
 
 
     @FXML
     public void initialize() {
+        this.labelApiClient = LabelApiClient.getInstance();
+
         createTableBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) createTableBtn.getScene().getWindow());
@@ -63,18 +73,19 @@ public class CreateTabController {
             projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText()));
             screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
             screenService.setScreen(EPage.SHOW_TAB);
-            resetFields();
+            resetFields(null);
         });
 
         addLabelBtn.setOnAction(event -> {
-            LabelApiClient labelApiClient = LabelApiClient.getInstance();
             if (labelTextField.getText().isEmpty()) {
                 setErrorMessage(labelTextField);
                 return;
             }
 
-            labelApiClient.addLabel(new LabelModel(labelTextField.getText(), colorPicker.getValue()));
-            System.out.println(labelApiClient.getLabels());
+            LabelModel labelModel = new LabelModel(labelTextField.getText(), colorPicker.getValue());
+            labelApiClient.addLabel(labelModel);
+            createRectangle(labelModel);
+            resetFields(labelTextField);
         });
     }
 
@@ -89,11 +100,34 @@ public class CreateTabController {
     }
 
     // reset all fields
-    private void resetFields() {
-        nameTextField.setText("");
-        descriptionTextField.setText("");
-        labelTextField.setText("");
-        joinCodeTextField.setText("");
+    private void resetFields(TextField textField) {
+        if (textField == null) {
+            nameTextField.setText("");
+            descriptionTextField.setText("");
+            labelTextField.setText("");
+            joinCodeTextField.setText("");
+        } else {
+            textField.setText("");
+        }
+    }
+
+    private void createRectangle(LabelModel labelModel) {
+        Rectangle rectangle = new Rectangle(20, 10, colorPicker.getValue());
+        rectangle.setStroke(Color.BLACK);
+        Label label = new Label(labelTextField.getText());
+        label.setTextFill(Color.BLACK);
+
+        HBox labelContainer = new HBox(rectangle, label);
+        labelContainer.setSpacing(5);
+
+        labelHBox.getChildren().add(labelContainer);
+        rectangle.setOnMouseClicked(e -> {
+            labelHBox.getChildren().remove(labelContainer);
+            this.labelApiClient.removeLabel(labelModel);
+        });
+
+        rectangle.setOnMouseEntered(e -> rectangle.setCursor(HAND));
+        rectangle.setOnMouseExited(e -> rectangle.setCursor(DEFAULT));
     }
 
 }
