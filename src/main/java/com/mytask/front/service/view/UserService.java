@@ -1,12 +1,16 @@
-package com.mytask.front.service;
+package com.mytask.front.service.view;
 
-import com.mytask.front.utils.User;
+import com.mytask.front.model.User;
 
 import java.util.ArrayList;
 
 public class UserService {
     private static User currentUser = new User();
     private static final ArrayList<User> allUsers = new ArrayList<>();
+
+    static {
+        allUsers.add(new User("admin", "admin", "admin", "admin"));
+    }
 
     public static User getCurrentUser() {
         return currentUser;
@@ -48,6 +52,5 @@ public class UserService {
         allUsers.add(user);
         UserService.currentUser = user;
         return "ok";
-
     }
 }

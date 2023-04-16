@@ -1,9 +1,9 @@
 package com.mytask.front;
 
 import com.mytask.front.controller.*;
-import com.mytask.front.service.TabService;
+import com.mytask.front.service.view.TabService;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.view.ScreenService;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
