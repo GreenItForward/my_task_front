@@ -1,4 +1,4 @@
-package com.mytask.front.service;
+package com.mytask.front.service.view;
 
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -64,8 +64,7 @@ public class TabService {
         Label dueDateLabel = new Label((random.nextInt(30) + 1) + " avr");
         dueDateLabel.getStyleClass().add("dueDateLabel");
 
-        Button dueDate
-        = new Button();
+        Button dueDateButton = new Button();
         dueDateButton.setGraphic(clockImageView);
         dueDateButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
 

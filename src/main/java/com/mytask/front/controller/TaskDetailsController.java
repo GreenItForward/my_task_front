@@ -1,6 +1,6 @@
 package com.mytask.front.controller;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.view.ScreenService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

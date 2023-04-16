@@ -1,7 +1,7 @@
 package com.mytask.front.controller;
-import com.mytask.front.service.UserService;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -31,14 +31,14 @@ public class IndexController {
                 screenService = ScreenService.getInstance((Stage) bienvenue.getScene().getWindow());
             }
         });
-        bienvenue.setText(EString.WELCOME.getString() + UserService.getCurrentUser().getPrenom());
+        bienvenue.setText(EString.WELCOME.toString() + UserService.getCurrentUser().getPrenom());
         voir_tableau.setOnAction(event -> {
-            System.out.println(EString.SHOW_TAB_LOG.getString());
+            System.out.println(EString.SHOW_TAB_LOG.toString());
             screenService.setScreen(EPage.SHOW_ALL_TAB);
         });
 
         creer_tableau.setOnAction(event -> {
-            System.out.println(EString.CREATE_TAB_LOG.getString());
+            System.out.println(EString.CREATE_TAB_LOG.toString());
             screenService.setScreen(EPage.CREATE_TAB);
         });
 

@@ -1,48 +1,133 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
+import com.mytask.front.service.api.impl.LabelApiClient;
+import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
+
+import static javafx.scene.Cursor.DEFAULT;
+import static javafx.scene.Cursor.HAND;
 
 public class CreateTabController {
     private ScreenService screenService;
 
     @FXML
-    private Button joinTableBtn, createTableBtn, backToMenuBtn;
-
+    private Button joinTableBtn, createTableBtn, backToMenuBtn, addLabelBtn;
     @FXML
     private Label joinTableLabel, colorLabel, labelEtiquette, descriptionLabel, nameLabel;
-
     @FXML
     private TextField nameTextField, descriptionTextField, joinCodeTextField, labelTextField;
+    @FXML
+    private ColorPicker colorPicker;
+    @FXML
+    private HBox labelHBox;
+
+    LabelApiClient labelApiClient;
 
 
 
     @FXML
     public void initialize() {
+        this.labelApiClient = LabelApiClient.getInstance();
+
         createTableBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) createTableBtn.getScene().getWindow());
             }
         });
-        backToMenuBtn.setText(EString.BACK_TO_MENU.getString());
-        joinTableBtn.setText(EString.JOIN_TAB.getString());
-        joinTableLabel.setText(EString.LABEL_JOIN_TAB.getString());
-        createTableBtn.setText(EString.CREATE_TAB.getString());
-        nameTextField.setPromptText(EString.NAME_TAB.getString());
-        descriptionTextField.setPromptText(EString.DESCRIPTION_TAB.getString());
+        backToMenuBtn.setText(EString.BACK_TO_MENU.toString());
+        joinTableBtn.setText(EString.JOIN_TAB.toString());
+        joinTableLabel.setText(EString.LABEL_JOIN_TAB.toString());
+        createTableBtn.setText(EString.CREATE_TAB.toString());
+        nameTextField.setPromptText(EString.NAME_TAB.toString());
+        descriptionTextField.setPromptText(EString.DESCRIPTION_TAB.toString());
         labelTextField.setPromptText("Frond-end");
         joinCodeTextField.setPromptText("Code du tableau");
-        colorLabel.setText(EString.SELECT_COLOR.getString());
-        labelEtiquette.setText(EString.LABEL.getString());
-        descriptionLabel.setText(EString.DESCRIPTION.getString());
-        nameLabel.setText(EString.NAME.getString());
+        colorLabel.setText(EString.SELECT_COLOR.toString());
+        labelEtiquette.setText(EString.LABEL.toString());
+        descriptionLabel.setText(EString.DESCRIPTION.toString());
+        nameLabel.setText(EString.NAME.toString());
+        addLabelBtn.setText(EString.ADD_LABEL.toString());
+
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
+        createTableBtn.setOnAction(event -> {
+            ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
+            if (nameTextField.getText().isEmpty()) {
+                setErrorMessage(nameTextField);
+                return;
+            }
+
+            projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText()));
+            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
+            screenService.setScreen(EPage.SHOW_TAB);
+            resetFields(null);
+        });
+
+        addLabelBtn.setOnAction(event -> {
+            if (labelTextField.getText().isEmpty()) {
+                setErrorMessage(labelTextField);
+                return;
+            }
+
+            LabelModel labelModel = new LabelModel(labelTextField.getText(), colorPicker.getValue());
+            labelApiClient.addLabel(labelModel);
+            createRectangle(labelModel);
+            resetFields(labelTextField);
+        });
+    }
+
+    private void setErrorMessage(TextField textField) {
+        textField.setStyle("-fx-prompt-text-fill: red;");
+        textField.setPromptText(EString.EMPTY_FIELD.toString());
+    }
+
+    private void resetErrorMessage(TextField textField) {
+        textField.setStyle("-fx-prompt-text-fill: black;");
+        textField.setPromptText("");
+    }
+
+    // reset all fields
+    private void resetFields(TextField textField) {
+        if (textField == null) {
+            nameTextField.setText("");
+            descriptionTextField.setText("");
+            labelTextField.setText("");
+            joinCodeTextField.setText("");
+        } else {
+            textField.setText("");
+        }
+    }
+
+    private void createRectangle(LabelModel labelModel) {
+        Rectangle rectangle = new Rectangle(20, 10, colorPicker.getValue());
+        rectangle.setStroke(Color.BLACK);
+        Label label = new Label(labelTextField.getText());
+        label.setTextFill(Color.BLACK);
+
+        HBox labelContainer = new HBox(rectangle, label);
+        labelContainer.setSpacing(5);
+
+        labelHBox.getChildren().add(labelContainer);
+        rectangle.setOnMouseClicked(e -> {
+            labelHBox.getChildren().remove(labelContainer);
+            this.labelApiClient.removeLabel(labelModel);
+        });
+
+        rectangle.setOnMouseEntered(e -> rectangle.setCursor(HAND));
+        rectangle.setOnMouseExited(e -> rectangle.setCursor(DEFAULT));
     }
 
 }

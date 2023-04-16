@@ -1,7 +1,7 @@
 package com.mytask.front.controller;
 
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
+import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,11 +25,11 @@ public class ShowAllTabController {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
             }
         });
-        myTablesLabel.setText(EString.MY_TABS.getString());
-        tableInfoLabel.setText(EString.INFORMATION_TAB.getString());
-        descriptionLabel.setText(EString.DESCRIPTION.getString());
-        backToMenuBtn.setText(EString.BACK_TO_MENU.getString());
-        openTableBtn.setText(EString.OPEN_TABLE.getString());
+        myTablesLabel.setText(EString.MY_TABS.toString());
+        tableInfoLabel.setText(EString.INFORMATION_TAB.toString());
+        descriptionLabel.setText(EString.DESCRIPTION.toString());
+        backToMenuBtn.setText(EString.BACK_TO_MENU.toString());
+        openTableBtn.setText(EString.OPEN_TABLE.toString());
         openTableBtn.setOnAction(event -> screenService.setScreen(EPage.SHOW_TAB));
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
     }

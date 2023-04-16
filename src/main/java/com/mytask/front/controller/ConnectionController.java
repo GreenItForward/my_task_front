@@ -1,17 +1,15 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.service.ScreenService;
-import com.mytask.front.service.UserService;
+import com.mytask.front.service.view.ScreenService;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EString;
-import com.mytask.front.utils.User;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 
 public class ConnectionController {
     @FXML
@@ -31,14 +29,14 @@ public class ConnectionController {
         });
 
         sinscrire.setOnAction(event -> {
-            System.out.println(EString.SIGN_UP.getString());
+            System.out.println(EString.SIGN_UP.toString());
             screenService.setScreen(EPage.INSCRIPTION);
         });
 
         seconnecter.setOnAction(event -> {
             String res = UserService.connectUser(email.getText(), password.getText());
             if(res.equals("ok")) {
-                System.out.println(EString.SIGN_IN_IN_PROGRESS.getString());
+                System.out.println(EString.SIGN_IN_IN_PROGRESS.toString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
             } else {

@@ -44,9 +44,9 @@ public class PdfExportService {
             table.setWidth(UnitValue.createPercentValue(100));
 
             // en-tête des colonnes
-            table.addCell(EString.TODO.getString());
-            table.addCell(EString.IN_PROGRESS.getString());
-            table.addCell(EString.DONE.getString());
+            table.addCell(EString.TODO.toString());
+            table.addCell(EString.IN_PROGRESS.toString());
+            table.addCell(EString.DONE.toString());
 
             // Déterminer le nombre maximal de tâches par colonne
             int maxTasks = Math.max(tasksByColumn.get(0).getChildren().size(),

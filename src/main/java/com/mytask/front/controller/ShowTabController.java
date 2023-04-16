@@ -1,16 +1,14 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.service.PopupService;
+import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
-import com.mytask.front.service.ScreenService;
-import com.mytask.front.service.TabService;
+import com.mytask.front.service.view.ScreenService;
+import com.mytask.front.service.view.TabService;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.PdfExportService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -25,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import javafx.scene.control.TextField;
-import static com.mytask.front.service.PopupService.showTablesPopup;
+import static com.mytask.front.service.view.PopupService.showTablesPopup;
 
 public class ShowTabController {
 
@@ -79,15 +77,15 @@ public class ShowTabController {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
             }
         });
-        tableLabel.setText(EString.MY_TABS.getString());
-        backToMenuBtn.setText(EString.BACK_TO_MENU.getString());
-        generateInviteCodeBtn.setText(EString.GENERATE_INVITE_CODE.getString());
-        viewMembersBtn.setText(EString.VIEW_MEMBERS.getString());
-        todoLabel.setText(EString.TODO.getString());
-        inProgressLabel.setText(EString.IN_PROGRESS.getString());
-        doneLabel.setText(EString.DONE.getString());
-        showTablesBtn.setText(EString.SHOW_TABLES.getString());
-        exportToPdfBtn.setText(EString.EXPORT_TO_PDF.getString());
+        tableLabel.setText(EString.MY_TABS.toString());
+        backToMenuBtn.setText(EString.BACK_TO_MENU.toString());
+        generateInviteCodeBtn.setText(EString.GENERATE_INVITE_CODE.toString());
+        viewMembersBtn.setText(EString.VIEW_MEMBERS.toString());
+        todoLabel.setText(EString.TODO.toString());
+        inProgressLabel.setText(EString.IN_PROGRESS.toString());
+        doneLabel.setText(EString.DONE.toString());
+        showTablesBtn.setText(EString.SHOW_TABLES.toString());
+        exportToPdfBtn.setText(EString.EXPORT_TO_PDF.toString());
         TextField addTodoTaskField = createAddTaskField(todoTasksList);
         TextField addInProgressTaskField = createAddTaskField(inProgressTasksList);
         TextField addDoneTaskField = createAddTaskField(doneTasksList);
@@ -138,7 +136,7 @@ public class ShowTabController {
 
 
     private TextField createAddTaskField(VBox taskList) {
-        TextField addTaskField = new TextField(EString.ADD_TASK.getString());
+        TextField addTaskField = new TextField(EString.ADD_TASK.toString());
         addTaskField.getStyleClass().add("add-task-field");
 
         // Rendre le champ non modifiable jusqu'à ce que l'utilisateur clique dessus
@@ -153,20 +151,20 @@ public class ShowTabController {
         // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
         addTaskField.setOnAction(event -> {
             String taskText = addTaskField.getText();
-            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.getString())) {
+            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
                 HBox newTask = createRandomTask(rand, taskText);
                 taskList.getChildren().add(taskList.getChildren().size(), newTask);
 
                 // on remet le champ à son état initial
                 addTaskField.setEditable(false);
-                addTaskField.setText(EString.ADD_TASK.getString());
+                addTaskField.setText(EString.ADD_TASK.toString());
             }
         });
 
         // quand l'utilisateur clique en dehors du champ, on remet le champ à son état initial
         addTaskField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (Boolean.TRUE.equals(!newValue) && addTaskField.getText().isEmpty()) {
-                addTaskField.setText(EString.ADD_TASK.getString());
+                addTaskField.setText(EString.ADD_TASK.toString());
                 addTaskField.setEditable(false);
             }
         });
@@ -234,7 +232,7 @@ public class ShowTabController {
             VBox column = (VBox) scrollPane.getContent();
 
             scrollPane.setOnDragOver(event -> {
-                if (event.getGestureSource() != column && event.getDragboard().hasString() && "task".equals(event.getDragboard().getString())) {
+                if (event.getGestureSource() != column && event.getDragboard().hasString() && "task".equals(event.getDragboard().toString())) {
                     event.acceptTransferModes(TransferMode.MOVE);
                 }
                 event.consume();

@@ -1,4 +1,4 @@
-package com.mytask.front.service;
+package com.mytask.front.service.view;
 
 import com.mytask.front.App;
 import com.mytask.front.utils.EIcon;
