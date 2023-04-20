@@ -94,7 +94,8 @@ public class ShowTabController {
         TextField addDoneTaskField = createAddTaskField(doneTasksList);
 
         // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-        /* // MOCK DATA TO TEST THE UI
+        // MOCK DATA TO TEST THE UI
+        /*
         todoTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         inProgressTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         doneTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
@@ -154,7 +155,7 @@ public class ShowTabController {
         // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
         addTaskField.setOnAction(event -> {
             String taskText = addTaskField.getText();
-            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.getString())) {
+            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
                 HBox newTask = createRandomTask(new Task(), taskText);
                 taskList.getChildren().add(taskList.getChildren().size(), newTask);
 
@@ -242,7 +243,7 @@ public class ShowTabController {
             VBox column = (VBox) scrollPane.getContent();
 
             scrollPane.setOnDragOver(event -> {
-                if (event.getGestureSource() != column && event.getDragboard().hasString() && "task".equals(event.getDragboard().toString())) {
+                if (event.getGestureSource() != column && event.getDragboard().hasString() && "task".equals(event.getDragboard().getString())) {
                     event.acceptTransferModes(TransferMode.MOVE);
                 }
                 event.consume();
