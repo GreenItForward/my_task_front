@@ -1,4 +1,4 @@
-package com.mytask.front.utils;
+package com.mytask.front.model;
 
 public class User {
     private String email;

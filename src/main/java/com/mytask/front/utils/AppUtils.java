@@ -1,12 +1,11 @@
 package com.mytask.front.utils;
 
-import com.mytask.front.service.AlertService;
+import com.mytask.front.service.view.AlertService;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import java.util.Random;
-import java.util.UUID;
 
 public class AppUtils {
 
@@ -56,7 +55,7 @@ public class AppUtils {
         ClipboardContent content = new ClipboardContent();
         content.putString(label.getText());
         clipboard.setContent(content);
-        AlertService.showAlertInfo(EString.INVITE_CODE_COPIED_TITLE.getString(), EString.INVITE_CODE_COPIED_MESSAGE.getString());
+        AlertService.showAlertInfo(EString.INVITE_CODE_COPIED_TITLE.toString(), EString.INVITE_CODE_COPIED_MESSAGE.toString());
     }
 }
 
