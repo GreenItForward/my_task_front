@@ -75,7 +75,7 @@ public class TabService {
         StringProperty formattedDateProperty = new SimpleStringProperty();
         task.getdeadlineDatePicker().valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                String formattedDate = task.parseDueDate(newValue.format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.getString())));
+                String formattedDate = task.parseDueDate(newValue.format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.toString())));
                 formattedDateProperty.set(formattedDate);
             } else {
                 formattedDateProperty.set(null);
@@ -85,7 +85,7 @@ public class TabService {
         dueDateLabel.textProperty().bind(formattedDateProperty);
 
         if (task.getdeadlineDatePicker().getValue() != null) {
-            String formattedDate = task.parseDueDate(task.getdeadlineDatePicker().getValue().format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.getString())));
+            String formattedDate = task.parseDueDate(task.getdeadlineDatePicker().getValue().format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.toString())));
             formattedDateProperty.set(formattedDate);
         }
 
@@ -101,7 +101,7 @@ public class TabService {
                 return;
             }
 
-            System.out.println(task.getdeadlineDatePicker().getValue().format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.getString())));
+            System.out.println(task.getdeadlineDatePicker().getValue().format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.toString())));
 
             if (clockImageView.getImage() == clockImage) {
                 clockImageView.setImage(clockImageChecked);

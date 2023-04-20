@@ -1,10 +1,7 @@
 package com.mytask.front.service.view;
 
-<<<<<<< HEAD:src/main/java/com/mytask/front/service/PopupService.java
 import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.Task;
-=======
->>>>>>> develop:src/main/java/com/mytask/front/service/view/PopupService.java
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
