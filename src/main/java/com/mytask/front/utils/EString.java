@@ -14,6 +14,7 @@ public enum EString {
     COPY_INVITE_CODE("Copier le code d'invitation"),
     ADD_TASK("Ajouter une tâche"),
     ADD_LABEL("Ajouter une étiquette"),
+    CHANGE_ASSIGNED_MEMBERS("Changer les membres assignés"),
 
     // Labels
     MY_TABS("Mes tableaux"),

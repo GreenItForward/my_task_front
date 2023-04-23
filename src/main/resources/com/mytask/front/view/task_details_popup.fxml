@@ -15,7 +15,7 @@
     <TextField layoutX="31.0" layoutY="20.0" prefHeight="25.0" prefWidth="527.0" text="Titre" fx:id="titleTextField"/>
     <TextArea layoutX="31.0" layoutY="64.0" prefHeight="317.0" prefWidth="200.0" text="Détails"
               fx:id="detailsTextArea"/>
-    <Button layoutX="437.0" layoutY="81.0" mnemonicParsing="false" text="Changer les membres"/>
+    <Button layoutX="437.0" layoutY="81.0" mnemonicParsing="false" fx:id="changeAssignedMembersBtn"/>
     <DatePicker layoutX="243.0" layoutY="81.0" fx:id="deadlineDatePicker"/>
     <Label layoutX="243.0" layoutY="56.0" prefHeight="25.0" prefWidth="175.0" text="Date limite : "/>
     <Label layoutX="243.0" layoutY="146.0" prefHeight="17.0" prefWidth="45.0" text="Labels :"/>

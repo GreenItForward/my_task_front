@@ -2,12 +2,19 @@ package com.mytask.front.controller;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
 
+import com.mytask.front.service.view.PopupService;
+import com.mytask.front.service.view.TabService;
+import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.util.Objects;
+
+import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_MEMBERS;
 
 public class TaskDetailsController {
     @FXML
@@ -18,14 +25,17 @@ public class TaskDetailsController {
     @FXML
     private DatePicker deadlineDatePicker;
 
+    @FXML
+    private Button changeAssignedMembersBtn;
+
     private Task task;
 
     private TaskApiClient taskApiClient;
 
     private static TaskDetailsController instance;
 
-    // Change the constructor from private to public
     public TaskDetailsController() {
+
     }
 
     public static TaskDetailsController getInstance() {
@@ -40,24 +50,10 @@ public class TaskDetailsController {
     private void initialize() {
         task = null;
         taskApiClient = TaskApiClient.getInstance();
-        this.titleTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (task != null) {
-                task.setTitle(newValue);
-            }
-        });
 
-        this.detailsTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (task != null) {
-                task.setDetails(newValue);
-            }
-        });
-
-        deadlineDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (task != null) {
-                task.getdeadlineDatePicker().setValue(newValue);
-            }
-        });
-
+        changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
+        this.initializeListeners();
+        changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
     }
 
     @FXML
@@ -91,4 +87,26 @@ public class TaskDetailsController {
         }
     }
  */
+
+    private void initializeListeners() {
+        this.titleTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.setTitle(newValue);
+            }
+        });
+
+        this.detailsTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.setDetails(newValue);
+            }
+        });
+
+        deadlineDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.getdeadlineDatePicker().setValue(newValue);
+            }
+        });
+    }
+
+
 }
