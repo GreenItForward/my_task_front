@@ -5,6 +5,7 @@ import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,10 +33,11 @@ import static com.mytask.front.utils.EPopup.TASK_DETAILS;
 
 public class PopupService {
     private static TaskApiClient taskApiClient;
+    private PopupService instance;
 
 
     private PopupService() {
-        throw new IllegalStateException("Utility class");
+
     }
 
 
@@ -91,8 +93,12 @@ public class PopupService {
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
     }
 
-    public static void showLabelPopup(Stage primaryStage) {
-        VBox labelContainer = createLabelContent();
+    public static PopupService getInstance() {
+        return new PopupService();
+    }
+
+    public void showLabelPopup(Stage primaryStage) {
+        VBox labelContainer = this.createLabelContent();
         setPopupScreen(primaryStage, EPopup.LABELS, labelContainer);
     }
 
@@ -108,7 +114,6 @@ public class PopupService {
 
         deleteButton.setOnAction(e -> onDelete.accept(labelInfo));
 
-        // Update label color when ColorPicker value changes
         colorPicker.setOnAction(e -> {
             Color newColor = colorPicker.getValue();
             String colorString = AppService.colorToHexString(newColor); // Pour l'api
@@ -117,27 +122,55 @@ public class PopupService {
         return labelInfo;
     }
 
-    private static VBox createLabelContent() {
+    private VBox createLabelContent() {
         VBox labelContainer = new VBox();
         labelContainer.setSpacing(10);
         labelContainer.setStyle("-fx-padding: 10;");
 
-        // Exemple de données label (on le récupèrera de l'api)
+        // Exemple de données label
         List<String[]> labels = Arrays.asList(
                 new String[]{"FRONT-END", "#FF0000"},
                 new String[]{"BACK-END", "#00FF00"},
                 new String[]{"TEST", "#0000FF"});
 
-        Consumer<HBox> onDelete = labelInfo -> {
-            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_LABEL_TITLE.toString(), EString.ALERT_VERIFICATION.toString());
-            if (AlertService.isConfirmed(result)) {
-                labelContainer.getChildren().remove(labelInfo);
-            }
-        };
+        for (String[] label : labels) {
+            TextField nameLabel = new TextField(label[0]);
+            ColorPicker colorPicker = new ColorPicker(Color.web(label[1]));
 
-        labels.forEach(label -> labelContainer.getChildren().add(createLabelInfo(label, onDelete)));
+            Button toggleButton = new Button(EString.SUPPRIMER.toString());
+            toggleButton.getStyleClass().add("button-delete");
+
+            HBox labelInfo = new HBox(10);
+            labelInfo.getChildren().addAll(nameLabel, colorPicker, toggleButton);
+            labelContainer.getChildren().add(labelInfo);
+
+            toggleButton.setOnAction(e -> toggleLabel(toggleButton));
+
+
+            // Update label color when ColorPicker value changes
+            colorPicker.setOnAction(e -> {
+                Color newColor = colorPicker.getValue();
+                String colorString = AppService.colorToHexString(newColor); // Pour l'api
+            });
+        }
 
         return labelContainer;
+    }
+
+
+    private static void toggleLabel(Button toggleButton) {
+        if (EString.SUPPRIMER.toString().equals(toggleButton.getText())) {
+            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_LABEL_TITLE.toString(), EString.ALERT_VERIFICATION.toString());
+            if (AlertService.isConfirmed(result)) {
+                toggleButton.setText(EString.AJOUTER.toString());
+                toggleButton.getStyleClass().remove("button-delete");
+                toggleButton.getStyleClass().add("button-add");
+            }
+        } else {
+            toggleButton.setText(EString.SUPPRIMER.toString());
+            toggleButton.getStyleClass().remove("button-add");
+            toggleButton.getStyleClass().add("button-delete");
+        }
     }
 
     private static HBox createUserInfo(String[] user, Consumer<HBox> onDelete) {

@@ -52,6 +52,7 @@ public enum EString {
     ADMINISTRATEUR("Administrateur"),
     MEMBRE("Membre"),
     SUPPRIMER("Supprimer"),
+    AJOUTER("Ajouter"),
 
     // Alert messages
     DELETE_LABEL_TITLE("Supprimer une étiquette"),

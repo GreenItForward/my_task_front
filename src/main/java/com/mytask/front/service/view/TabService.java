@@ -144,6 +144,6 @@ public class TabService {
     }
 
     public static void showLabels(Stage window) {
-        PopupService.showLabelPopup(window);
+        PopupService.getInstance().showLabelPopup(window);
     }
 }
