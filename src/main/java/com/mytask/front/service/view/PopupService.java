@@ -1,6 +1,7 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.controller.TaskDetailsController;
+import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.TaskApiClient;
@@ -97,8 +98,8 @@ public class PopupService {
         return new PopupService();
     }
 
-    public void showLabelPopup(Stage primaryStage) {
-        VBox labelContainer = this.createLabelContent();
+    public void showLabelPopup(Stage primaryStage, Task task) {
+        VBox labelContainer = this.createLabelContent(task);
         setPopupScreen(primaryStage, EPopup.LABELS, labelContainer);
     }
 
@@ -122,20 +123,17 @@ public class PopupService {
         return labelInfo;
     }
 
-    private VBox createLabelContent() {
+    private VBox createLabelContent(Task task) {
         VBox labelContainer = new VBox();
         labelContainer.setSpacing(10);
         labelContainer.setStyle("-fx-padding: 10;");
 
         // Exemple de données label
-        List<String[]> labels = Arrays.asList(
-                new String[]{"FRONT-END", "#FF0000"},
-                new String[]{"BACK-END", "#00FF00"},
-                new String[]{"TEST", "#0000FF"});
+        List<LabelModel> labels = task.getLabels();
 
-        for (String[] label : labels) {
-            TextField nameLabel = new TextField(label[0]);
-            ColorPicker colorPicker = new ColorPicker(Color.web(label[1]));
+        for (LabelModel label : labels) {
+            TextField nameLabel = new TextField(label.getNom());
+            ColorPicker colorPicker = new ColorPicker(label.getCouleur());
 
             Button toggleButton = new Button(EString.SUPPRIMER.toString());
             toggleButton.getStyleClass().add("button-delete");

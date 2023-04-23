@@ -153,7 +153,7 @@ public class TabService {
         PopupService.showInviteCodePopup(primaryStage);
     }
 
-    public static void showLabels(Stage window) {
-        PopupService.getInstance().showLabelPopup(window);
+    public static void showLabels(Stage window, Task task) {
+        PopupService.getInstance().showLabelPopup(window, task);
     }
 }

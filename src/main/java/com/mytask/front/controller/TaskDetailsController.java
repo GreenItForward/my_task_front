@@ -56,7 +56,7 @@ public class TaskDetailsController {
         changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
         this.initializeListeners();
         changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
-        changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow()));
+        changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow(), task));
     }
 
     @FXML
