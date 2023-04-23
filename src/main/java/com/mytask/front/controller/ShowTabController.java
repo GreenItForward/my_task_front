@@ -186,6 +186,8 @@ public class ShowTabController {
         task.setTitle(title);
         task.setDeadline(LocalDate.now().plusDays(random.nextInt(100)));
 
+        //TODO: quand on créera les taches sans les données aléatoires, on devra enlever ça et mettre les données de la tache (projectID, assignedTo, etc.)
+
         Label titleLabel = new Label(title);
         titleLabel.textProperty().bind(task.titleProperty());
         HBox deadlineBox = TabService.createDeadlineBox(task);

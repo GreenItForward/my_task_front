@@ -2,6 +2,7 @@ package com.mytask.front.service.view;
 
 import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -21,15 +22,25 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
+
+import static com.mytask.front.utils.EPopup.TASK_DETAILS;
 
 public class PopupService {
+    private static TaskApiClient taskApiClient;
 
 
     private PopupService() {
         throw new IllegalStateException("Utility class");
     }
 
+
     public static void setPopupScreen(Stage primaryStage, EPopup page, VBox content) {
+        setPopupScreen(primaryStage, page, content, null);
+    }
+
+    public static void setPopupScreen(Stage primaryStage, EPopup page, VBox content, Supplier<Task> taskSupplier) {
+        taskApiClient = TaskApiClient.getInstance();
         Stage popup = new Stage();
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
@@ -43,7 +54,16 @@ public class PopupService {
         Label label = new Label(page.getWindowTitle());
         label.getStyleClass().add("popup-title");
         Button closeButton = new Button(EString.CLOSE.toString());
-        closeButton.setOnAction(e -> popup.close());
+
+        closeButton.setOnAction(e -> {
+            if (page.getFxmlName().equals(TASK_DETAILS.getFxmlName())) {
+                Task task = taskSupplier.get();
+                if (task != null) {
+                    taskApiClient.updateTask(task);
+                }
+            }
+            popup.close();
+        });
 
         scrollPane.setContent(content);
 
@@ -147,11 +167,9 @@ public class PopupService {
             URL fxmlUrl = EPopup.TASK_DETAILS.getFxmlPath();
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent taskDetailContent = loader.load();
-
             TaskDetailsController taskDetailController = loader.getController();
             taskDetailController.setTask(task);
-
-            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent));
+            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent), taskDetailController::getTask);
         } catch (IOException e) {
             e.printStackTrace();
         }
