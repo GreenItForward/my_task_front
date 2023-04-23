@@ -142,4 +142,8 @@ public class TabService {
     public static void showInviteCode(Stage primaryStage) {
         PopupService.showInviteCodePopup(primaryStage);
     }
+
+    public static void showLabels(Stage window) {
+        PopupService.showLabelPopup(window);
+    }
 }

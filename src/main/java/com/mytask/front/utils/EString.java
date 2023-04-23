@@ -15,6 +15,7 @@ public enum EString {
     ADD_TASK("Ajouter une tâche"),
     ADD_LABEL("Ajouter une étiquette"),
     CHANGE_ASSIGNED_MEMBERS("Changer les membres assignés"),
+    CHANGE_ASSIGNED_LABELS("Changer les étiquettes assignées"),
 
     // Labels
     MY_TABS("Mes tableaux"),
@@ -53,6 +54,7 @@ public enum EString {
     SUPPRIMER("Supprimer"),
 
     // Alert messages
+    DELETE_LABEL_TITLE("Supprimer une étiquette"),
     DELETE_USER_TITLE("Supprimer un utilisateur"),
     ALERT_VERIFICATION("Etes-vous sûr de vouloir continuer ?"),
     DELETE_USER_CONFIRMATION("Voulez-vous vraiment supprimer cet utilisateur ?"),

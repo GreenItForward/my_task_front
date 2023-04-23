@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
+import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_LABELS;
 import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_MEMBERS;
 
 public class TaskDetailsController {
@@ -26,7 +27,7 @@ public class TaskDetailsController {
     private DatePicker deadlineDatePicker;
 
     @FXML
-    private Button changeAssignedMembersBtn;
+    private Button changeAssignedMembersBtn, changeAssignedLabelsBtn;
 
     private Task task;
 
@@ -52,8 +53,10 @@ public class TaskDetailsController {
         taskApiClient = TaskApiClient.getInstance();
 
         changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
+        changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
         this.initializeListeners();
         changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
+        changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow()));
     }
 
     @FXML

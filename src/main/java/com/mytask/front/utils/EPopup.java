@@ -6,7 +6,8 @@ public enum EPopup {
     MEMBERS("members", "Gestion des membres", 420, 500),
     INVITE_CODE("invite_code", "Gestion des codes d'invitation", 420, 500),
     TASK_DETAILS("task_details_popup", "Editer la tâche", 700, 525),
-    TABLE_LIST("tables_list_popup", "Liste des tableaux", 420, 500);
+    TABLE_LIST("tables_list_popup", "Liste des tableaux", 420, 500),
+    LABELS("labels", "Gestion des labels", 450, 500);
 
     private String fxmlName;
     private String windowTitle;

@@ -2,11 +2,13 @@ package com.mytask.front.service.view;
 
 import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -14,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,6 +25,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.mytask.front.utils.EPopup.TASK_DETAILS;
@@ -87,10 +91,77 @@ public class PopupService {
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
     }
 
-    public static void showInviteCodePopup(Stage primaryStage) {
-        VBox inviteCodeContainer = createInviteCodeContent();
+    public static void showLabelPopup(Stage primaryStage) {
+        VBox labelContainer = createLabelContent();
+        setPopupScreen(primaryStage, EPopup.LABELS, labelContainer);
+    }
 
-        setPopupScreen(primaryStage, EPopup.INVITE_CODE, inviteCodeContainer);
+    private static HBox createLabelInfo(String[] label, Consumer<HBox> onDelete) {
+        TextField nameLabel = new TextField(label[0]);
+        ColorPicker colorPicker = new ColorPicker(Color.web(label[1]));
+
+        Button deleteButton = new Button(EString.SUPPRIMER.toString());
+        deleteButton.getStyleClass().add("button-delete");
+
+        HBox labelInfo = new HBox(10);
+        labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
+
+        deleteButton.setOnAction(e -> onDelete.accept(labelInfo));
+
+        // Update label color when ColorPicker value changes
+        colorPicker.setOnAction(e -> {
+            Color newColor = colorPicker.getValue();
+            String colorString = AppService.colorToHexString(newColor); // Pour l'api
+        });
+
+        return labelInfo;
+    }
+
+    private static VBox createLabelContent() {
+        VBox labelContainer = new VBox();
+        labelContainer.setSpacing(10);
+        labelContainer.setStyle("-fx-padding: 10;");
+
+        // Exemple de données label (on le récupèrera de l'api)
+        List<String[]> labels = Arrays.asList(
+                new String[]{"FRONT-END", "#FF0000"},
+                new String[]{"BACK-END", "#00FF00"},
+                new String[]{"TEST", "#0000FF"});
+
+        Consumer<HBox> onDelete = labelInfo -> {
+            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_LABEL_TITLE.toString(), EString.ALERT_VERIFICATION.toString());
+            if (AlertService.isConfirmed(result)) {
+                labelContainer.getChildren().remove(labelInfo);
+            }
+        };
+
+        labels.forEach(label -> labelContainer.getChildren().add(createLabelInfo(label, onDelete)));
+
+        return labelContainer;
+    }
+
+    private static HBox createUserInfo(String[] user, Consumer<HBox> onDelete) {
+        Label nameLabel = new Label(user[0]);
+        Label emailLabel = new Label(user[1]);
+
+        ComboBox<String> roleComboBox = new ComboBox<>();
+        roleComboBox.getItems().addAll(EString.getRoleStrings());
+        roleComboBox.setValue(user[2]);
+
+        HBox userInfo = new HBox(10);
+        userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
+
+        roleComboBox.setOnAction(e -> {
+            if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
+                onDelete.accept(userInfo);
+            } else {
+                roleComboBox.setValue(user[2]);
+            }
+        });
+
+        roleComboBox.getStyleClass().add("combo-box");
+
+        return userInfo;
     }
 
     private static VBox createMemberContent() {
@@ -98,45 +169,20 @@ public class PopupService {
         userContainer.setSpacing(10);
         userContainer.setStyle("-fx-padding: 10;");
 
-        // Exemple de données utilisateur
+        // Exemple de données utilisateur (on le récupèrera de l'api)
         List<String[]> users = Arrays.asList(
                 new String[]{"Ronan (vous)", "ronan@gmail.com", "Administrateur"},
                 new String[]{"John", "johndoe@gmail.com", "Membre"}
         );
 
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(20, 20, 20, 20));
+        Consumer<HBox> onDelete = userInfo -> {
+            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
+            if (AlertService.isConfirmed(result)) {
+                userContainer.getChildren().remove(userInfo);
+            }
+        };
 
-        for (int i = 0; i < users.size(); i++) {
-            Label nameLabel = new Label(users.get(i)[0]);
-            Label emailLabel = new Label(users.get(i)[1]);
-
-            ComboBox<String> roleComboBox = new ComboBox<>();
-            roleComboBox.getItems().addAll(EString.getRoleStrings());
-            roleComboBox.setValue(users.get(i)[2]);
-
-            HBox userInfo = new HBox(10);
-            userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
-            userContainer.getChildren().add(userInfo);
-
-            int finalI = i;
-            roleComboBox.setOnAction(e -> {
-                if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
-                    ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
-                    if (AlertService.isConfirmed(result)) {
-                        userContainer.getChildren().remove(userInfo);
-                    } else {
-                        roleComboBox.setValue(users.get(finalI)[2]);
-                    }
-                }
-            });
-
-            roleComboBox.getStyleClass().add("combo-box");
-        }
-
-        gridPane.add(userContainer, 0, 0, 3, 1);
+        users.forEach(user -> userContainer.getChildren().add(createUserInfo(user, onDelete)));
 
         return userContainer;
     }
@@ -192,9 +238,16 @@ public class PopupService {
         popupStage.show();
     }
 
+    public static void showInviteCodePopup(Stage primaryStage) {
+        VBox inviteCodeContainer = createInviteCodeContent();
+
+        setPopupScreen(primaryStage, EPopup.INVITE_CODE, inviteCodeContainer);
+    }
+
     private static Parent loadFXML(String fxmlPath) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(PopupService.class.getResource(fxmlPath));
         return fxmlLoader.load();
     }
+
 
 }
