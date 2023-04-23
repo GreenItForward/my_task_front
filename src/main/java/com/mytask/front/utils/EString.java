@@ -3,6 +3,7 @@ package com.mytask.front.utils;
 public enum EString {
     // Buttons
     BACK("Retour"),
+
     CLOSE("Fermer"),
     BACK_TO_MENU("Retour au menu"),
     CREATE_TAB("Créer un tableau"),
