@@ -1,5 +1,7 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.exception.SignupException;
+import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
@@ -19,9 +21,11 @@ public class InscriptionController {
     @FXML
     private Label error;
     private ScreenService screenService;
+    private AuthApiClient authApiClient;
 
     @FXML
     public void initialize() {
+        authApiClient = AuthApiClient.getInstance();
         sinscrire.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) sinscrire.getScene().getWindow());
@@ -34,14 +38,15 @@ public class InscriptionController {
 
         sinscrire.setOnAction(event -> {
             User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
-            String res = UserService.signUpUser(user);
-            if(res.equals("ok")) {
+            try {
+                UserService.signUpUser(user);
+                authApiClient.register(user);
                 System.out.println(EString.SIGN_UP_IN_PROGRESS.toString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
-            }
-            else {
-                error.setText(res);
+            } catch (SignupException e) {
+                System.out.println(e.getMessage());
+                error.setText(e.getMessage());
             }
         });
     }

@@ -1,5 +1,8 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.exception.LoginException;
+import com.mytask.front.model.User;
+import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
@@ -19,9 +22,11 @@ public class ConnectionController {
     @FXML
     private Label error;
     private ScreenService screenService;
+    private AuthApiClient authApiClient;
 
     @FXML
     public void initialize() {
+        authApiClient = AuthApiClient.getInstance();
         seconnecter.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) newValue.getWindow());
@@ -34,13 +39,16 @@ public class ConnectionController {
         });
 
         seconnecter.setOnAction(event -> {
-            String res = UserService.connectUser(email.getText(), password.getText());
-            if(res.equals("ok")) {
+            try {
+                UserService.connectUser(email.getText(), password.getText());
+                User user = new User(email.getText(), password.getText());
+                authApiClient.login(user);
                 System.out.println(EString.SIGN_IN_IN_PROGRESS.toString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
-            } else {
-                error.setText(res);
+            } catch (LoginException e) {
+                System.out.println(e.getMessage());
+                error.setText(e.getMessage());
             }
         });
     }

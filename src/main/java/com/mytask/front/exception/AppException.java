@@ -1,4 +1,4 @@
 package com.mytask.front.exception;
 
-public class AppExceptions {
+public class AppException {
 }
