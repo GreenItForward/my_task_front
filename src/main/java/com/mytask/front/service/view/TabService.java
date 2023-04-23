@@ -1,8 +1,7 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EPopup;
 import com.mytask.front.utils.EString;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -20,6 +19,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import static com.mytask.front.utils.EIcon.*;
@@ -29,19 +30,15 @@ public class TabService {
     // Singleton
     public static void init(Stage primaryStage) {
         ScreenService screenService = ScreenService.getInstance(primaryStage);
+
     }
 
-    public static HBox createColorTags(Random random) {
-        Color color1 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        Color color2 = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+    public static HBox createColorTags(String title, Color color) {
         String tooltipStyle = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #ffffff; -fx-background-color: #000000; -fx-padding: 5px;";
+        Rectangle colorRect1 = new Rectangle(20, 10, color);
 
-        Rectangle colorRect1 = new Rectangle(20, 10, color1);
-        Rectangle colorRect2 = new Rectangle(20, 10, color2);
-
-        for (Color color : new Color[]{color1, color2}) {
-            Rectangle colorRect = color.equals(color1) ? colorRect1 : colorRect2;
-            String labelName = "Couleur: " + color.toString().substring(2, color.toString().length() - 2) + ", Titre: \"" + (random.nextInt(100) + 1) + "\"";
+            Rectangle colorRect = colorRect1;
+            String labelName = "Couleur: " + color.toString().substring(2, color.toString().length() - 2) + ", Titre: \"" + title + "\"";
             colorRect.setId(labelName.substring(labelName.indexOf("e:")+2, labelName.length() - 1).replace("\"", ""));
             Tooltip tooltip = new Tooltip(labelName);
             tooltip.setStyle(tooltipStyle);
@@ -53,9 +50,22 @@ public class TabService {
             colorRect.setOnMouseExited(e -> colorRect.setOpacity(1));
             tooltip.setHideDelay(Duration.seconds(0.3));
             tooltip.setShowDelay(Duration.seconds(0.2));
-        }
 
-        return new HBox(5, colorRect1, colorRect2);
+        return new HBox(5, colorRect1);
+    }
+
+    public static HBox createColorTags(Task task) {
+        final HBox[] result = {null};
+        List<LabelModel> labels = task.getLabels();
+        labels.forEach(label -> {
+            if (result[0] == null) {
+                result[0] = createColorTags(label.getNom(), label.getCouleur());
+            } else {
+                result[0].getChildren().add(createColorTags(label.getNom(), label.getCouleur()));
+            }
+        });
+
+        return result[0];
     }
 
     public static Label createTitleLabel(Random random) {

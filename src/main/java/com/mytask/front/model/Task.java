@@ -5,10 +5,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class Task {
@@ -24,6 +27,7 @@ public class Task {
     private DatePicker deadlineDatePicker;
     private StringProperty assignedTo;
 
+    private List<LabelModel> labels;
 
     public Task(String title, LocalDate deadline, String assignedTo, DatePicker datePicker, String details) {
         this.id = 14;
@@ -31,9 +35,9 @@ public class Task {
         this.details = new SimpleStringProperty(details);
         this.status = EStatus.TODO;
         this.projectID = 38;
-
         this.assignedTo = new SimpleStringProperty(assignedTo);
         this.deadlineDatePicker = new DatePicker(deadline);
+        this.labels = new ArrayList<>();
     }
 
     public Task() {
@@ -115,6 +119,14 @@ public class Task {
 
     public void setProjectID(int projectID) {
         this.projectID = projectID;
+    }
+
+    public List<LabelModel> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<LabelModel> labels) {
+        this.labels = labels;
     }
 
     public String parseDueDate(String dueDateText) {

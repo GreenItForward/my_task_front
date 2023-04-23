@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
@@ -16,14 +17,13 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
+
 import javafx.scene.control.TextField;
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 import static com.mytask.front.service.view.TabService.createTitleLabel;
@@ -182,7 +182,14 @@ public class ShowTabController {
         HBox taskBox = new HBox(10);
         Random random = new Random();
 
-        HBox colorTags = TabService.createColorTags(random);
+        List<LabelModel> labels = Arrays.asList(
+                new LabelModel("FRONT-END", Color.web("#FF0000")),
+                new LabelModel("BACK-END", Color.web("#00FF00")),
+                new LabelModel("TEST", Color.web("#0000FF")));
+
+        task.setLabels(labels);
+
+        HBox colorTags = TabService.createColorTags(task);
         task.setTitle(title);
         task.setDeadline(LocalDate.now().plusDays(random.nextInt(100)));
 
