@@ -270,7 +270,7 @@ public class PopupService {
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent taskDetailContent = loader.load();
             TaskDetailsController taskDetailController = loader.getController();
-            taskDetailController.setTask(task);
+            taskDetailController.setTaskAndUpdateUI(task);
             setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent), taskDetailController::getTask);
         } catch (IOException e) {
             e.printStackTrace();

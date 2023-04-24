@@ -1,15 +1,19 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.view.TabService;
+import com.mytask.front.utils.AppUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_LABELS;
@@ -26,6 +30,9 @@ public class TaskDetailsController {
 
     @FXML
     private Button changeAssignedMembersBtn, changeAssignedLabelsBtn;
+
+    @FXML
+    private ScrollPane labelsScrollPane;
 
     private Task task;
 
@@ -50,6 +57,7 @@ public class TaskDetailsController {
         task = null;
         taskApiClient = TaskApiClient.getInstance();
 
+
         changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
         changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
         this.initializeListeners();
@@ -60,7 +68,13 @@ public class TaskDetailsController {
     @FXML
     public void setTask(Task task) {
         this.task = Objects.requireNonNullElseGet(task, Task::new);
+
         updateFields();
+    }
+
+    public void setTaskAndUpdateUI(Task task) {
+        this.task = task;
+        displayLabels();
     }
 
 
@@ -79,6 +93,26 @@ public class TaskDetailsController {
         detailsTextArea.setText(task.getDetails());
         deadlineDatePicker.setValue(task.getDeadline());
 
+    }
+
+    private void displayLabels() {
+        Task task = getTask();
+        List<LabelModel> labels = task.getLabels();
+
+        VBox labelsContainer = new VBox(10);
+        labelsContainer.setPadding(new Insets(10, 10, 10, 10));
+        labelsContainer.setStyle("-fx-background-color: transparent;");
+
+        for (LabelModel labelModel : labels) {
+            Label label = new Label(labelModel.getNom());
+            label.setTextFill(Color.WHITE);
+            String color = AppService.colorToHexString(labelModel.getCouleur());
+            label.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 5px; -fx-padding: 4; -fx-text-fill: black;");
+
+            labelsContainer.getChildren().add(label);
+        }
+
+        labelsScrollPane.setContent(labelsContainer);
     }
 /* TODO: Fix this method*/
 /*
