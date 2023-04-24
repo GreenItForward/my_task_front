@@ -1,22 +1,24 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.exception.LoginException;
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
-import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 
 public class ConnectionController {
     @FXML
-    private TextField email, password;
+    private TextField email;
+    @FXML
+    private PasswordField password;
     @FXML
     private Button sinscrire, seconnecter;
     @FXML
@@ -40,13 +42,12 @@ public class ConnectionController {
 
         seconnecter.setOnAction(event -> {
             try {
-                UserService.connectUser(email.getText(), password.getText());
                 User user = new User(email.getText(), password.getText());
-                authApiClient.login(user);
+                authApiClient.authentify(user, "login");
                 System.out.println(EString.SIGN_IN_IN_PROGRESS.toString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
-            } catch (LoginException e) {
+            } catch (AuthException e) {
                 System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }

@@ -71,10 +71,10 @@ public class User {
         this.token = token;
     }
 
-    public String toJSON(boolean isLogin) {
+    public String toJSON(String endpoint) {
         String result = "{\"email\":\"" + this.email + "\",\"password\":\"" + this.password;
-        if (!isLogin) {
-            result += "\",\"name\":\"" + this.nom;
+        if (endpoint.equals("register")) {
+            result += "\",\"name\":\"" + this.nom + "\",\"firstname\":\"" + this.prenom;
         }
         return result + "\"}";
     }
