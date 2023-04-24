@@ -63,20 +63,11 @@ public class PopupService {
         Button closeButton = new Button(EString.CLOSE.toString());
 
         closeButton.setOnAction(e -> {
-            if (page.getFxmlName().equals(TASK_DETAILS.getFxmlName())) {
-                Task task = taskSupplier.get();
-                if (task != null) {
-                    taskApiClient.updateTask(task);
-                }
-            }else if(page.getFxmlName().equals(LABELS.getFxmlName())){
-                Task task = taskSupplier.get();
-                ShowTabController.getInstance().updateLabels(task);
-               // TaskDetailsController.getInstance().updateAssignedMembers();
-            }
-
-
+            updateInformation(page, taskSupplier);
             popup.close();
         });
+
+        popup.setOnCloseRequest(e -> updateInformation(page, taskSupplier));
 
         scrollPane.setContent(content);
 
@@ -93,6 +84,19 @@ public class PopupService {
         popup.centerOnScreen();
         popup.setResizable(false);
         popup.showAndWait();
+    }
+
+    private static void updateInformation(EPopup page, Supplier<Task> taskSupplier) {
+        if (page.getFxmlName().equals(TASK_DETAILS.getFxmlName())) {
+            Task task = taskSupplier.get();
+            if (task != null) {
+                taskApiClient.updateTask(task);
+            }
+        }else if(page.getFxmlName().equals(LABELS.getFxmlName())){
+            Task task = taskSupplier.get();
+            ShowTabController.getInstance().updateLabels(task);
+            // TaskDetailsController.getInstance().updateAssignedMembers();
+        }
     }
 
     public static void showMemberPopup(Stage primaryStage) {
