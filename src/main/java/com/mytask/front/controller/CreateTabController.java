@@ -71,7 +71,8 @@ public class CreateTabController {
             }
 
             projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText()));
-            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
+            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+
             screenService.setScreen(EPage.SHOW_TAB);
             resetFields(null);
         });

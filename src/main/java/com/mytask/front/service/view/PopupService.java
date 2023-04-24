@@ -1,9 +1,11 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
+import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
 import javafx.event.ActionEvent;
@@ -19,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,6 +33,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static com.mytask.front.utils.EPopup.LABELS;
 import static com.mytask.front.utils.EPopup.TASK_DETAILS;
 
 public class PopupService {
@@ -68,7 +72,13 @@ public class PopupService {
                 if (task != null) {
                     taskApiClient.updateTask(task);
                 }
+            }else if(page.getFxmlName().equals(LABELS.getFxmlName())){
+                Task task = taskSupplier.get();
+                ShowTabController.getInstance().updateLabels(task);
+               // TaskDetailsController.getInstance().updateAssignedMembers();
             }
+
+
             popup.close();
         });
 
@@ -100,7 +110,7 @@ public class PopupService {
 
     public void showLabelPopup(Stage primaryStage, Task task) {
         VBox labelContainer = this.createLabelContent(task);
-        setPopupScreen(primaryStage, EPopup.LABELS, labelContainer);
+        setPopupScreen(primaryStage, LABELS, labelContainer, () -> task);
     }
 
     private static HBox createLabelInfo(String[] label, Consumer<HBox> onDelete) {
@@ -112,8 +122,6 @@ public class PopupService {
 
         HBox labelInfo = new HBox(10);
         labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
-
-        deleteButton.setOnAction(e -> onDelete.accept(labelInfo));
 
         colorPicker.setOnAction(e -> {
             Color newColor = colorPicker.getValue();
@@ -142,8 +150,21 @@ public class PopupService {
             labelInfo.getChildren().addAll(nameLabel, colorPicker, toggleButton);
             labelContainer.getChildren().add(labelInfo);
 
-            toggleButton.setOnAction(e -> toggleLabel(toggleButton));
+            toggleButton.setOnAction(e -> {
+                toggleLabel(toggleButton, label);
+            });
 
+            nameLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null && !newValue.isEmpty()) {
+                    label.setNom(newValue);
+                }
+            });
+
+            colorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    label.setCouleur(newValue);
+                }
+            });
 
             // Update label color when ColorPicker value changes
             colorPicker.setOnAction(e -> {
@@ -156,13 +177,14 @@ public class PopupService {
     }
 
 
-    private static void toggleLabel(Button toggleButton) {
+    private static void toggleLabel(Button toggleButton, LabelModel label) {
         if (EString.SUPPRIMER.toString().equals(toggleButton.getText())) {
             ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_LABEL_TITLE.toString(), EString.ALERT_VERIFICATION.toString());
             if (AlertService.isConfirmed(result)) {
                 toggleButton.setText(EString.AJOUTER.toString());
                 toggleButton.getStyleClass().remove("button-delete");
                 toggleButton.getStyleClass().add("button-add");
+                LabelApiClient.getInstance().removeLabel(label);
             }
         } else {
             toggleButton.setText(EString.SUPPRIMER.toString());

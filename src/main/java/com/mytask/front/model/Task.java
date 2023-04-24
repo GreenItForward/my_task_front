@@ -6,6 +6,8 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +30,9 @@ public class Task {
     private StringProperty assignedTo;
 
     private List<LabelModel> labels;
+
+    private HBox taskBox;
+    private HBox labelBox;
 
     public Task(String title, LocalDate deadline, String assignedTo, DatePicker datePicker, String details) {
         this.id = 14;
@@ -80,7 +85,7 @@ public class Task {
         if (details.get() == null) {
             return "";
         }
-        
+
         return details.get();
     }
 
@@ -129,6 +134,22 @@ public class Task {
         this.labels = labels;
     }
 
+    public HBox getTaskBox() {
+        return taskBox;
+    }
+
+    public void setTaskBox(HBox taskBox) {
+        this.taskBox = taskBox;
+    }
+
+    public HBox getLabelBox() {
+        return labelBox;
+    }
+
+    public void setLabelBox(HBox labelBox) {
+        this.labelBox = labelBox;
+    }
+
     public String parseDueDate(String dueDateText) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.FRANCE);
@@ -149,7 +170,7 @@ public class Task {
                 ", \"status\":\"" + status + '\"' +
                 ", \"deadline\":\"" + deadlineDatePicker.getValue() + '\"' +
                 ", \"projectID\":" + projectID +
-            //    ", \"assignedTo\":\"" + assignedTo + '\"' +
+                //    ", \"assignedTo\":\"" + assignedTo + '\"' +
                 '}';
     }
 }

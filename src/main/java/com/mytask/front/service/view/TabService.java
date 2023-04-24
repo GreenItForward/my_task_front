@@ -33,39 +33,39 @@ public class TabService {
 
     }
 
-    public static HBox createColorTags(String title, Color color) {
+    public static Rectangle createColorRectangle(String title, Color color, int taskID) {
         String tooltipStyle = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #ffffff; -fx-background-color: #000000; -fx-padding: 5px;";
-        Rectangle colorRect1 = new Rectangle(20, 10, color);
+        Rectangle colorRect = new Rectangle(20, 10, color);
 
-            Rectangle colorRect = colorRect1;
-            String labelName = "Couleur: " + color.toString().substring(2, color.toString().length() - 2) + ", Titre: \"" + title + "\"";
-            colorRect.setId(labelName.substring(labelName.indexOf("e:")+2, labelName.length() - 1).replace("\"", ""));
-            Tooltip tooltip = new Tooltip(labelName);
-            tooltip.setStyle(tooltipStyle);
-            Tooltip.install(colorRect, tooltip);
-            tooltip.setStyle(tooltipStyle);
-            colorRect.setArcWidth(10);
-            colorRect.setArcHeight(10);
-            colorRect.setOnMouseEntered(e -> colorRect.setOpacity(0.5));
-            colorRect.setOnMouseExited(e -> colorRect.setOpacity(1));
-            tooltip.setHideDelay(Duration.seconds(0.3));
-            tooltip.setShowDelay(Duration.seconds(0.2));
+        String labelName = "Couleur: " + color.toString().substring(2, color.toString().length() - 2) + ", Titre: \"" + title + "\"";
+        colorRect.setId(String.format("label-%s-%s", title, taskID));
+        System.out.println(colorRect.getId());
+        Tooltip tooltip = new Tooltip(labelName);
+        tooltip.setStyle(tooltipStyle);
+        Tooltip.install(colorRect, tooltip);
+        tooltip.setStyle(tooltipStyle);
+        colorRect.setArcWidth(10);
+        colorRect.setArcHeight(10);
+        colorRect.setOnMouseEntered(e -> colorRect.setOpacity(0.5));
+        colorRect.setOnMouseExited(e -> colorRect.setOpacity(1));
+        tooltip.setHideDelay(Duration.seconds(0.3));
+        tooltip.setShowDelay(Duration.seconds(0.2));
 
-        return new HBox(5, colorRect1);
+        return colorRect;
     }
 
     public static HBox createColorTags(Task task) {
-        final HBox[] result = {null};
+        final HBox result = new HBox();
+        result.setSpacing(5); // Ajouter un espacement entre les étiquettes
+        result.setId("hbox-labels");
+
         List<LabelModel> labels = task.getLabels();
         labels.forEach(label -> {
-            if (result[0] == null) {
-                result[0] = createColorTags(label.getNom(), label.getCouleur());
-            } else {
-                result[0].getChildren().add(createColorTags(label.getNom(), label.getCouleur()));
-            }
+            Rectangle colorRect = createColorRectangle(label.getNom(), label.getCouleur(), task.getId());
+            result.getChildren().add(colorRect);
         });
 
-        return result[0];
+        return result;
     }
 
     public static Label createTitleLabel(Random random) {

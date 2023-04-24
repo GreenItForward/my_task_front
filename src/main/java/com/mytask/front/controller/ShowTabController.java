@@ -1,16 +1,19 @@
 package com.mytask.front.controller;
 
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
+import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.PdfExportService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -18,6 +21,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -26,7 +30,6 @@ import java.util.*;
 
 import javafx.scene.control.TextField;
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
-import static com.mytask.front.service.view.TabService.createTitleLabel;
 
 public class ShowTabController {
 
@@ -67,10 +70,22 @@ public class ShowTabController {
 
     private HBox draggedTask;
     private static SecureRandom rand;
+    private static ShowTabController instance;
 
     static {
         try { rand = SecureRandom.getInstanceStrong(); }
         catch (NoSuchAlgorithmException e) { rand = new SecureRandom(); }
+    }
+
+    private ShowTabController() {
+    }
+
+
+    public static ShowTabController getInstance() {
+        if (instance == null) {
+            instance = new ShowTabController();
+        }
+        return instance;
     }
 
     @FXML
@@ -100,6 +115,7 @@ public class ShowTabController {
         inProgressTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         doneTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
         */
+
 
         todoTasksList.getChildren().add(0, addTodoTaskField);
         inProgressTasksList.getChildren().add(0, addInProgressTaskField);
@@ -229,6 +245,9 @@ public class ShowTabController {
 
         VBox.setMargin(taskBox, new Insets(10, 0, 0, 0));
 
+        task.setLabelBox(colorTags);
+        task.setTaskBox(taskBox);
+
         return taskBox;
     }
 
@@ -273,7 +292,7 @@ public class ShowTabController {
     }
 
 
-    private void configureTaskDragAndDrop(HBox taskBox) {
+        private void configureTaskDragAndDrop(HBox taskBox) {
         taskBox.setOnDragDetected(event -> {
             Dragboard db = taskBox.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
@@ -293,5 +312,24 @@ public class ShowTabController {
             draggedTask = null;
             event.consume();
         });
+    }
+
+    public void updateLabels(Task Task) {
+        HBox taskBox = Task.getLabelBox();
+        taskBox.getChildren().removeIf(Rectangle.class::isInstance);
+        HBox colorTags = TabService.createColorTags(Task);
+        taskBox.getChildren().add(colorTags);
+    }
+
+    public VBox getTodoTasksList() {
+        return todoTasksList;
+    }
+
+    public VBox getInProgressTasksList() {
+        return inProgressTasksList;
+    }
+
+    public VBox getDoneTasksList() {
+        return doneTasksList;
     }
 }
