@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -39,7 +38,6 @@ public class TabService {
 
         String labelName = "Couleur: " + color.toString().substring(2, color.toString().length() - 2) + ", Titre: \"" + title + "\"";
         colorRect.setId(String.format("label-%s-%s", title, taskID));
-        System.out.println(colorRect.getId());
         Tooltip tooltip = new Tooltip(labelName);
         tooltip.setStyle(tooltipStyle);
         Tooltip.install(colorRect, tooltip);

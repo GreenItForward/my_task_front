@@ -18,6 +18,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static com.mytask.front.configuration.AppConfiguration.labels;
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;
 
@@ -70,9 +74,13 @@ public class CreateTabController {
                 return;
             }
 
-            projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText()));
-            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+            Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
+            projectApiClient.createProject(project);
+            project.setLabels(labels);
+           // project.setLabels(labelApiClient.getLabels()); // dès que l'on aura l'endpoint pour récupérer les labels
+            ShowTabController.getInstance().setProject(project);
 
+            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
             screenService.setScreen(EPage.SHOW_TAB);
             resetFields(null);
         });

@@ -29,6 +29,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 import javafx.scene.control.TextField;
+
+import static com.mytask.front.configuration.AppConfiguration.labels;
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 
 public class ShowTabController {
@@ -71,6 +73,7 @@ public class ShowTabController {
     private HBox draggedTask;
     private static SecureRandom rand;
     private static ShowTabController instance;
+    private Project project;
 
     static {
         try { rand = SecureRandom.getInstanceStrong(); }
@@ -90,6 +93,10 @@ public class ShowTabController {
 
     @FXML
     public void initialize() {
+        project = new Project("mock", "mock mock mock");
+        project.setLabels(labels);
+
+
         backToMenuBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
@@ -198,12 +205,11 @@ public class ShowTabController {
         HBox taskBox = new HBox(10);
         Random random = new Random();
 
-        List<LabelModel> labels = Arrays.asList(
-                new LabelModel("FRONT-END", Color.web("#FF0000")),
-                new LabelModel("BACK-END", Color.web("#00FF00")),
-                new LabelModel("TEST", Color.web("#0000FF")));
-
-        task.setLabels(labels);
+        List<LabelModel> labels = this.project.getLabels();
+        List<LabelModel> taskLabels = new ArrayList<>();
+        taskLabels.add(labels.get(0));
+        taskLabels.add(labels.get(1));
+        task.setLabels(taskLabels);
 
         HBox colorTags = TabService.createColorTags(task);
         task.setTitle(title);
@@ -292,6 +298,7 @@ public class ShowTabController {
     }
 
 
+
         private void configureTaskDragAndDrop(HBox taskBox) {
         taskBox.setOnDragDetected(event -> {
             Dragboard db = taskBox.startDragAndDrop(TransferMode.MOVE);
@@ -316,7 +323,10 @@ public class ShowTabController {
 
     public void updateLabels(Task Task) {
         HBox taskBox = Task.getLabelBox();
+        
         taskBox.getChildren().removeIf(Rectangle.class::isInstance);
+        taskBox.getChildren().removeIf(HBox.class::isInstance);
+
         HBox colorTags = TabService.createColorTags(Task);
         taskBox.getChildren().add(colorTags);
     }
@@ -331,5 +341,13 @@ public class ShowTabController {
 
     public VBox getDoneTasksList() {
         return doneTasksList;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
     }
 }

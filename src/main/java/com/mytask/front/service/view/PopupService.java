@@ -3,6 +3,7 @@ package com.mytask.front.service.view;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.LabelApiClient;
@@ -137,21 +138,21 @@ public class PopupService {
         labelContainer.setStyle("-fx-padding: 10;");
 
         // Exemple de données label
-        List<LabelModel> labels = task.getLabels();
+        List<LabelModel> labels = ShowTabController.getInstance().getProject().getLabels();
 
         for (LabelModel label : labels) {
             TextField nameLabel = new TextField(label.getNom());
             ColorPicker colorPicker = new ColorPicker(label.getCouleur());
 
-            Button toggleButton = new Button(EString.SUPPRIMER.toString());
-            toggleButton.getStyleClass().add("button-delete");
+            Button toggleButton = new Button();
+            updateToggleButton(toggleButton, task, label);
 
             HBox labelInfo = new HBox(10);
             labelInfo.getChildren().addAll(nameLabel, colorPicker, toggleButton);
             labelContainer.getChildren().add(labelInfo);
 
             toggleButton.setOnAction(e -> {
-                toggleLabel(toggleButton, label);
+                toggleLabel(toggleButton, task, label);
             });
 
             nameLabel.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -177,20 +178,27 @@ public class PopupService {
     }
 
 
-    private static void toggleLabel(Button toggleButton, LabelModel label) {
-        if (EString.SUPPRIMER.toString().equals(toggleButton.getText())) {
-            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_LABEL_TITLE.toString(), EString.ALERT_VERIFICATION.toString());
-            if (AlertService.isConfirmed(result)) {
-                toggleButton.setText(EString.AJOUTER.toString());
-                toggleButton.getStyleClass().remove("button-delete");
-                toggleButton.getStyleClass().add("button-add");
-                LabelApiClient.getInstance().removeLabel(label);
-            }
-        } else {
+    private static void updateToggleButton(Button toggleButton, Task task, LabelModel label) {
+        if (task.getLabels().contains(label)) {
             toggleButton.setText(EString.SUPPRIMER.toString());
             toggleButton.getStyleClass().remove("button-add");
             toggleButton.getStyleClass().add("button-delete");
+        } else {
+            toggleButton.setText(EString.AJOUTER.toString());
+            toggleButton.getStyleClass().remove("button-delete");
+            toggleButton.getStyleClass().add("button-add");
         }
+    }
+
+    private static void toggleLabel(Button toggleButton, Task task, LabelModel label) {
+        if (task.getLabels().contains(label)) {
+            task.getLabels().remove(label);
+            LabelApiClient.getInstance().removeLabel(label);
+        } else {
+            task.getLabels().add(label);
+            LabelApiClient.getInstance().addLabel(label);
+        }
+        updateToggleButton(toggleButton, task, label);
     }
 
     private static HBox createUserInfo(String[] user, Consumer<HBox> onDelete) {
