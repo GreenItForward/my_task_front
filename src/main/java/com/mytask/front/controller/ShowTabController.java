@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
@@ -324,6 +325,10 @@ public class ShowTabController {
 
         HBox colorTags = TabService.createColorTags(Task);
         taskBox.getChildren().add(colorTags);
+
+        TaskLabelApiClient taskLabelApi = TaskLabelApiClient.getInstance();
+       // Task.getLabels().forEach(label -> taskLabelApi.updateLabelToTask(Task, label)); // à utiliser quand on aura l'API pour mettre à jour les labels d'une tache
+        taskLabelApi.updateLabelToTask(Task, Task.getLabels().get(0));
     }
 
     public VBox getTodoTasksList() {
