@@ -8,7 +8,6 @@ import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
@@ -17,10 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static com.mytask.front.configuration.AppConfiguration.labels;
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;

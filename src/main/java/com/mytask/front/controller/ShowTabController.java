@@ -7,29 +7,24 @@ import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
-import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.PdfExportService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
-
 import javafx.scene.control.TextField;
-
 import static com.mytask.front.configuration.AppConfiguration.labels;
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 
@@ -323,7 +318,7 @@ public class ShowTabController {
 
     public void updateLabels(Task Task) {
         HBox taskBox = Task.getLabelBox();
-        
+
         taskBox.getChildren().removeIf(Rectangle.class::isInstance);
         taskBox.getChildren().removeIf(HBox.class::isInstance);
 
