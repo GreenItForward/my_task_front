@@ -1,7 +1,6 @@
 package com.mytask.front.service.api.impl;
 
 import com.mytask.front.exception.AuthException;
-import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.AuthApiClientInterface;
 import com.mytask.front.service.view.UserService;
@@ -14,14 +13,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.ArrayList;
 
 
 public class AuthApiClient implements AuthApiClientInterface {
     private final HttpClient httpClient;
     private static AuthApiClient instance;
-
-    private final ArrayList<LabelModel> labels = new ArrayList<>();
 
     private AuthApiClient() {
         httpClient = HttpClient.newBuilder()
@@ -30,7 +26,7 @@ public class AuthApiClient implements AuthApiClientInterface {
                 .build();
     }
 
-    // Ajouter une méthode statique pour obtenir l'instance unique de ProjectApiClient
+    /** Méthode statique afin d'obtenir l'instance unique de ProjectApiClient */
     public static AuthApiClient getInstance() {
         if (instance == null) {
             instance = new AuthApiClient();
@@ -40,7 +36,7 @@ public class AuthApiClient implements AuthApiClientInterface {
 
     @Override
     public void authentify(User user, String endpoint) throws AuthException {
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/auth/" + endpoint))
                 .POST(HttpRequest.BodyPublishers.ofString(user.toJSON(endpoint)))
