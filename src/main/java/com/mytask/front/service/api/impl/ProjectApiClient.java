@@ -36,7 +36,7 @@ public class ProjectApiClient implements ProjectApiClientInterface {
     public void createProject(Project project) {
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:3000/project"))
+                .uri(URI.create("http://localhost:3000/api/project"))
                 .POST(HttpRequest.BodyPublishers.ofString(project.toJSON()))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + bearerToken)

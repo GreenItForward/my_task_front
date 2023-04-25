@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import static com.mytask.front.service.AppService.colorToHexString;
 
 public class LabelModel {
+
+    private int id;
     private String nom;
     private Color couleur;
     private int projectId;
@@ -13,7 +15,12 @@ public class LabelModel {
         this.nom = nom;
         this.couleur = couleur;
         this.projectId = 0;
+        this.id = 0;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public String getNom() {
         return nom;

@@ -1,11 +1,14 @@
 package com.mytask.front.model;
 
+import java.util.List;
+
 public class Project {
     private String nom;
     private String description;
     private String codeJoin;
     private int userId;
    // private User user;
+   private List<LabelModel> labels;
 
     public Project(String nom, String description) {
         this.nom = nom;
@@ -47,6 +50,14 @@ public class Project {
 
     public void setCodeJoin(String codeJoin) {
         this.codeJoin = codeJoin;
+    }
+
+    public List<LabelModel> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<LabelModel> labels) {
+        this.labels = labels;
     }
 
     // transforme un objet Project en JSON
