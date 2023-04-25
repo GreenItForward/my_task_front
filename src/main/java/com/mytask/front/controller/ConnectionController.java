@@ -8,8 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-
 
 public class ConnectionController {
     @FXML
@@ -43,5 +43,34 @@ public class ConnectionController {
                 error.setText(res);
             }
         });
+
+        activerToucheEntree(sinscrire, () -> sinscrire.fire());
+        activerToucheEntree(seconnecter, () -> seconnecter.fire());
+
+        gestionBoutons();
+    }
+
+    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
+        button.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                actionOnEntree.run();
+                e.consume();
+            }
+        });
+    }
+
+    private void gestionBoutons() {
+        activerToucheEntree(seconnecter, this::seConnecter);
+        activerToucheEntree(sinscrire, this::sInscrire);
+
+        seconnecter.setDefaultButton(true);
+    }
+
+    private void sInscrire() {
+        sinscrire.fire();
+    }
+
+    private void seConnecter() {
+        seconnecter.fire();
     }
 }
