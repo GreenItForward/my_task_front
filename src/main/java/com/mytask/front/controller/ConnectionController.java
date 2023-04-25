@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 
@@ -47,10 +48,45 @@ public class ConnectionController {
                 System.out.println(EString.SIGN_IN_IN_PROGRESS.toString());
                 screenService.loadScreen(EPage.INDEX, IndexController::new);
                 screenService.setScreen(EPage.INDEX);
+                resetFields(null);
             } catch (AuthException e) {
                 System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }
         });
+    }
+
+    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
+        button.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                actionOnEntree.run();
+                e.consume();
+            }
+        });
+    }
+
+    private void gestionBoutons() {
+        activerToucheEntree(seconnecter, this::seConnecter);
+        activerToucheEntree(sinscrire, this::sInscrire);
+
+        seconnecter.setDefaultButton(true);
+    }
+
+    private void sInscrire() {
+        sinscrire.fire();
+    }
+
+    private void seConnecter() {
+        seconnecter.fire();
+    }
+
+    private void resetFields(TextField textField) {
+        if (textField != null) {
+            textField.setText("");
+            return;
+        }
+
+        email.setText("");
+        password.setText("");
     }
 }

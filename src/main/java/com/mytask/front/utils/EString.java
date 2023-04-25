@@ -62,7 +62,8 @@ public enum EString {
     SIGN_UP_IN_PROGRESS("Inscription en cours..."),
     SHOW_TAB_LOG("Voir tableau"),
     CREATE_TAB_LOG("Créer tableau"),
-    SHOW_TABLES("Afficher les tableaux");
+    SHOW_TABLES("Afficher les tableaux"),
+    DISCONNECT_LOG("Déconnexion de l'utilisateur");
 
     private String string;
 
