@@ -34,6 +34,7 @@ public class InscriptionController {
                 screenService = ScreenService.getInstance((Stage) sinscrire.getScene().getWindow());
             }
         });
+
         seconnecter.setOnAction(event -> {
             System.out.println(EString.CONNECTION.toString());
             screenService.setScreen(EPage.CONNECTION);
@@ -66,13 +67,18 @@ public class InscriptionController {
         password.setText("");
     }
 
-    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
+    public void activerToucheEntree(Button button, Runnable actionOnEntree) {
         button.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 actionOnEntree.run();
                 e.consume();
             }
         });
+
+        activerToucheEntree(sinscrire, () -> sinscrire.fire());
+        activerToucheEntree(seconnecter, () -> seconnecter.fire());
+
+        gestionBoutons();
     }
 
     private void gestionBoutons() {

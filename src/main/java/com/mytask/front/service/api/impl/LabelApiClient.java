@@ -39,7 +39,7 @@ public class LabelApiClient implements LabelApiClientInterface {
     public void createLabel(LabelModel label) {
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:3000/label"))
+                .uri(URI.create("http://localhost:3000/api/label"))
                 .POST(HttpRequest.BodyPublishers.ofString(label.toJSON()))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)

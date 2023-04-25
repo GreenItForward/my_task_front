@@ -9,28 +9,20 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <TextField layoutX="31.0" layoutY="20.0" prefHeight="25.0" prefWidth="527.0" text="Titre" />
-      <TextArea layoutX="31.0" layoutY="64.0" prefHeight="317.0" prefWidth="200.0" text="Détails" />
-      <Button layoutX="437.0" layoutY="81.0" mnemonicParsing="false" text="Changer les membres" />
-      <DatePicker layoutX="243.0" layoutY="81.0" />
-      <Label layoutX="243.0" layoutY="56.0" prefHeight="25.0" prefWidth="175.0" text="Date limite : " />
-      <Label layoutX="243.0" layoutY="146.0" prefHeight="17.0" prefWidth="45.0" text="Labels :" />
-      <Button layoutX="437.0" layoutY="123.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="131.0" text="Changer les labels" />
-       <ScrollPane layoutX="243.0" layoutY="167.0" prefHeight="212.0" prefWidth="325.0">
-           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-               <Label layoutX="7.0" layoutY="8.0"
-                      style="-fx-background-color: #4984e3; -fx-background-radius: 5px; -fx-padding: 4;"
-                      text="Frontend" textFill="WHITE"/>
-               <Label layoutX="8.0" layoutY="82.0"
-                      style="-fx-background-color: #ba7413; -fx-background-radius: 5px; -fx-padding: 4;" text="Backend"
-                      textFill="WHITE"/>
-               <Label layoutX="7.0" layoutY="43.0"
-                      style="-fx-background-color: #ba1396; -fx-background-radius: 5px; -fx-padding: 4;"
-                      text="Organisation" textFill="WHITE"/>
-           </AnchorPane>
-       </ScrollPane>
-   </children>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.mytask.front.controller.TaskDetailsController">
+    <TextField layoutX="31.0" layoutY="20.0" prefHeight="25.0" prefWidth="527.0" text="Titre" fx:id="titleTextField"/>
+    <TextArea layoutX="31.0" layoutY="64.0" prefHeight="317.0" prefWidth="200.0" text="Détails"
+              fx:id="detailsTextArea"/>
+    <Button layoutX="437.0" layoutY="81.0" mnemonicParsing="false" fx:id="changeAssignedMembersBtn"/>
+    <DatePicker layoutX="243.0" layoutY="81.0" fx:id="deadlineDatePicker"/>
+    <Label layoutX="243.0" layoutY="56.0" prefHeight="25.0" prefWidth="175.0" text="Date limite : "/>
+    <Label layoutX="243.0" layoutY="146.0" prefHeight="17.0" prefWidth="45.0" text="Labels :"/>
+    <Button layoutX="437.0" layoutY="123.0" mnemonicParsing="false"
+            fx:id="changeAssignedLabelsBtn"/>
+    <ScrollPane layoutX="243.0" layoutY="167.0" prefHeight="212.0" prefWidth="325.0" fx:id="labelsScrollPane">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+        </AnchorPane>
+    </ScrollPane>
 </Pane>

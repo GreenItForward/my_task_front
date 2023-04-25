@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
-
 public class ConnectionController {
     @FXML
     private TextField email;
@@ -54,6 +53,11 @@ public class ConnectionController {
                 error.setText(e.getMessage());
             }
         });
+
+        activerToucheEntree(sinscrire, () -> sinscrire.fire());
+        activerToucheEntree(seconnecter, () -> seconnecter.fire());
+
+        gestionBoutons();
     }
 
     public static void activerToucheEntree(Button button, Runnable actionOnEntree) {

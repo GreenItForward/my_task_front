@@ -8,7 +8,6 @@ import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
@@ -17,7 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
-
+import static com.mytask.front.configuration.AppConfiguration.labels;
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;
 
@@ -70,8 +69,13 @@ public class CreateTabController {
                 return;
             }
 
-            projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText()));
-            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
+            Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
+            projectApiClient.createProject(project);
+            project.setLabels(labels);
+           // project.setLabels(labelApiClient.getLabels()); // dès que l'on aura l'endpoint pour récupérer les labels
+            ShowTabController.getInstance().setProject(project);
+
+            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
             screenService.setScreen(EPage.SHOW_TAB);
             resetFields(null);
         });

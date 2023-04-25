@@ -38,7 +38,7 @@ public class AuthApiClient implements AuthApiClientInterface {
     public void authentify(User user, String endpoint) throws AuthException {
         HttpResponse<String> response;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:3000/auth/" + endpoint))
+                .uri(URI.create("http://localhost:3000/api/auth/" + endpoint))
                 .POST(HttpRequest.BodyPublishers.ofString(user.toJSON(endpoint)))
                 .header("Content-Type", "application/json")
                 .build();

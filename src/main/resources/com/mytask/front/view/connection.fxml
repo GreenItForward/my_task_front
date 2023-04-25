@@ -53,15 +53,18 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Connexion" />
                   <GridPane GridPane.rowIndex="1">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="200.0" prefWidth="300.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="621.1999816894531" minWidth="10.0" prefWidth="220.00003051757812" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="107.9999938964844" minWidth="7.9999877929687955" prefWidth="26.399987792968716" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="704.0" minWidth="10.0" prefWidth="427.20001220703125" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="200.0" prefWidth="300.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="621.1999816894531" minWidth="10.0"
+                                           prefWidth="220.00003051757812"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="107.9999938964844" minWidth="7.9999877929687955"
+                                           prefWidth="26.399987792968716"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="704.0" minWidth="10.0"
+                                           prefWidth="427.20001220703125"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="300.0" prefWidth="300.0"/>
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES"/>
                      </rowConstraints>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />

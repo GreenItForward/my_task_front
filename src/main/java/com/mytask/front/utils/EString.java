@@ -3,6 +3,7 @@ package com.mytask.front.utils;
 public enum EString {
     // Buttons
     BACK("Retour"),
+
     CLOSE("Fermer"),
     BACK_TO_MENU("Retour au menu"),
     CREATE_TAB("Créer un tableau"),
@@ -13,6 +14,8 @@ public enum EString {
     COPY_INVITE_CODE("Copier le code d'invitation"),
     ADD_TASK("Ajouter une tâche"),
     ADD_LABEL("Ajouter une étiquette"),
+    CHANGE_ASSIGNED_MEMBERS("Changer les membres assignés"),
+    CHANGE_ASSIGNED_LABELS("Changer les étiquettes assignées"),
 
     // Labels
     MY_TABS("Mes tableaux"),
@@ -40,13 +43,19 @@ public enum EString {
 
     // Errors messages
     EMPTY_FIELD("Veuillez remplir ce champ"),
+    
+    // Formatters
+    DATE_FORMAT("yyyy-MM-dd"),
+
 
     // Roles and actions
     ADMINISTRATEUR("Administrateur"),
     MEMBRE("Membre"),
     SUPPRIMER("Supprimer"),
+    AJOUTER("Ajouter"),
 
     // Alert messages
+    DELETE_LABEL_TITLE("Supprimer une étiquette"),
     DELETE_USER_TITLE("Supprimer un utilisateur"),
     ALERT_VERIFICATION("Etes-vous sûr de vouloir continuer ?"),
     DELETE_USER_CONFIRMATION("Voulez-vous vraiment supprimer cet utilisateur ?"),
