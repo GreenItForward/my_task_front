@@ -27,7 +27,6 @@ public class LabelApiClient implements LabelApiClientInterface {
             token = UserService.getCurrentUser().getToken();
         }
 
-        // Ajouter une méthode statique pour obtenir l'instance unique de ProjectApiClient
         public static LabelApiClient getInstance() {
             if (instance == null) {
                 instance = new LabelApiClient();
@@ -37,6 +36,7 @@ public class LabelApiClient implements LabelApiClientInterface {
 
     @Override
     public void createLabel(LabelModel label) {
+        updateToken(UserService.getCurrentUser().getToken());
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/label"))
@@ -58,7 +58,6 @@ public class LabelApiClient implements LabelApiClientInterface {
     }
 
     @Override
-
     public void addLabel(LabelModel label) {
         labels.add(label);
     }
@@ -76,5 +75,9 @@ public class LabelApiClient implements LabelApiClientInterface {
     @Override
     public List<LabelModel> getLabels() {
         return labels;
+    }
+
+    public void updateToken(String token) {
+        this.token = token;
     }
 }
