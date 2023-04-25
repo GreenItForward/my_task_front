@@ -3,7 +3,6 @@ package com.mytask.front.service.api.impl;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.AuthApiClientInterface;
-import com.mytask.front.service.view.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +34,7 @@ public class AuthApiClient implements AuthApiClientInterface {
     }
 
     @Override
-    public void authentify(User user, String endpoint) throws AuthException {
+    public String authentify(User user, String endpoint) throws AuthException {
         HttpResponse<String> response;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/auth/" + endpoint))
@@ -47,13 +46,51 @@ public class AuthApiClient implements AuthApiClientInterface {
             int statusCode = response.statusCode();
 
             if (statusCode >= 200 && statusCode < 300) {
-                UserService.setCurrentUser(user);
-                UserService.getCurrentUser().setToken(response.body());
-                System.out.println(UserService.getCurrentUser().getToken());
-                return;
+                System.out.println(response.body());
+                return response.body();
             }
 
             JSONObject jsonResponse = new JSONObject(response.body());
+            if (jsonResponse.has("message")) {
+                String result = jsonResponse.getString("message").replaceAll("[\\[\\]\"]", "");
+                throw new AuthException(result);
+            }
+            throw new AuthException(response.body());
+        } catch (IOException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            throw new AuthException(e.getMessage());
+        }
+    }
+
+    @Override
+    public User getUser(String token) throws AuthException {
+        HttpResponse<String> response;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/auth/getUser"))
+                .POST(HttpRequest.BodyPublishers.ofString("{\"token\":\"" + token + "\"}"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer "+token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            JSONObject jsonResponse = new JSONObject(response.body());
+
+            if (statusCode >= 200 && statusCode < 300) {
+                User user = new User();
+                if (jsonResponse.has("email")) {
+                    user.setEmail(jsonResponse.getString("email").replaceAll("[\\[\\]\"]", ""));
+                }
+                if (jsonResponse.has("name")) {
+                    user.setNom(jsonResponse.getString("name").replaceAll("[\\[\\]\"]", ""));
+                }
+                if (jsonResponse.has("firstname")) {
+                    user.setPrenom(jsonResponse.getString("firstname").replaceAll("[\\[\\]\"]", ""));
+                }
+                return user;
+            }
+
             if (jsonResponse.has("message")) {
                 String result = jsonResponse.getString("message").replaceAll("[\\[\\]\"]", "");
                 throw new AuthException(result);

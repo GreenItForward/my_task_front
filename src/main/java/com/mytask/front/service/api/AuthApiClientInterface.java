@@ -5,5 +5,6 @@ import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 
 public interface AuthApiClientInterface {
-    void authentify(User user, String endpoint) throws AuthException;
+    String authentify(User user, String endpoint) throws AuthException;
+    User getUser(String token) throws AuthException;
 }

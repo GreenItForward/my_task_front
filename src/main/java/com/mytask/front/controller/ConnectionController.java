@@ -4,6 +4,7 @@ import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EString;
 import javafx.fxml.FXML;
@@ -41,17 +42,21 @@ public class ConnectionController {
         });
 
         seconnecter.setOnAction(event -> {
+            User user = new User(email.getText(), password.getText());
+            System.out.println(EString.SIGN_IN_IN_PROGRESS.toString());
+
             try {
-                User user = new User(email.getText(), password.getText());
-                authApiClient.authentify(user, "login");
-                System.out.println(EString.SIGN_IN_IN_PROGRESS.toString());
-                screenService.loadScreen(EPage.INDEX, IndexController::new);
-                screenService.setScreen(EPage.INDEX);
+                String token = authApiClient.authentify(user, "login");
+                UserService.setCurrentUser(authApiClient.getUser(token));
+                UserService.getCurrentUser().setToken(token);
                 resetFields(null);
             } catch (AuthException e) {
                 System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }
+
+            screenService.loadScreen(EPage.INDEX, IndexController::new);
+            screenService.setScreen(EPage.INDEX);
         });
 
         activerToucheEntree(sinscrire, () -> sinscrire.fire());

@@ -1,5 +1,7 @@
 package com.mytask.front.model;
 
+import com.mytask.front.exception.AuthEndpoint;
+
 public class User {
     private String email;
     private String nom;
@@ -74,6 +76,15 @@ public class User {
     public String toJSON(String endpoint) {
         String result = "{\"email\":\"" + this.email + "\",\"password\":\"" + this.password;
         if (endpoint.equals("register")) {
+            result += "\",\"name\":\"" + this.nom + "\",\"firstname\":\"" + this.prenom;
+        }
+        return result + "\"}";
+    }
+
+
+    public String toJSON(AuthEndpoint endpoint) {
+        String result = "{\"email\":\"" + this.email + "\",\"password\":\"" + this.password;
+        if (endpoint == AuthEndpoint.REGISTER) {
             result += "\",\"name\":\"" + this.nom + "\",\"firstname\":\"" + this.prenom;
         }
         return result + "\"}";

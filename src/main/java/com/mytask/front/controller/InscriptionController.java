@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EString;
 import com.mytask.front.model.User;
@@ -36,22 +37,26 @@ public class InscriptionController {
         });
 
         seconnecter.setOnAction(event -> {
-            System.out.println(EString.CONNECTION.toString());
+            System.out.println(EString.CONNECTION);
             screenService.setScreen(EPage.CONNECTION);
         });
 
         sinscrire.setOnAction(event -> {
             User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
+            System.out.println(EString.SIGN_UP_IN_PROGRESS);
+
             try {
-                authApiClient.authentify(user, "register");
-                System.out.println(EString.SIGN_UP_IN_PROGRESS.toString());
-                screenService.loadScreen(EPage.INDEX, IndexController::new);
-                screenService.setScreen(EPage.INDEX);
+                String token = authApiClient.authentify(user, "register");
+                UserService.setCurrentUser(authApiClient.getUser(token));
+                UserService.getCurrentUser().setToken(token);
                 resetFields(null);
             } catch (AuthException e) {
                 System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }
+
+            screenService.loadScreen(EPage.INDEX, IndexController::new);
+            screenService.setScreen(EPage.INDEX);
         });
     }
 
