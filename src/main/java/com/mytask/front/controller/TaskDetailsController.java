@@ -3,18 +3,14 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
-import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.view.TabService;
-import com.mytask.front.utils.AppUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.util.List;
-import java.util.Objects;
 
 import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_LABELS;
 import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_MEMBERS;
@@ -36,8 +32,6 @@ public class TaskDetailsController {
 
     private Task task;
 
-    private TaskApiClient taskApiClient;
-
     private static TaskDetailsController instance;
 
     public TaskDetailsController() {
@@ -55,8 +49,6 @@ public class TaskDetailsController {
     @FXML
     private void initialize() {
         task = null;
-        taskApiClient = TaskApiClient.getInstance();
-
 
         changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
         changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
@@ -65,18 +57,15 @@ public class TaskDetailsController {
         changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow(), task));
     }
 
-    @FXML
-    public void setTask(Task task) {
-        this.task = Objects.requireNonNullElseGet(task, Task::new);
-
+    public void setTaskAndUpdateUI(Task task) {
+        setTask(task);
+        displayLabels();
         updateFields();
     }
 
-    public void setTaskAndUpdateUI(Task task) {
+    public void setTask(Task task) {
         this.task = task;
-        displayLabels();
     }
-
 
     @FXML
     public Task getTask() {
@@ -92,7 +81,6 @@ public class TaskDetailsController {
         titleTextField.setText(task.getTitle());
         detailsTextArea.setText(task.getDetails());
         deadlineDatePicker.setValue(task.getDeadline());
-
     }
 
     private void displayLabels() {
@@ -114,14 +102,6 @@ public class TaskDetailsController {
 
         labelsScrollPane.setContent(labelsContainer);
     }
-/* TODO: Fix this method*/
-/*
-    public void saveTask() {
-        if (task != null) {
-            taskApiClient.saveTask(task);
-        }
-    }
- */
 
     private void initializeListeners() {
         this.titleTextField.textProperty().addListener((observable, oldValue, newValue) -> {
