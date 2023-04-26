@@ -3,6 +3,7 @@ package com.mytask.front.service.api.impl;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.TaskLabelApiClientInterface;
+import com.mytask.front.service.view.UserService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,20 +12,20 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static com.mytask.front.configuration.AppConfiguration.bearerToken;
-
 public class TaskLabelApiClient implements TaskLabelApiClientInterface {
     private static TaskLabelApiClient instance;
     private final HttpClient httpClient;
 
     private int taskId;
     private int labelId;
+    private final String token;
 
     private TaskLabelApiClient() {
         httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        token = UserService.getCurrentUser().getToken();
     }
 
 
@@ -47,7 +48,7 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
                 .uri(URI.create("http://localhost:3000/api/task-label"))
                 .PUT(HttpRequest.BodyPublishers.ofString(this.toJSON()))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + bearerToken)
+                .header("Authorization", "Bearer " + token)
                 .build();
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

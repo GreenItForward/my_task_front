@@ -2,6 +2,7 @@ package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.TaskApiClientInterface;
+import com.mytask.front.service.view.UserService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,17 +11,17 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static com.mytask.front.configuration.AppConfiguration.bearerToken;
-
 public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
     private static TaskApiClient instance;
+    private final String token;
 
     private TaskApiClient() {
         httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        token = UserService.getCurrentUser().getToken();
     }
 
     public static TaskApiClient getInstance() {
@@ -49,7 +50,7 @@ public class TaskApiClient implements TaskApiClientInterface {
                 .uri(URI.create("http://localhost:3000/api/task"))
                 .PUT(HttpRequest.BodyPublishers.ofString(task.toJSON()))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + bearerToken)
+                .header("Authorization", "Bearer " + token)
                 .build();
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

@@ -2,6 +2,8 @@ package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.service.api.LabelApiClientInterface;
+import com.mytask.front.service.view.UserService;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -11,22 +13,20 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mytask.front.configuration.AppConfiguration.bearerToken;
-
 public class LabelApiClient implements LabelApiClientInterface {
         private final HttpClient httpClient;
         private static LabelApiClient instance;
-
-        private ArrayList<LabelModel> labels = new ArrayList<>();
+        private static String token;
+        private final ArrayList<LabelModel> labels = new ArrayList<>();
 
         private LabelApiClient() {
             httpClient = HttpClient.newBuilder()
                     .version(HttpClient.Version.HTTP_2)
                     .connectTimeout(Duration.ofSeconds(10))
                     .build();
+            token = UserService.getCurrentUser().getToken();
         }
 
-        // Ajouter une méthode statique pour obtenir l'instance unique de ProjectApiClient
         public static LabelApiClient getInstance() {
             if (instance == null) {
                 instance = new LabelApiClient();
@@ -36,12 +36,13 @@ public class LabelApiClient implements LabelApiClientInterface {
 
     @Override
     public void createLabel(LabelModel label) {
+        updateToken(UserService.getCurrentUser().getToken());
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/label"))
                 .POST(HttpRequest.BodyPublishers.ofString(label.toJSON()))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + bearerToken)
+                .header("Authorization", "Bearer " + token)
                 .build();
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -57,7 +58,6 @@ public class LabelApiClient implements LabelApiClientInterface {
     }
 
     @Override
-
     public void addLabel(LabelModel label) {
         labels.add(label);
     }
@@ -75,5 +75,9 @@ public class LabelApiClient implements LabelApiClientInterface {
     @Override
     public List<LabelModel> getLabels() {
         return labels;
+    }
+
+    public void updateToken(String token) {
+        this.token = token;
     }
 }

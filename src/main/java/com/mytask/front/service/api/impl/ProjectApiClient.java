@@ -3,6 +3,7 @@ package com.mytask.front.service.api.impl;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.ProjectApiClientInterface;
+import com.mytask.front.service.view.UserService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,17 +13,17 @@ import java.net.http.HttpResponse;
 
 import java.time.Duration;
 
-import static com.mytask.front.configuration.AppConfiguration.bearerToken;
-
 public class ProjectApiClient implements ProjectApiClientInterface {
     private final HttpClient httpClient;
     private static ProjectApiClient instance;
+    private static String token;
 
     private ProjectApiClient() {
         httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        token = UserService.getCurrentUser().getToken();
     }
 
     public static ProjectApiClient getInstance() {
@@ -39,7 +40,7 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                 .uri(URI.create("http://localhost:3000/api/project"))
                 .POST(HttpRequest.BodyPublishers.ofString(project.toJSON()))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + bearerToken)
+                .header("Authorization", "Bearer " + token)
                 .build();
 
         try {
@@ -56,7 +57,6 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                         label.setProjectId(Integer.parseInt(id));
                         LabelApiClient.getInstance().createLabel(label);
                     }
-
                     LabelApiClient.getInstance().getLabels().clear();
                 } else {
                     System.err.println("Project creation failed: Forbidden");

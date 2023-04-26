@@ -1,5 +1,7 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.exception.AuthException;
+import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EPage;
@@ -8,21 +10,26 @@ import com.mytask.front.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class InscriptionController {
     @FXML
-    private TextField email, nom, prenom, password;
+    private TextField email, nom, prenom;
+    @FXML
+    private PasswordField password;
     @FXML
     private Button sinscrire, seconnecter;
     @FXML
     private Label error;
     private ScreenService screenService;
+    private AuthApiClient authApiClient;
 
     @FXML
     public void initialize() {
+        authApiClient = AuthApiClient.getInstance();
         sinscrire.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) sinscrire.getScene().getWindow());
@@ -30,20 +37,46 @@ public class InscriptionController {
         });
 
         seconnecter.setOnAction(event -> {
-            System.out.println(EString.CONNECTION.toString());
+            System.out.println(EString.CONNECTION);
             screenService.setScreen(EPage.CONNECTION);
         });
 
         sinscrire.setOnAction(event -> {
             User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
-            String res = UserService.signUpUser(user);
-            if(res.equals("ok")) {
-                System.out.println(EString.SIGN_UP_IN_PROGRESS.toString());
-                screenService.loadScreen(EPage.INDEX, IndexController::new);
-                screenService.setScreen(EPage.INDEX);
+            System.out.println(EString.SIGN_UP_IN_PROGRESS);
+
+            try {
+                String token = authApiClient.authentify(user, "register");
+                UserService.setCurrentUser(authApiClient.getUser(token));
+                UserService.getCurrentUser().setToken(token);
+                resetFields(null);
+            } catch (AuthException e) {
+                System.out.println(e.getMessage());
+                error.setText(e.getMessage());
             }
-            else {
-                error.setText(res);
+
+            screenService.loadScreen(EPage.INDEX, IndexController::new);
+            screenService.setScreen(EPage.INDEX);
+        });
+    }
+
+    private void resetFields(TextField textField) {
+        if (textField != null) {
+            textField.setText("");
+            return;
+        }
+
+        email.setText("");
+        nom.setText("");
+        prenom.setText("");
+        password.setText("");
+    }
+
+    public void activerToucheEntree(Button button, Runnable actionOnEntree) {
+        button.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                actionOnEntree.run();
+                e.consume();
             }
         });
 
@@ -51,15 +84,6 @@ public class InscriptionController {
         activerToucheEntree(seconnecter, () -> seconnecter.fire());
 
         gestionBoutons();
-    }
-
-    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
-        button.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                actionOnEntree.run();
-                e.consume();
-            }
-        });
     }
 
     private void gestionBoutons() {

@@ -20,6 +20,9 @@ public class IndexController {
     private Button creer_tableau;
 
     @FXML
+    private Button se_deconnecter;
+
+    @FXML
     private Button quitter;
 
     private ScreenService screenService;
@@ -40,6 +43,11 @@ public class IndexController {
         creer_tableau.setOnAction(event -> {
             System.out.println(EString.CREATE_TAB_LOG.toString());
             screenService.setScreen(EPage.CREATE_TAB);
+        });
+
+        se_deconnecter.setOnAction(event -> {
+            System.out.println(EString.DISCONNECT_LOG.toString());
+            screenService.setScreen(EPage.CONNECTION);
         });
 
         quitter.setOnAction(event -> Platform.exit());
