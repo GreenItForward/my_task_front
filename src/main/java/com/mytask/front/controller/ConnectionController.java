@@ -37,13 +37,13 @@ public class ConnectionController {
         });
 
         sinscrire.setOnAction(event -> {
-            System.out.println(EString.SIGN_UP.toString());
+            System.out.println(EString.SIGN_UP);
             screenService.setScreen(EPage.INSCRIPTION);
         });
 
         seconnecter.setOnAction(event -> {
             User user = new User(email.getText(), password.getText());
-            System.out.println(EString.SIGN_IN_IN_PROGRESS.toString());
+            System.out.println(EString.SIGN_IN_IN_PROGRESS);
 
             try {
                 String token = authApiClient.authentify(user, "login");
