@@ -26,11 +26,10 @@
 
         <VBox spacing="10" fx:id="tableInfoVBox">
             <Label fx:id="tableInfoLabel"/>
-            <HBox>
-                <Label fx:id="tableTitleLabel"/>
-            </HBox>
+            <Label fx:id="tableTitleLabel" styleClass="tableLabel"/>
+
             <Label fx:id="descriptionLabel"/>
-            <Label fx:id="tableDescriptionLabel"/>
+            <Label fx:id="tableDescriptionLabel" styleClass="tableLabel"/>
             <Button fx:id="openTableBtn"/>
         </VBox>
     </HBox>

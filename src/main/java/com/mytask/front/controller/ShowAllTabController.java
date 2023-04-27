@@ -22,7 +22,7 @@ import java.util.List;
 public class ShowAllTabController {
 
     @FXML
-    private Label myTablesLabel, tableInfoLabel, descriptionLabel;
+    private Label myTablesLabel, tableInfoLabel, descriptionLabel, tableTitleLabel, tableDescriptionLabel;
 
     @FXML
     private Button backToMenuBtn, openTableBtn;
@@ -47,8 +47,8 @@ public class ShowAllTabController {
         tablesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Project project = projects.get(tablesListView.getSelectionModel().getSelectedIndex());
-                tableInfoLabel.setText(project.getNom());
-                descriptionLabel.setText(project.getDescription());
+                tableTitleLabel.setText(project.getNom());
+                tableDescriptionLabel.setText(project.getDescription());
             }
         });
 
