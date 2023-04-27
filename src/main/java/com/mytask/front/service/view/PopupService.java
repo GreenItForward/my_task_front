@@ -1,11 +1,14 @@
 package com.mytask.front.service.view;
 
+import com.itextpdf.layout.element.Table;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.LabelApiClient;
+import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
@@ -20,9 +23,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +39,8 @@ import static com.mytask.front.utils.EPopup.TASK_DETAILS;
 
 public class PopupService {
     private static TaskApiClient taskApiClient;
-    private PopupService instance;
+    private static PopupService instance;
+    private ShowAllTabService showAllTabService;
 
 
     private PopupService() {
@@ -284,13 +290,26 @@ public class PopupService {
 
     public static void showTablesPopup() {
         ListView<String> tablesPopupListView = new ListView<>();
+        List<Project> projects =  ShowAllTabService.getInstance().getProjects();
+        projects.forEach(project -> tablesPopupListView.getItems().add(project.getNom()));
+        Button openTableButton = new Button(EString.OPEN_TABLE.toString());
+        openTableButton.setOnAction(e -> {
+            String selectedTable = tablesPopupListView.getSelectionModel().getSelectedItem();
+            Project project = projects.stream().filter(p -> p.getNom().equals(selectedTable)).findFirst().orElse(null);
+
+            if (project != null) {
+                ProjectTabService projectTabService = ProjectTabService.getInstance();
+                projectTabService.openProject(project);
+            }
+
+        });
 
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(EString.MY_TABS.toString());
 
         VBox popupVBox = new VBox(10);
-        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.toString()), tablesPopupListView);
+        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.toString()), tablesPopupListView, openTableButton);
         popupVBox.setPadding(new Insets(10, 10, 10, 10));
 
         Scene popupScene = new Scene(popupVBox, EPopup.TABLE_LIST.getWidth(), EPopup.TABLE_LIST.getHeight());
