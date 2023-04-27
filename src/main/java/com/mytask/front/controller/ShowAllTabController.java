@@ -2,6 +2,8 @@ package com.mytask.front.controller;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
+import com.mytask.front.service.api.ProjectApiClientInterface;
+import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
@@ -12,7 +14,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShowAllTabController {
@@ -26,23 +30,14 @@ public class ShowAllTabController {
     @FXML
     private ListView tablesListView;
 
-
     private ScreenService screenService;
+    private ProjectApiClient projectApiClient;
 
     @FXML
-    public void initialize() {
-        for(int i = 0; i < 40; i++) {
-            Project project = new Project();
-            project.setNom("Nom du tableau " + i);
-            project.setDescription("Description du tableau " + i);
-            project.setCodeJoin("Code du tableau " + i);
-            project.setUserId(1);
-            project.setLabels(List.of(new LabelModel("Label 1", Color.web("#FFFFFF")), new LabelModel("Label 2", Color.web("#FFFFFF"))));
-            ShowAllTabService.getInstance().addProject(project);
-        }
-
-        // ajout des projets dans la liste
-        List<Project> projects = ShowAllTabService.getInstance().getProjects();
+    public void initialize() throws JSONException {
+        this.projectApiClient = ProjectApiClient.getInstance();
+        ArrayList<Project> projects = projectApiClient.getProjectByUser();
+        ShowAllTabService.getInstance().setProjects(projects);
 
         for(Project project : projects) {
             tablesListView.getItems().add(project.getNom());

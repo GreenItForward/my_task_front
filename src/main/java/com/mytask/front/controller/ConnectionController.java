@@ -57,6 +57,7 @@ public class ConnectionController {
 
             screenService.loadScreen(EPage.INDEX, IndexController::new);
             screenService.setScreen(EPage.INDEX);
+            screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
         });
 
         activerToucheEntree(sinscrire, () -> sinscrire.fire());

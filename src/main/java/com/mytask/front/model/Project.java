@@ -22,6 +22,13 @@ public class Project {
     public Project() {
     }
 
+    public Project(String nom, String description, String codeJoin, int id) {
+        this.nom = nom;
+        this.description = description;
+        this.codeJoin = codeJoin;
+        this.id = id;
+    }
+
     public int getUserId() {
         return userId;
     }
