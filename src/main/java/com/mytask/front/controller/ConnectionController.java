@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.utils.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.AuthApiClient;
@@ -46,7 +47,7 @@ public class ConnectionController {
             System.out.println(EString.SIGN_IN_IN_PROGRESS);
 
             try {
-                String token = authApiClient.authentify(user, "login");
+                String token = authApiClient.authentify(user, EAuthEndpoint.LOGIN);
                 UserService.setCurrentUser(authApiClient.getUser(token));
                 UserService.getCurrentUser().setToken(token);
                 resetFields(null);

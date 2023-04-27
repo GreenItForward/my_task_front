@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.utils.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
@@ -46,7 +47,7 @@ public class InscriptionController {
             System.out.println(EString.SIGN_UP_IN_PROGRESS);
 
             try {
-                String token = authApiClient.authentify(user, "register");
+                String token = authApiClient.authentify(user, EAuthEndpoint.REGISTER);
                 UserService.setCurrentUser(authApiClient.getUser(token));
                 UserService.getCurrentUser().setToken(token);
                 resetFields(null);
