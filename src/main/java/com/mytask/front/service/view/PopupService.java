@@ -139,7 +139,7 @@ public class PopupService {
         labelContainer.setStyle("-fx-padding: 10;");
 
         // Exemple de données label
-        List<LabelModel> labels = ShowTabController.getInstance().getProject().getLabels();
+        List<LabelModel> labels = ShowAllTabService.getInstance().getProjects().get(0).getLabels();
 
         for (LabelModel label : labels) {
             TextField nameLabel = new TextField(label.getNom());

@@ -48,13 +48,24 @@ public class TaskDetailsController {
 
     @FXML
     private void initialize() {
-        task = null;
+        initData();
+        setTextForUIElements();
+        configureButtons();
+        initializeListeners();
+    }
 
-        changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
-        changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
-        this.initializeListeners();
+    private void initData() {
+        task = null;
+    }
+
+    private void configureButtons() {
         changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
         changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow(), task));
+    }
+
+    private void setTextForUIElements() {
+        changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
+        changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
     }
 
     public void setTaskAndUpdateUI(Task task) {

@@ -37,6 +37,13 @@ public class ShowAllTabController {
 
     @FXML
     public void initialize() throws JSONException {
+        initData();
+        configureButtons();
+        setTextForUIElements();
+    }
+
+
+    private void initData() throws JSONException {
         this.projectApiClient = ProjectApiClient.getInstance();
         projects = projectApiClient.getProjectByUser();
         ShowAllTabService.getInstance().setProjects(projects);
@@ -44,8 +51,9 @@ public class ShowAllTabController {
         for(Project project : projects) {
             tablesListView.getItems().add(project.getNom());
         }
+    }
 
-        // ajout des listeners
+    private void configureButtons() {
         tablesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Project project = projects.get(tablesListView.getSelectionModel().getSelectedIndex());
@@ -75,6 +83,10 @@ public class ShowAllTabController {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
             }
         });
+    }
+
+
+    private void setTextForUIElements() {
         myTablesLabel.setText(EString.MY_TABS.toString());
         tableInfoLabel.setText(EString.INFORMATION_TAB.toString());
         descriptionLabel.setText(EString.DESCRIPTION.toString());

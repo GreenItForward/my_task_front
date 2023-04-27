@@ -72,7 +72,8 @@ public enum EString {
     SHOW_TAB_LOG("Voir tableau"),
     CREATE_TAB_LOG("Créer tableau"),
     SHOW_TABLES("Afficher les tableaux"),
-    DISCONNECT_LOG("Déconnexion de l'utilisateur");
+    DISCONNECT_LOG("Déconnexion de l'utilisateur"),
+    ERROR("Erreur");
 
     private String string;
 
