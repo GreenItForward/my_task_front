@@ -1,6 +1,5 @@
 package com.mytask.front.service.view;
 
-import com.itextpdf.layout.element.Table;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.LabelModel;
@@ -8,7 +7,6 @@ import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.LabelApiClient;
-import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
@@ -22,12 +20,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
-import org.json.JSONException;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -40,8 +38,6 @@ import static com.mytask.front.utils.EPopup.TASK_DETAILS;
 public class PopupService {
     private static TaskApiClient taskApiClient;
     private static PopupService instance;
-    private ShowAllTabService showAllTabService;
-
 
     private PopupService() {
 
@@ -84,7 +80,7 @@ public class PopupService {
         Scene popupScene = new Scene(layout, page.getWidth(), page.getHeight());
         popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.STYLES.getCssPath())).toExternalForm());
         popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.POPUP.getCssPath())).toExternalForm());
-
+        
         popup.setScene(popupScene);
         popup.getIcons().add(new Image(Objects.requireNonNull(PopupService.class.getResourceAsStream(EIcon.GIF.getImagePath()))));
         popup.centerOnScreen();
@@ -295,11 +291,13 @@ public class PopupService {
         Button openTableButton = new Button(EString.OPEN_TABLE.toString());
         openTableButton.setOnAction(e -> {
             String selectedTable = tablesPopupListView.getSelectionModel().getSelectedItem();
-            Project project = projects.stream().filter(p -> p.getNom().equals(selectedTable)).findFirst().orElse(null);
-
-            if (project != null) {
-                ProjectTabService projectTabService = ProjectTabService.getInstance();
-                projectTabService.openProject(project);
+            if (selectedTable != null) {
+                Project project = projects.stream().filter(p -> p.getNom().equals(selectedTable)).findFirst().orElse(null);
+                if (project != null) {
+                    ProjectTabService projectTabService = ProjectTabService.getInstance();
+                    projectTabService.closeCurrentPopup(openTableButton.getScene().getWindow());
+                    projectTabService.openProject(project);
+                }
             }
 
         });
@@ -329,4 +327,9 @@ public class PopupService {
     }
 
 
+    public void closeCurrentPopup(Window window) {
+        if (window != null) {
+            window.hide();
+        }
+    }
 }

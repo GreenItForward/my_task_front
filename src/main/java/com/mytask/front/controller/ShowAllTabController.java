@@ -4,6 +4,7 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.ProjectApiClientInterface;
 import com.mytask.front.service.api.impl.ProjectApiClient;
+import com.mytask.front.service.view.ProjectTabService;
 import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
@@ -32,11 +33,12 @@ public class ShowAllTabController {
 
     private ScreenService screenService;
     private ProjectApiClient projectApiClient;
+    ArrayList<Project> projects;
 
     @FXML
     public void initialize() throws JSONException {
         this.projectApiClient = ProjectApiClient.getInstance();
-        ArrayList<Project> projects = projectApiClient.getProjectByUser();
+        projects = projectApiClient.getProjectByUser();
         ShowAllTabService.getInstance().setProjects(projects);
 
         for(Project project : projects) {
@@ -49,6 +51,22 @@ public class ShowAllTabController {
                 Project project = projects.get(tablesListView.getSelectionModel().getSelectedIndex());
                 tableTitleLabel.setText(project.getNom());
                 tableDescriptionLabel.setText(project.getDescription());
+                openTableBtn.setDisable(false);
+            } else {
+                tableTitleLabel.setText("");
+                tableDescriptionLabel.setText("");
+                openTableBtn.setDisable(true);
+            }
+        });
+
+        openTableBtn.setOnAction(e -> {
+            String selectedTable = (String) tablesListView.getSelectionModel().getSelectedItem();
+            if (selectedTable != null) {
+                Project project = projects.get(tablesListView.getSelectionModel().getSelectedIndex());
+                if (project != null) {
+                    ProjectTabService projectTabService = ProjectTabService.getInstance();
+                    projectTabService.openProject(project);
+                }
             }
         });
 
@@ -62,7 +80,6 @@ public class ShowAllTabController {
         descriptionLabel.setText(EString.DESCRIPTION.toString());
         backToMenuBtn.setText(EString.BACK_TO_MENU.toString());
         openTableBtn.setText(EString.OPEN_TABLE.toString());
-        openTableBtn.setOnAction(event -> screenService.setScreen(EPage.SHOW_TAB));
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
     }
 
