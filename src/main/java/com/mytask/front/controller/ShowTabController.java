@@ -97,8 +97,7 @@ public class ShowTabController {
     }
 
     private void initData() {
-        project = new Project("mock", "mock mock mock");
-        project.setLabels(labels);
+      //  project.setLabels(labels);
     }
 
     private void setTextForUIElements() {
@@ -348,6 +347,16 @@ public class ShowTabController {
 
     public void setProject(Project project) {
         this.project = project;
+        project.setLabels(labels);
+        project.getTasks().forEach(task -> {
+            createRandomTask(task, task.getTitle());
+            switch (task.getStatus()) {
+                case TODO -> todoTasksList.getChildren().add(task.getTaskBox());
+                case IN_PROGRESS -> inProgressTasksList.getChildren().add(task.getTaskBox());
+                case DONE -> doneTasksList.getChildren().add(task.getTaskBox());
+            }
+        });
+
     }
 
     public Project getProject() {

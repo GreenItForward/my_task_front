@@ -58,6 +58,17 @@ public class Task {
         this.labels = new ArrayList<>();
     }
 
+    public Task(int id, String titre, String description, Project project) {
+        this.id = id;
+        this.title = new SimpleStringProperty(titre);
+        this.details = new SimpleStringProperty(description);
+        this.status = EStatus.TODO;
+        this.projectID = project.getId();
+        this.assignedTo = new SimpleStringProperty("James");
+        this.deadlineDatePicker = new DatePicker();
+        this.labels = new ArrayList<>();
+    }
+
     public String getTitle() {
         return title.get();
     }
