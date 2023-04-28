@@ -11,9 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class LabelService {
     private static LabelService instance;
@@ -105,7 +103,7 @@ public class LabelService {
 
     private HBox createLabelProjectInfo(LabelModel label, VBox labelContainer) {
         HBox labelInfo = new HBox(10);
-        List<LabelModel> originalLabels = showAllTabService.getProjects().get(0).getLabels();
+        List<LabelModel> originalLabels = new ArrayList<>((showAllTabService.getProjects().get(0).getLabels()));
         List<LabelModel> modifiableLabels = new ArrayList<>(originalLabels);
 
         TextField nameLabel = new TextField(label.getNom());
@@ -114,29 +112,44 @@ public class LabelService {
         Button deleteButton = new Button(EString.SUPPRIMER.toString());
         deleteButton.getStyleClass().add("button-delete");
 
+        Button saveButton = new Button(EString.SAVE.toString());
+        saveButton.getStyleClass().add("button-save");
+
         deleteButton.setOnAction(e -> {
             modifiableLabels.remove(label);
             showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
             labelContainer.getChildren().remove(labelInfo);
         });
 
-        labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
+        nameLabel.textProperty().addListener((observable, oldValue, newValue) -> nameLabel.setOnAction(e -> {
+            if (!nameLabel.getText().isEmpty()) {
+                int index = modifiableLabels.indexOf(label);
+                if (index == -1) {
+                    modifiableLabels.add(label);
+                    index = modifiableLabels.indexOf(label);
+                    showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+                }
 
-        nameLabel.textProperty().addListener((observable, oldValue, newValue) -> {
-            int index = modifiableLabels.indexOf(label);
-            label.setNom(newValue);
-            modifiableLabels.set(index, label);
+                label.setNom(newValue);
+                modifiableLabels.set(index, label);
+                showAllTabService.getProjects().get(0).getLabels().get(index).setNom(newValue);
+            }
+        }));
+
+        colorPicker.valueProperty().addListener((observableColorPicker, oldValueColorPicker, newValueColorPicker) -> {
+            int indexColorPicker = modifiableLabels.indexOf(label);
+            if (indexColorPicker == -1) {
+                modifiableLabels.add(label);
+                indexColorPicker = modifiableLabels.indexOf(label);
+                showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+            }
+
+            label.setCouleur(newValueColorPicker);
+            modifiableLabels.set(indexColorPicker, label);
             showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
         });
 
-        colorPicker.setOnAction(e -> {
-            Color newColor = colorPicker.getValue();
-            int index = modifiableLabels.indexOf(label);
-            label.setCouleur(newColor);
-            modifiableLabels.set(index, label);
-            showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
-            String colorString = AppService.colorToHexString(newColor); // Pour l'api
-        });
+        labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton, saveButton);
 
         return labelInfo;
     }
