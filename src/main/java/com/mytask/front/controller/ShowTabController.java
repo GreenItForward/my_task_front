@@ -5,6 +5,7 @@ import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
+import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
@@ -98,7 +99,7 @@ public class ShowTabController {
     }
 
     private void initData() {
-        project = new Project("mock", "mock mock mock");
+        project = ShowAllTabService.getInstance().getProjects().get(0);
         project.setLabels(labels);
     }
 
