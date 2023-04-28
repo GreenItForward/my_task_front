@@ -19,8 +19,6 @@ public class App extends Application {
         screenService.loadScreen(EPage.CONNECTION, ConnectionController::new);
         screenService.loadScreen(EPage.INSCRIPTION, InscriptionController::new);
         screenService.loadScreen(EPage.CREATE_TAB, CreateTabController::new);
-        screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
-        screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
 
         // Configurer la scène initiale
         EPage initialPage = EPage.CONNECTION;

@@ -4,6 +4,9 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.ProjectApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,6 +15,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 public class ProjectApiClient implements ProjectApiClientInterface {
     private final HttpClient httpClient;
@@ -65,6 +69,42 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                 System.err.println("Project creation failed, status code: " + response.statusCode() + "\body: "+ response.body());
             }
         }
+    }
+
+    @Override
+    public ArrayList<Project> getProjectByUser() throws JSONException {
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/project/user"))
+                .GET()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        ArrayList<Project> projects = new ArrayList<>();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            if (response != null && response.statusCode() == 200) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONArray jsonArray = new JSONArray(responseBody);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject project = jsonArray.getJSONObject(i);
+                        projects.add(new Project(project.getString("nom"), project.getString("description"), project.getString("codeJoin"), project.getInt("id")));
+                    }
+
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
+            } else {
+                System.err.println("Get project failed, status code: " + response.statusCode() + "\body: "+ response.body());
+            }
+        }
+
+        return projects;
     }
 
     @Override

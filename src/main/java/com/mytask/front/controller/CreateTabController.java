@@ -4,6 +4,7 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
+import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+
 import static com.mytask.front.configuration.AppConfiguration.labels;
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;
@@ -36,17 +38,30 @@ public class CreateTabController {
 
     LabelApiClient labelApiClient;
 
-
-
     @FXML
     public void initialize() {
-        this.labelApiClient = LabelApiClient.getInstance();
+        initData();
+        configureButtons();
+        setTextForUIElements();
+    }
 
+    private void initData() {
+        this.labelApiClient = LabelApiClient.getInstance();
+    }
+
+    private void configureButtons() {
         createTableBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) createTableBtn.getScene().getWindow());
             }
         });
+
+        backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
+        createTableBtn.setOnAction(event -> createTable());
+        addLabelBtn.setOnAction(event -> addLabel());
+    }
+
+    private void setTextForUIElements() {
         backToMenuBtn.setText(EString.BACK_TO_MENU.toString());
         joinTableBtn.setText(EString.JOIN_TAB.toString());
         joinTableLabel.setText(EString.LABEL_JOIN_TAB.toString());
@@ -60,42 +75,40 @@ public class CreateTabController {
         descriptionLabel.setText(EString.DESCRIPTION.toString());
         nameLabel.setText(EString.NAME.toString());
         addLabelBtn.setText(EString.ADD_LABEL.toString());
+    }
 
-        backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
-        createTableBtn.setOnAction(event -> {
-            ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
-            if (nameTextField.getText().isEmpty()) {
-                setErrorMessage(nameTextField);
-                return;
-            }
+    private void createTable() {
+        ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
+        if (nameTextField.getText().isEmpty()) {
+            setErrorMessage(nameTextField);
+            return;
+        }
 
-            Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
-            projectApiClient.createProject(project);
-            project.setLabels(labels);
-           // project.setLabels(labelApiClient.getLabels()); // dès que l'on aura l'endpoint pour récupérer les labels
-            ShowTabController.getInstance().setProject(project);
+        Project project = ShowAllTabService.getInstance().getProjects().get(0);
+        projectApiClient.createProject(project);
+        project.setLabels(labels);
+        ShowTabController.getInstance().setProject(project);
 
-            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
-            screenService.setScreen(EPage.SHOW_TAB);
-            resetFields(null);
-        });
+        screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+        screenService.setScreen(EPage.SHOW_TAB);
+        resetFields(null);
+    }
 
-        addLabelBtn.setOnAction(event -> {
-            if (labelTextField.getText().isEmpty()) {
-                setErrorMessage(labelTextField);
-                return;
-            }
+    private void addLabel() {
+        if (labelTextField.getText().isEmpty()) {
+            setErrorMessage(labelTextField);
+            return;
+        }
 
-            LabelModel labelModel = new LabelModel(labelTextField.getText(), colorPicker.getValue());
-            labelApiClient.addLabel(labelModel);
-            createRectangle(labelModel);
-            resetFields(labelTextField);
-        });
+        LabelModel labelModel = new LabelModel(labelTextField.getText(), colorPicker.getValue());
+        labelApiClient.addLabel(labelModel);
+        createRectangle(labelModel);
+        resetFields(labelTextField);
     }
 
     private void setErrorMessage(TextField textField) {
-        textField.setStyle("-fx-prompt-text-fill: red;");
-        textField.setPromptText(EString.EMPTY_FIELD.toString());
+        textField.setStyle("-fx-border-color: red");
+        textField.setPromptText(EString.ERROR.toString());
     }
 
     private void resetErrorMessage(TextField textField) {
@@ -113,6 +126,8 @@ public class CreateTabController {
         } else {
             textField.setText("");
         }
+
+        resetErrorMessage(nameTextField);
     }
 
     private void createRectangle(LabelModel labelModel) {

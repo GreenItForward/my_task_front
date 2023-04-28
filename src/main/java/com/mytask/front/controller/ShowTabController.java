@@ -9,7 +9,7 @@ import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
 import com.mytask.front.utils.EString;
-import com.mytask.front.utils.PdfExportService;
+import com.mytask.front.utils.PdfExportHelper;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -89,15 +89,19 @@ public class ShowTabController {
 
     @FXML
     public void initialize() {
+        initData();
+        setTextForUIElements();
+        configureButtons();
+        setupDragAndDrop();
+        initializeTaskLists();
+    }
+
+    private void initData() {
         project = new Project("mock", "mock mock mock");
         project.setLabels(labels);
+    }
 
-
-        backToMenuBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
-            }
-        });
+    private void setTextForUIElements() {
         tableLabel.setText(EString.MY_TABS.toString());
         backToMenuBtn.setText(EString.BACK_TO_MENU.toString());
         generateInviteCodeBtn.setText(EString.GENERATE_INVITE_CODE.toString());
@@ -107,23 +111,14 @@ public class ShowTabController {
         doneLabel.setText(EString.DONE.toString());
         showTablesBtn.setText(EString.SHOW_TABLES.toString());
         exportToPdfBtn.setText(EString.EXPORT_TO_PDF.toString());
-        TextField addTodoTaskField = createAddTaskField(todoTasksList);
-        TextField addInProgressTaskField = createAddTaskField(inProgressTasksList);
-        TextField addDoneTaskField = createAddTaskField(doneTasksList);
+    }
 
-        // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-        // MOCK DATA TO TEST THE UI
-        /*
-        todoTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
-        inProgressTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
-        doneTasksList.getChildren().add(createRandomTasksRecursively(rand, 5));
-        */
-
-
-        todoTasksList.getChildren().add(0, addTodoTaskField);
-        inProgressTasksList.getChildren().add(0, addInProgressTaskField);
-        doneTasksList.getChildren().add(0, addDoneTaskField);
-        setupDragAndDrop();
+    private void configureButtons() {
+        backToMenuBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
+            }
+        });
 
         //TODO: Initialize the controller's logic here
         // ex: add EventHandlers to buttons, set initial data, etc.
@@ -135,6 +130,14 @@ public class ShowTabController {
         // quand on appuie sur generateInviteCodeBtn on affiche un popup avec le code d'invitation
         generateInviteCodeBtn.setOnAction(event -> TabService.showInviteCode((Stage) generateInviteCodeBtn.getScene().getWindow()));
 
+        // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
+        showTablesBtn.setOnAction(event -> showTablesPopup());
+
+        // quand on appuie sur exportToPdfBtn on exporte la table en pdf
+        exportToPdfBtn.setOnAction(event -> PdfExportHelper.exportToPdf(getTasksByColumn()));
+    }
+
+    private List<VBox> getTasksByColumn() {
         List<VBox> tasksByColumn = new ArrayList<>();
 
         // vérifier que si il sont vide alors on les ajoute pas
@@ -149,14 +152,14 @@ public class ShowTabController {
         if (doneTasksList.getChildren().size() > 1) {
             tasksByColumn.add((VBox) doneTasksList.getChildren().get(1));
         }
-        
-        // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
-        showTablesBtn.setOnAction(event -> showTablesPopup());
-        
-        // quand on appuie sur exportToPdfBtn on exporte la table en pdf
-       exportToPdfBtn.setOnAction(event -> PdfExportService.exportToPdf(tasksByColumn));
+        return tasksByColumn;
     }
 
+    private void initializeTaskLists() {
+        todoTasksList.getChildren().add(0, createAddTaskField(todoTasksList));
+        inProgressTasksList.getChildren().add(0,  createAddTaskField(inProgressTasksList));
+        doneTasksList.getChildren().add(0, createAddTaskField(doneTasksList));
+    }
 
     private TextField createAddTaskField(VBox taskList) {
         TextField addTaskField = new TextField(EString.ADD_TASK.toString());

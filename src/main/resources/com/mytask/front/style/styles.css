@@ -10,3 +10,9 @@
 .button:hover {
     -fx-background-color: #2980b9;
 }
+
+.tableLabel {
+    -fx-padding: 0 0 0 10px;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
