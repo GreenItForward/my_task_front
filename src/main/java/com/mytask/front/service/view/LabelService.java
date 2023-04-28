@@ -3,6 +3,8 @@ package com.mytask.front.service.view;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.LabelApiClient;
+import com.mytask.front.service.api.impl.TaskApiClient;
+import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.utils.EString;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -158,11 +160,11 @@ public class LabelService {
     protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {
        if (task.getLabels().contains(label)) {
             task.getLabels().remove(label);
-         //   LabelApiClient.getInstance().removeLabel(label);
         } else {
             task.getLabels().add(label);
-          //  LabelApiClient.getInstance().addLabel(label);
         }
+
+        TaskLabelApiClient.getInstance().updateLabelToTask(task, label);
         PopupService.getInstance().updateToggleButton(toggleCheckBox, task, label);
     }
 

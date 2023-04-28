@@ -99,10 +99,6 @@ public class PopupService {
             if (task != null) {
                 taskApiClient.updateTask(task);
             }
-        }else if(page.getFxmlName().equals(LABELS.getFxmlName())){
-            Task task = taskSupplier.get();
-            ShowTabController.getInstance().updateLabels(task);
-            // TaskDetailsController.getInstance().updateAssignedMembers();
         }
     }
 
