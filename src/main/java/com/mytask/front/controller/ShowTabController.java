@@ -8,6 +8,7 @@ import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
+import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.PdfExportHelper;
 import javafx.fxml.FXML;
@@ -151,6 +152,7 @@ public class ShowTabController {
         if (doneTasksList.getChildren().size() > 1) {
             tasksByColumn.add((VBox) doneTasksList.getChildren().get(1));
         }
+
         return tasksByColumn;
     }
 
@@ -158,6 +160,10 @@ public class ShowTabController {
         todoTasksList.getChildren().add(0, createAddTaskField(todoTasksList));
         inProgressTasksList.getChildren().add(0,  createAddTaskField(inProgressTasksList));
         doneTasksList.getChildren().add(0, createAddTaskField(doneTasksList));
+        todoTasksList.setId(String.valueOf(EStatus.TODO));
+        inProgressTasksList.setId(String.valueOf(EStatus.IN_PROGRESS));
+        doneTasksList.setId(String.valueOf(EStatus.DONE));
+
     }
 
     private TextField createAddTaskField(VBox taskList) {
@@ -252,6 +258,7 @@ public class ShowTabController {
         task.setLabelBox(colorTags);
         task.setTaskBox(taskBox);
 
+        taskBox.setUserData(task);
         return taskBox;
     }
 
@@ -285,7 +292,18 @@ public class ShowTabController {
                 if (draggedTask != null && !Objects.equals(draggedTask.getParent(), column)) {
                     column.getChildren().add(draggedTask);
                     event.setDropCompleted(true);
-                    // TODO: update task status in list
+
+                    String targetParentId = column.getId();
+                    Task task = (Task) draggedTask.getUserData();
+
+                    switch (targetParentId) {
+                        case "TODO" -> task.setStatus(EStatus.TODO);
+                        case "IN_PROGRESS" -> task.setStatus(EStatus.IN_PROGRESS);
+                        case "DONE" -> task.setStatus(EStatus.DONE);
+                    }
+
+                    // TaskApiClient.getInstance().updateTaskStatus(task); // TODO: uncomment when API is ready
+
                 } else {
                     event.setDropCompleted(false);
                 }
