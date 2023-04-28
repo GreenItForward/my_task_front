@@ -12,6 +12,7 @@ public interface LabelApiClientInterface {
     void createLabel(LabelModel label);
     void addLabel(LabelModel label);
     void removeLabel(LabelModel label);
+    void deleteLabel(LabelModel label);
     void updateLabel(LabelModel label);
     List<LabelModel> getLabels(Project project) throws JSONException;
 }

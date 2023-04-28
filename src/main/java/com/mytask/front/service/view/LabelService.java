@@ -2,16 +2,15 @@ package com.mytask.front.service.view;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
-import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.utils.EString;
-import com.mytask.front.utils.EStyle;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LabelService {
     private static LabelService instance;
@@ -112,13 +111,15 @@ public class LabelService {
         Button deleteButton = new Button(EString.SUPPRIMER.toString());
         deleteButton.getStyleClass().add("button-delete");
 
-        Button saveButton = new Button(EString.SAVE.toString());
-        saveButton.getStyleClass().add("button-save");
-
         deleteButton.setOnAction(e -> {
             modifiableLabels.remove(label);
             showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
             labelContainer.getChildren().remove(labelInfo);
+
+            if (originalLabels.contains(label)) {
+                LabelApiClient.getInstance().deleteLabel(label);
+                originalLabels.remove(label);
+            }
         });
 
         nameLabel.textProperty().addListener((observable, oldValue, newValue) -> nameLabel.setOnAction(e -> {
@@ -149,18 +150,18 @@ public class LabelService {
             showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
         });
 
-        labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton, saveButton);
+        labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
 
         return labelInfo;
     }
 
     protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {
-        if (task.getLabels().contains(label)) {
+       if (task.getLabels().contains(label)) {
             task.getLabels().remove(label);
-            LabelApiClient.getInstance().removeLabel(label);
+         //   LabelApiClient.getInstance().removeLabel(label);
         } else {
             task.getLabels().add(label);
-            LabelApiClient.getInstance().addLabel(label);
+          //  LabelApiClient.getInstance().addLabel(label);
         }
         PopupService.getInstance().updateToggleButton(toggleCheckBox, task, label);
     }

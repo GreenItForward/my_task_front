@@ -50,8 +50,10 @@ public class ShowAllTabController {
         projects = projectApiClient.getProjectByUser();
         ShowAllTabService.getInstance().setProjects(projects);
 
+
+
         for(Project project : projects) {
-            project.setLabels(LabelApiClient.getInstance().getLabels(project));
+     //       project.setLabels(LabelApiClient.getInstance().getLabels(project)); // redundant
             tablesListView.getItems().add(project.getNom());
         }
     }

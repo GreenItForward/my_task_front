@@ -4,6 +4,7 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.LabelApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.HttpClientApi;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,8 +109,15 @@ public class LabelApiClient implements LabelApiClientInterface {
             }
         }
 
-
         return labels;
+    }
+
+
+    @Override
+    public void deleteLabel(LabelModel label) {
+        HttpRequest request = HttpClientApi.createDeleteRequest("http://localhost:3000/api/label/" + label.getId(), token);
+        HttpClientApi.sendRequestAndPrintResponse(httpClient, request);
+        labels.remove(label);
     }
 
     public void updateToken(String token) {
