@@ -1,5 +1,6 @@
 package com.mytask.front.model;
 
+import com.mytask.front.utils.EStatus;
 import javafx.scene.paint.Color;
 
 import static com.mytask.front.service.AppService.colorToHexString;

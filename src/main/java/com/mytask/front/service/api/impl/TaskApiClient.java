@@ -1,8 +1,14 @@
 package com.mytask.front.service.api.impl;
 
+import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.TaskApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.EStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,6 +16,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
@@ -63,6 +71,38 @@ public class TaskApiClient implements TaskApiClientInterface {
             }
         }
 
+    }
+
+    @Override
+    public List<Task> getTasksByProject(Project project) throws JSONException {
+        HttpResponse<String> response = null;
+        List<Task> tasks = new ArrayList<>();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/tasks" + project.getId()))
+                .GET()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null && response.statusCode() == 200) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONArray jsonArray = new JSONArray(responseBody);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject label = jsonArray.getJSONObject(i);
+                        tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getJSONObject("userId").getInt("id"), label.getJSONObject("projectId").getInt("id")));
+                    }
+                }
+            }
+        }
+        return tasks;
     }
 
     @Override

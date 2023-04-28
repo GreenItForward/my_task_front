@@ -46,6 +46,18 @@ public class Task {
         this(null, null, null, null, null);
     }
 
+    public Task(int id, String titre, String description, EStatus status, String deadline, int userId, int projectID) {
+        this.id = id;
+        this.title = new SimpleStringProperty(titre);
+        this.details = new SimpleStringProperty(description);
+        this.status = status;
+        this.projectID = projectID;
+        this.assignedTo = new SimpleStringProperty(String.valueOf(userId));
+        this.deadlineDatePicker = new DatePicker();
+        this.deadlineDatePicker.setValue(LocalDate.parse(deadline, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRANCE)));
+        this.labels = new ArrayList<>();
+    }
+
     public String getTitle() {
         return title.get();
     }
