@@ -49,6 +49,7 @@ public class ShowTabController {
     private Button viewMembersBtn;
     @FXML
     private Button exportToPdfBtn;
+    @FXML private Button projectSettingBtn;
     @FXML
     private VBox todoTasksList;
     @FXML
@@ -111,6 +112,7 @@ public class ShowTabController {
         doneLabel.setText(EString.DONE.toString());
         showTablesBtn.setText(EString.SHOW_TABLES.toString());
         exportToPdfBtn.setText(EString.EXPORT_TO_PDF.toString());
+        projectSettingBtn.setText(EString.PROJECT_SETTINGS.toString());
     }
 
     private void configureButtons() {
@@ -119,6 +121,8 @@ public class ShowTabController {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
             }
         });
+
+        projectSettingBtn.setOnAction(event -> PopupService.showProjectSettingsPopup((Stage) projectSettingBtn.getScene().getWindow(), project));
 
         //TODO: Initialize the controller's logic here
         // ex: add EventHandlers to buttons, set initial data, etc.

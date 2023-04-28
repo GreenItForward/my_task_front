@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.configuration.AppConfiguration;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.ProjectApiClientInterface;
@@ -49,6 +50,7 @@ public class ShowAllTabController {
         ShowAllTabService.getInstance().setProjects(projects);
 
         for(Project project : projects) {
+            project.setLabels(AppConfiguration.labels);
             tablesListView.getItems().add(project.getNom());
         }
     }

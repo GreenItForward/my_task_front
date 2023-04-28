@@ -25,10 +25,12 @@ import java.util.Random;
 import static com.mytask.front.utils.EIcon.*;
 
 public class TabService {
+    private static PopupService popupService;
 
     // Singleton
     public static void init(Stage primaryStage) {
         ScreenService screenService = ScreenService.getInstance(primaryStage);
+        popupService = popupService.getInstance();
 
     }
 
@@ -144,14 +146,14 @@ public class TabService {
     }
 
     public static void showMembers(Stage primaryStage) {
-        PopupService.showMemberPopup(primaryStage);
+        popupService.showMemberPopup(primaryStage);
     }
 
     public static void showInviteCode(Stage primaryStage) {
-        PopupService.showInviteCodePopup(primaryStage);
+        popupService.showInviteCodePopup(primaryStage);
     }
 
     public static void showLabels(Stage window, Task task) {
-        PopupService.getInstance().showLabelPopup(window, task);
+        popupService.showLabelPopup(window, task);
     }
 }
