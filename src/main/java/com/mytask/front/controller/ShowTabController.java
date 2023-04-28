@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.service.view.ShowAllTabService;
@@ -27,7 +28,8 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
 import javafx.scene.control.TextField;
-import static com.mytask.front.configuration.AppConfiguration.labels;
+import org.json.JSONException;
+
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 
 public class ShowTabController {
@@ -90,7 +92,7 @@ public class ShowTabController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws JSONException {
         initData();
         setTextForUIElements();
         configureButtons();
@@ -98,9 +100,9 @@ public class ShowTabController {
         initializeTaskLists();
     }
 
-    private void initData() {
+    private void initData() throws JSONException {
         project = ShowAllTabService.getInstance().getProjects().get(0);
-        project.setLabels(labels);
+        project.setLabels(LabelApiClient.getInstance().getLabels(project));
     }
 
     private void setTextForUIElements() {

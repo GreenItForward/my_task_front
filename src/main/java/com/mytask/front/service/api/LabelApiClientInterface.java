@@ -2,7 +2,9 @@ package com.mytask.front.service.api;
 
 
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import javafx.scene.control.Label;
+import org.json.JSONException;
 
 import java.util.List;
 
@@ -11,5 +13,5 @@ public interface LabelApiClientInterface {
     void addLabel(LabelModel label);
     void removeLabel(LabelModel label);
     void updateLabel(LabelModel label);
-    List<LabelModel> getLabels();
+    List<LabelModel> getLabels(Project project) throws JSONException;
 }

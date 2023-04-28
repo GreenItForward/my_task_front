@@ -18,6 +18,14 @@ public class LabelModel {
         this.id = 0;
     }
 
+    public LabelModel(String id, String nom, String couleur, int projectID) {
+        this.id = Integer.parseInt(id);
+        this.nom = nom;
+        this.couleur = Color.web(couleur);
+        this.projectId = projectID;
+
+    }
+
     public int getId() { return id; }
 
     public void setId(int id) { this.id = id; }
