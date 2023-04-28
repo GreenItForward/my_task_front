@@ -1,6 +1,6 @@
 package com.mytask.front.model;
 
-import com.mytask.front.exception.AuthEndpoint;
+import com.mytask.front.utils.EAuthEndpoint;
 
 public class User {
     private String email;
@@ -82,9 +82,9 @@ public class User {
     }
 
 
-    public String toJSON(AuthEndpoint endpoint) {
+    public String toJSON(EAuthEndpoint endpoint) {
         String result = "{\"email\":\"" + this.email + "\",\"password\":\"" + this.password;
-        if (endpoint == AuthEndpoint.REGISTER) {
+        if (endpoint == EAuthEndpoint.REGISTER) {
             result += "\",\"name\":\"" + this.nom + "\",\"firstname\":\"" + this.prenom;
         }
         return result + "\"}";

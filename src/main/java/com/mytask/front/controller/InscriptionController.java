@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.utils.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
@@ -45,18 +46,23 @@ public class InscriptionController {
             User user = new User(email.getText(), nom.getText(), prenom.getText(), password.getText());
             System.out.println(EString.SIGN_UP_IN_PROGRESS);
 
+            String token = null;
             try {
-                String token = authApiClient.authentify(user, "register");
+                token = authApiClient.authentify(user, EAuthEndpoint.REGISTER);
                 UserService.setCurrentUser(authApiClient.getUser(token));
                 UserService.getCurrentUser().setToken(token);
                 resetFields(null);
+
+                if (token.equals(UserService.getCurrentUser().getToken())) {
+                    screenService.loadScreen(EPage.INDEX, IndexController::new);
+                    screenService.setScreen(EPage.INDEX);
+                    screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
+                    screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+                }
             } catch (AuthException e) {
                 System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }
-
-            screenService.loadScreen(EPage.INDEX, IndexController::new);
-            screenService.setScreen(EPage.INDEX);
         });
     }
 

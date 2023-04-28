@@ -1,5 +1,6 @@
 package com.mytask.front.service.api.impl;
 
+import com.mytask.front.utils.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.AuthApiClientInterface;
@@ -34,11 +35,11 @@ public class AuthApiClient implements AuthApiClientInterface {
     }
 
     @Override
-    public String authentify(User user, String endpoint) throws AuthException {
+    public String authentify(User user, EAuthEndpoint endpoint) throws AuthException {
         HttpResponse<String> response;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:3000/api/auth/" + endpoint))
-                .POST(HttpRequest.BodyPublishers.ofString(user.toJSON(endpoint)))
+                .uri(URI.create("http://localhost:3000/api/auth/" + endpoint.getValue()))
+                .POST(HttpRequest.BodyPublishers.ofString(user.toJSON(endpoint.getValue())))
                 .header("Content-Type", "application/json")
                 .build();
         try {

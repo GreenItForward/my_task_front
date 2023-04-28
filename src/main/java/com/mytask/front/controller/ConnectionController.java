@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.utils.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.AuthApiClient;
@@ -36,30 +37,36 @@ public class ConnectionController {
             }
         });
 
+
         sinscrire.setOnAction(event -> {
             System.out.println(EString.SIGN_UP);
             screenService.setScreen(EPage.INSCRIPTION);
         });
 
+
         seconnecter.setOnAction(event -> {
             User user = new User(email.getText(), password.getText());
             System.out.println(EString.SIGN_IN_IN_PROGRESS);
 
+            String token = null;
             try {
-                String token = authApiClient.authentify(user, "login");
+                token = authApiClient.authentify(user, EAuthEndpoint.LOGIN);
                 UserService.setCurrentUser(authApiClient.getUser(token));
                 UserService.getCurrentUser().setToken(token);
                 resetFields(null);
+
+                if (token.equals(UserService.getCurrentUser().getToken())) {
+                    screenService.loadScreen(EPage.INDEX, IndexController::new);
+                    screenService.setScreen(EPage.INDEX);
+                    screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
+                    screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+                }
             } catch (AuthException e) {
                 System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }
-
-            screenService.loadScreen(EPage.INDEX, IndexController::new);
-            screenService.setScreen(EPage.INDEX);
-            screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
-            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
         });
+
 
         activerToucheEntree(sinscrire, () -> sinscrire.fire());
         activerToucheEntree(seconnecter, () -> seconnecter.fire());
