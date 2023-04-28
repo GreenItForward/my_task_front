@@ -68,7 +68,6 @@ public class LabelService {
         });
 
         addLabelContainer.getChildren().addAll(labelTitle, addLabelButton);
-
         labelContainer.getChildren().addAll(addLabelContainer);
 
         return labelContainer;
@@ -166,6 +165,8 @@ public class LabelService {
 
         TaskLabelApiClient.getInstance().updateLabelToTask(task, label);
         PopupService.getInstance().updateToggleButton(toggleCheckBox, task, label);
+
+        TabService.updateColorTags(task);
     }
 
 }

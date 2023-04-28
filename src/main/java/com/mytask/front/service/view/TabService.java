@@ -68,6 +68,16 @@ public class TabService {
         return result;
     }
 
+    public static void updateColorTags(Task task) {
+        HBox hbox = task.getLabelBox();
+        hbox.getChildren().clear();
+        List<LabelModel> labels = task.getLabels();
+        labels.forEach(label -> {
+            Rectangle colorRect = createColorRectangle(label.getNom(), label.getCouleur(), task.getId());
+            hbox.getChildren().add(colorRect);
+        });
+    }
+
     public static Label createTitleLabel(Random random) {
         return new Label("[JAVA] Mise en place de JavaFX " + (random.nextInt(100) + 1));
     }

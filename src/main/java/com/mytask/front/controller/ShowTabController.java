@@ -210,14 +210,9 @@ public class ShowTabController {
     private HBox createRandomTask(Task task, String title) {
         HBox taskBox = new HBox(10);
         Random random = new Random();
-
-        List<LabelModel> labels = this.project.getLabels();
-        List<LabelModel> taskLabels = new ArrayList<>();
-        taskLabels.add(labels.get(0));
-        taskLabels.add(labels.get(1));
-        task.setLabels(taskLabels);
-
         HBox colorTags = TabService.createColorTags(task);
+
+        task.setTaskBox(colorTags);
         task.setTitle(title);
         task.setDeadline(LocalDate.now().plusDays(random.nextInt(100)));
 
