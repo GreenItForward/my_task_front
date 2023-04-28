@@ -126,15 +126,11 @@ public class PopupService {
         setPopupScreen(primaryStage, LABELS, labelContainer, () -> task);
     }
 
-    protected void updateToggleButton(Button toggleButton, Task task, LabelModel label) {
+    protected void updateToggleButton(CheckBox checkBox, Task task, LabelModel label) {
         if (task.getLabels().contains(label)) {
-            toggleButton.setText(EString.SUPPRIMER.toString());
-            toggleButton.getStyleClass().remove("button-add");
-            toggleButton.getStyleClass().add("button-delete");
+            checkBox.getStyleClass().remove("checkbox-add");
         } else {
-            toggleButton.setText(EString.AJOUTER.toString());
-            toggleButton.getStyleClass().remove("button-delete");
-            toggleButton.getStyleClass().add("button-add");
+            checkBox.getStyleClass().remove("checkbox-delete");
         }
     }
 

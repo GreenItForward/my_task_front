@@ -5,16 +5,15 @@ import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.utils.EString;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import com.mytask.front.utils.EStyle;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LabelService {
     private static LabelService instance;
@@ -82,44 +81,27 @@ public class LabelService {
         labelContainer.setSpacing(10);
         labelContainer.setStyle("-fx-padding: 10;");
 
-        // Exemple de données label
         List<LabelModel> labels = showAllTabService.getProjects().get(0).getLabels();
 
         for (LabelModel label : labels) {
             TextField nameLabel = new TextField(label.getNom());
             ColorPicker colorPicker = new ColorPicker(label.getCouleur());
 
-            Button toggleButton = new Button();
-            PopupService.getInstance().updateToggleButton(toggleButton, task, label);
+            CheckBox checkBox = new CheckBox();
+            checkBox.setSelected(task.getLabels().contains(label));
 
             HBox labelInfo = new HBox(10);
-            labelInfo.getChildren().addAll(nameLabel, colorPicker, toggleButton);
+            labelInfo.getChildren().addAll(nameLabel, colorPicker, checkBox);
             labelContainer.getChildren().add(labelInfo);
 
-            toggleButton.setOnAction(e -> toggleLabel(toggleButton, task, label));
+            checkBox.setOnAction(e -> toggleLabel(checkBox, task, label));
 
-            nameLabel.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null && !newValue.isEmpty()) {
-                    label.setNom(newValue);
-                }
-            });
-
-            colorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    label.setCouleur(newValue);
-                }
-            });
-
-            // Update label color when ColorPicker value changes
-            colorPicker.setOnAction(e -> {
-                Color newColor = colorPicker.getValue();
-                String colorString = AppService.colorToHexString(newColor); // Pour l'api
-            });
+            nameLabel.setDisable(true);
+            colorPicker.setDisable(true);
         }
 
         return labelContainer;
     }
-
 
     private HBox createLabelProjectInfo(LabelModel label, VBox labelContainer) {
         HBox labelInfo = new HBox(10);
@@ -159,7 +141,7 @@ public class LabelService {
         return labelInfo;
     }
 
-    protected static void toggleLabel(Button toggleButton, Task task, LabelModel label) {
+    protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {
         if (task.getLabels().contains(label)) {
             task.getLabels().remove(label);
             LabelApiClient.getInstance().removeLabel(label);
@@ -167,10 +149,7 @@ public class LabelService {
             task.getLabels().add(label);
             LabelApiClient.getInstance().addLabel(label);
         }
-        PopupService.getInstance().updateToggleButton(toggleButton, task, label);
+        PopupService.getInstance().updateToggleButton(toggleCheckBox, task, label);
     }
-
-
-
 
 }
