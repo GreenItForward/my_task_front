@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.utils.EPage;
@@ -27,8 +28,10 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
 import javafx.scene.control.TextField;
+
 import static com.mytask.front.configuration.AppConfiguration.labels;
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
+import static com.mytask.front.utils.EStatus.IN_PROGRESS;
 
 public class ShowTabController {
 
@@ -160,10 +163,9 @@ public class ShowTabController {
         todoTasksList.getChildren().add(0, createAddTaskField(todoTasksList));
         inProgressTasksList.getChildren().add(0,  createAddTaskField(inProgressTasksList));
         doneTasksList.getChildren().add(0, createAddTaskField(doneTasksList));
-        todoTasksList.setId(String.valueOf(EStatus.TODO));
-        inProgressTasksList.setId(String.valueOf(EStatus.IN_PROGRESS));
-        doneTasksList.setId(String.valueOf(EStatus.DONE));
-
+        todoTasksList.setId(EStatus.TODO.getValue());
+        inProgressTasksList.setId(IN_PROGRESS.getValue());
+        doneTasksList.setId(EStatus.DONE.getValue());
     }
 
     private TextField createAddTaskField(VBox taskList) {
@@ -297,12 +299,13 @@ public class ShowTabController {
                     Task task = (Task) draggedTask.getUserData();
 
                     switch (targetParentId) {
-                        case "TODO" -> task.setStatus(EStatus.TODO);
-                        case "IN_PROGRESS" -> task.setStatus(EStatus.IN_PROGRESS);
-                        case "DONE" -> task.setStatus(EStatus.DONE);
+                        case "TODO" -> task.setStatus(EStatus.TODO.getValue());
+                        case "IN PROGRESS" -> task.setStatus(IN_PROGRESS.getValue());
+                        case "DONE" -> task.setStatus(EStatus.DONE.getValue());
                     }
 
-                    // TaskApiClient.getInstance().updateTaskStatus(task); // TODO: uncomment when API is ready
+
+                    TaskApiClient.getInstance().updateTask(task);
 
                 } else {
                     event.setDropCompleted(false);
@@ -369,9 +372,9 @@ public class ShowTabController {
         project.getTasks().forEach(task -> {
             createRandomTask(task, task.getTitle());
             switch (task.getStatus()) {
-                case TODO -> todoTasksList.getChildren().add(task.getTaskBox());
-                case IN_PROGRESS -> inProgressTasksList.getChildren().add(task.getTaskBox());
-                case DONE -> doneTasksList.getChildren().add(task.getTaskBox());
+                case "TODO" -> todoTasksList.getChildren().add(task.getTaskBox());
+                case "IN PROGRESS" -> inProgressTasksList.getChildren().add(task.getTaskBox());
+                case "DONE" -> doneTasksList.getChildren().add(task.getTaskBox());
             }
         });
 

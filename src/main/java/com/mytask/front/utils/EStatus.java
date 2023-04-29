@@ -2,19 +2,35 @@ package com.mytask.front.utils;
 
 public enum EStatus {
     TODO,
-    IN_PROGRESS,
+    IN_PROGRESS("IN PROGRESS"),
     DONE;
 
-    public static EStatus getStatus(String status) {
+    public static String getStatus(String status) {
         switch (status) {
             case "TODO":
-                return TODO;
-            case "IN_PROGRESS":
-                return IN_PROGRESS;
+                return TODO.getValue();
+            case "IN PROGRESS":
+                return IN_PROGRESS.getValue();
             case "DONE":
-                return DONE;
+                return DONE.getValue();
             default:
-                return TODO;
+                return "";
         }
     }
+
+    private String value;
+
+    EStatus() {
+        this.value = this.name();
+    }
+
+    EStatus(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+
 }

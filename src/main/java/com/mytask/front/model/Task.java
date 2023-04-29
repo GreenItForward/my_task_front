@@ -2,7 +2,6 @@ package com.mytask.front.model;
 
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.service.api.impl.AuthApiClient;
-import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EStatus;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -23,7 +22,7 @@ public class Task {
 
     private StringProperty details;
 
-    private EStatus status;
+    private String status;
 
     private int projectID;
 
@@ -39,7 +38,7 @@ public class Task {
         this.id = 14;
         this.title = new SimpleStringProperty(title);
         this.details = new SimpleStringProperty(details);
-        this.status = EStatus.TODO;
+        this.status = EStatus.TODO.getValue();
         this.projectID = 38;
         this.assignedTo = new SimpleStringProperty(assignedTo);
         this.deadlineDatePicker = new DatePicker(deadline);
@@ -50,7 +49,7 @@ public class Task {
         this(null, null, null, null, null);
     }
 
-    public Task(int id, String titre, String description, EStatus status, String deadline, int userId, int projectID) throws AuthException {
+    public Task(int id, String titre, String description, String status, String deadline, int userId, int projectID) throws AuthException {
         this.id = id;
         this.title = new SimpleStringProperty(titre);
         this.details = new SimpleStringProperty(description);
@@ -68,7 +67,7 @@ public class Task {
         this.id = id;
         this.title = new SimpleStringProperty(titre);
         this.details = new SimpleStringProperty(description);
-        this.status = EStatus.TODO;
+        this.status = EStatus.TODO.getValue();
         this.projectID = project.getId();
         this.assignedTo = new SimpleStringProperty("James");
         this.deadlineDatePicker = new DatePicker();
@@ -136,11 +135,15 @@ public class Task {
         this.id = id;
     }
 
-    public EStatus getStatus() {
+    public String getStatus() {
+        if (status == null) {
+            return "";
+        }
+
         return status;
     }
 
-    public void setStatus(EStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

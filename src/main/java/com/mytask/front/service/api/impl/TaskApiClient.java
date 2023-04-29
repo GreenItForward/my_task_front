@@ -86,7 +86,7 @@ public class TaskApiClient implements TaskApiClientInterface {
                 .header("Authorization", "Bearer " + token)
                 .build();
         try {
-            System.out.println("Sending request to http://localhost:3000/api/task/project/" + project.getId());
+           // System.out.println("Sending request to http://localhost:3000/api/task/project/" + project.getId()); // DEBUG
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
