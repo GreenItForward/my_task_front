@@ -6,10 +6,7 @@ import com.mytask.front.utils.EString;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -79,7 +76,6 @@ public class TabService {
         clockImageView.setFitWidth(15);
         Label dueDateLabel = new Label();
         dueDateLabel.getStyleClass().add("dueDateLabel");
-
         StringProperty formattedDateProperty = new SimpleStringProperty();
         task.getdeadlineDatePicker().valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -92,6 +88,7 @@ public class TabService {
 
         dueDateLabel.textProperty().bind(formattedDateProperty);
 
+        System.out.println(task.getdeadlineDatePicker().getValue());
         if (task.getdeadlineDatePicker().getValue() != null) {
             String formattedDate = task.parseDueDate(task.getdeadlineDatePicker().getValue().format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.toString())));
             formattedDateProperty.set(formattedDate);
@@ -108,8 +105,6 @@ public class TabService {
             if (task.getdeadlineDatePicker().getValue() == null) {
                 return;
             }
-
-            System.out.println(task.getdeadlineDatePicker().getValue().format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.toString())));
 
             if (clockImageView.getImage() == clockImage) {
                 clockImageView.setImage(clockImageChecked);

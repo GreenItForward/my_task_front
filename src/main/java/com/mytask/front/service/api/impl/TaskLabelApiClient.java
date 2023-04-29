@@ -40,8 +40,6 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
     @Override
     public void updateLabelToTask(Task task, LabelModel label) {
         HttpResponse<String> response = null;
-        task.setId(14);
-        label.setId(1);
         this.taskId = task.getId();
         this.labelId = label.getId();
         HttpRequest request = HttpRequest.newBuilder()

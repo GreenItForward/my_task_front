@@ -73,7 +73,6 @@ public class TaskApiClient implements TaskApiClientInterface {
     @Override
     public void updateTask(Task task) {
         HttpResponse<String> response = null;
-        task.setId(14);
        // System.out.println(task.toJSON()); DEBUG
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/task"))

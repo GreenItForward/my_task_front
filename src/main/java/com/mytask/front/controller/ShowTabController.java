@@ -218,14 +218,12 @@ public class ShowTabController {
         List<LabelModel> taskLabels = new ArrayList<>();
         taskLabels.add(labels.get(0));
         taskLabels.add(labels.get(1));
-        task.setLabels(taskLabels);
         HBox colorTags = TabService.createColorTags(task);
+        task.setLabels(taskLabels);
         task.setTitle(title);
-        task.setDeadline(LocalDate.now().plusDays(random.nextInt(100)));
         task.setProjectID(this.project.getId());
 
         //TODO: quand on créera les taches sans les données aléatoires, on devra enlever ça et mettre les données de la tache (projectID, assignedTo, etc.)
-
         Label titleLabel = new Label(title);
         titleLabel.textProperty().bind(task.titleProperty());
         HBox deadlineBox = TabService.createDeadlineBox(task);

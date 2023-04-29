@@ -35,11 +35,11 @@ public class Task {
     private HBox labelBox;
 
     public Task(String title, LocalDate deadline, String assignedTo, DatePicker datePicker, String details) {
-        this.id = 14;
+        this.id = 0;
         this.title = new SimpleStringProperty(title);
         this.details = new SimpleStringProperty(details);
         this.status = EStatus.TODO.getValue();
-        this.projectID = 38;
+        this.projectID = 0;
         this.assignedTo = new SimpleStringProperty(assignedTo);
         this.deadlineDatePicker = new DatePicker(deadline);
         this.labels = new ArrayList<>();
