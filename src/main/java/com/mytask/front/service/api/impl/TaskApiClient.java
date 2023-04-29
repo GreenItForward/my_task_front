@@ -41,9 +41,29 @@ public class TaskApiClient implements TaskApiClientInterface {
     }
 
     @Override
-    public void createTask(Task project) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void createTask(Task task) {
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/task/"))
+                .POST(HttpRequest.BodyPublishers.ofString(task.createTaskJson()))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+
+        System.out.println(task.createTaskJson());
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException |InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null) {
+                System.out.println(response.body());
+            }
+        }
+
     }
+
 
     @Override
     public Task getTaskById(int id) {
@@ -54,7 +74,7 @@ public class TaskApiClient implements TaskApiClientInterface {
     public void updateTask(Task task) {
         HttpResponse<String> response = null;
         task.setId(14);
-        System.out.println(task.toJSON());
+       // System.out.println(task.toJSON()); DEBUG
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/task"))
                 .PUT(HttpRequest.BodyPublishers.ofString(task.toJSON()))
@@ -99,7 +119,11 @@ public class TaskApiClient implements TaskApiClientInterface {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject label = jsonArray.getJSONObject(i);
-                        tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getInt("userId"), label.getInt("projectId")));
+                        if (label.getString("deadline").equals("null")) {
+                           tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getInt("userId"), label.getInt("projectId")));
+                        } else {
+                            tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getInt("userId"), label.getInt("projectId")));
+                        }
                     }
                 }
             }

@@ -185,14 +185,17 @@ public class ShowTabController {
         addTaskField.setOnAction(event -> {
             String taskText = addTaskField.getText();
             if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
-                HBox newTask = createRandomTask(new Task(), taskText);
+                Task task = new Task();
+                HBox newTask = createRandomTask(task, taskText);
                 taskList.getChildren().add(taskList.getChildren().size(), newTask);
-
-                // on remet le champ à son état initial
+                taskList.setUserData(task);
+                task.setStatus(taskList.getId());
+                TaskApiClient.getInstance().createTask(task);
                 addTaskField.setEditable(false);
                 addTaskField.setText(EString.ADD_TASK.toString());
             }
         });
+
 
         // quand l'utilisateur clique en dehors du champ, on remet le champ à son état initial
         addTaskField.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -216,10 +219,10 @@ public class ShowTabController {
         taskLabels.add(labels.get(0));
         taskLabels.add(labels.get(1));
         task.setLabels(taskLabels);
-
         HBox colorTags = TabService.createColorTags(task);
         task.setTitle(title);
         task.setDeadline(LocalDate.now().plusDays(random.nextInt(100)));
+        task.setProjectID(this.project.getId());
 
         //TODO: quand on créera les taches sans les données aléatoires, on devra enlever ça et mettre les données de la tache (projectID, assignedTo, etc.)
 

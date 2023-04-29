@@ -59,17 +59,22 @@ public class Task {
         this.assignedTo = new SimpleStringProperty(String.valueOf(AuthApiClient.getInstance().getUserById(userId).getPrenom()));
         this.deadlineDatePicker = new DatePicker();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        this.deadlineDatePicker.setValue(LocalDate.from(LocalDateTime.parse(deadline, formatter)));
+
+        if (deadline != null && !deadline.equals("null")) {
+            this.deadlineDatePicker.setValue(LocalDate.from(LocalDateTime.parse(deadline, formatter)));
+        } else {
+            this.deadlineDatePicker.setValue(LocalDate.now());
+        }
         this.labels = new ArrayList<>();
     }
 
-    public Task(int id, String titre, String description, Project project) {
+    public Task(int id, String titre, String description, String status, int userId, int projectId) throws AuthException {
         this.id = id;
         this.title = new SimpleStringProperty(titre);
         this.details = new SimpleStringProperty(description);
-        this.status = EStatus.TODO.getValue();
-        this.projectID = project.getId();
-        this.assignedTo = new SimpleStringProperty("James");
+        this.status = status;
+        this.projectID = projectId;
+        this.assignedTo = new SimpleStringProperty(String.valueOf(AuthApiClient.getInstance().getUserById(userId).getPrenom()));
         this.deadlineDatePicker = new DatePicker();
         this.labels = new ArrayList<>();
     }
@@ -202,7 +207,33 @@ public class Task {
                 //    ", \"assignedTo\":\"" + assignedTo + '\"' +
                 '}';
     }
+
+    public String createTaskJson() {
+        return "{" +
+                "\"title\":\"" + title.getValue() + '\"' +
+                ", \"description\":\"" + this.getDetails() + '\"' +
+                ", \"status\":\"" + status + '\"' +
+                ", \"projectID\":" + projectID +
+                '}';
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title=" + title +
+                ", details=" + details +
+                ", status='" + status + '\'' +
+                ", projectID=" + projectID +
+                ", deadlineDatePicker=" + deadlineDatePicker +
+                ", assignedTo=" + assignedTo +
+                ", labels=" + labels +
+                ", taskBox=" + taskBox +
+                ", labelBox=" + labelBox +
+                '}';
+    }
 }
+
 
 
 
