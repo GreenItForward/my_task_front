@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
@@ -28,8 +29,8 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
 import javafx.scene.control.TextField;
+import org.json.JSONException;
 
-import static com.mytask.front.configuration.AppConfiguration.labels;
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 import static com.mytask.front.utils.EStatus.IN_PROGRESS;
 
@@ -216,8 +217,6 @@ public class ShowTabController {
 
         List<LabelModel> labels = this.project.getLabels();
         List<LabelModel> taskLabels = new ArrayList<>();
-        taskLabels.add(labels.get(0));
-        taskLabels.add(labels.get(1));
         HBox colorTags = TabService.createColorTags(task);
         task.setLabels(taskLabels);
         task.setTitle(title);
@@ -369,8 +368,13 @@ public class ShowTabController {
 
     public void setProject(Project project) {
         this.project = project;
-        project.setLabels(labels);
-        project.getTasks().forEach(task -> {
+        try {
+            project.setLabels(LabelApiClient.getInstance().getLabelsByProjectId(project.getId()));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        Project.getTasks().forEach(task -> {
             createRandomTask(task, task.getTitle());
             switch (task.getStatus()) {
                 case "TODO" -> todoTasksList.getChildren().add(task.getTaskBox());

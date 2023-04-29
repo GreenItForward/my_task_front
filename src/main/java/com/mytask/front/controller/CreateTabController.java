@@ -18,7 +18,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
-import static com.mytask.front.configuration.AppConfiguration.labels;
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;
 
@@ -86,7 +85,6 @@ public class CreateTabController {
 
         Project project = ShowAllTabService.getInstance().getProjects().get(0);
         projectApiClient.createProject(project);
-        project.setLabels(labels);
         ShowTabController.getInstance().setProject(project);
 
         screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);

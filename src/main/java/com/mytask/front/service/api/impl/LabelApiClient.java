@@ -1,8 +1,12 @@
 package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.service.api.LabelApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -80,4 +84,42 @@ public class LabelApiClient implements LabelApiClientInterface {
     public void updateToken(String token) {
         this.token = token;
     }
+
+    @Override
+    public List<LabelModel> getLabelsByProjectId(int id) throws JSONException {
+        updateToken(UserService.getCurrentUser().getToken());
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/label/" + id))
+                .GET()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null && response.statusCode() == 200) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONArray jsonArray = new JSONArray(responseBody);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject label = jsonArray.getJSONObject(i);
+                        labels.add(new LabelModel(label.getInt("id"), label.getString("nom"), label.getString("couleur"), label.getJSONObject("project").getInt("id")));
+                    }
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
+            } else {
+                System.err.println("Get project failed, status code: " + response.statusCode() + "\body: " + response.body());
+            }
+        }
+
+        return labels;
+    }
+
 }
