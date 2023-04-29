@@ -38,7 +38,7 @@ public class ProjectApiClient implements ProjectApiClientInterface {
     }
 
     @Override
-    public void createProject(Project project) {
+    public void createProject(Project project) throws JSONException {
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/project"))
@@ -57,11 +57,11 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                 if (!responseBody.contains("Forbidden")) {
                     String[] responseArray = responseBody.split(",");
                     String id = responseArray[responseArray.length - 1].split(":")[1].replace("}", "").trim();
-                    for (LabelModel label : LabelApiClient.getInstance().getLabels()) {
+                    for (LabelModel label : LabelApiClient.getInstance().getLabels(project)) {
                         label.setProjectId(Integer.parseInt(id));
                         LabelApiClient.getInstance().createLabel(label);
                     }
-                    LabelApiClient.getInstance().getLabels().clear();
+                    LabelApiClient.getInstance().getLabels(project).clear();
                 } else {
                     System.err.println("Project creation failed: Forbidden");
                 }

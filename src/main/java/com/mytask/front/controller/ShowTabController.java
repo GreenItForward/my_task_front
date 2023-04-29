@@ -3,8 +3,10 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
+import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
@@ -26,7 +28,8 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
 import javafx.scene.control.TextField;
-import static com.mytask.front.configuration.AppConfiguration.labels;
+import org.json.JSONException;
+
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 
 public class ShowTabController {
@@ -49,6 +52,7 @@ public class ShowTabController {
     private Button viewMembersBtn;
     @FXML
     private Button exportToPdfBtn;
+    @FXML private Button projectSettingBtn;
     @FXML
     private VBox todoTasksList;
     @FXML
@@ -88,7 +92,7 @@ public class ShowTabController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws JSONException {
         initData();
         setTextForUIElements();
         configureButtons();
@@ -96,9 +100,9 @@ public class ShowTabController {
         initializeTaskLists();
     }
 
-    private void initData() {
-        project = new Project("mock", "mock mock mock");
-        project.setLabels(labels);
+    private void initData() throws JSONException {
+        project = ShowAllTabService.getInstance().getProjects().get(0);
+        project.setLabels(LabelApiClient.getInstance().getLabels(project));
     }
 
     private void setTextForUIElements() {
@@ -111,6 +115,7 @@ public class ShowTabController {
         doneLabel.setText(EString.DONE.toString());
         showTablesBtn.setText(EString.SHOW_TABLES.toString());
         exportToPdfBtn.setText(EString.EXPORT_TO_PDF.toString());
+        projectSettingBtn.setText(EString.PROJECT_SETTINGS.toString());
     }
 
     private void configureButtons() {
@@ -119,6 +124,8 @@ public class ShowTabController {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
             }
         });
+
+        projectSettingBtn.setOnAction(event -> PopupService.showProjectSettingsPopup((Stage) projectSettingBtn.getScene().getWindow(), project));
 
         //TODO: Initialize the controller's logic here
         // ex: add EventHandlers to buttons, set initial data, etc.
@@ -203,14 +210,9 @@ public class ShowTabController {
     private HBox createRandomTask(Task task, String title) {
         HBox taskBox = new HBox(10);
         Random random = new Random();
-
-        List<LabelModel> labels = this.project.getLabels();
-        List<LabelModel> taskLabels = new ArrayList<>();
-        taskLabels.add(labels.get(0));
-        taskLabels.add(labels.get(1));
-        task.setLabels(taskLabels);
-
         HBox colorTags = TabService.createColorTags(task);
+
+        task.setTaskBox(colorTags);
         task.setTitle(title);
         task.setDeadline(LocalDate.now().plusDays(random.nextInt(100)));
 

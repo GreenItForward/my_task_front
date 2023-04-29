@@ -1,9 +1,11 @@
 package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.TaskLabelApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.HttpClientApi;
 
 import java.io.IOException;
 import java.net.URI;
@@ -40,8 +42,7 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
     @Override
     public void updateLabelToTask(Task task, LabelModel label) {
         HttpResponse<String> response = null;
-        task.setId(14);
-        label.setId(1);
+        task.setId(1);
         this.taskId = task.getId();
         this.labelId = label.getId();
         HttpRequest request = HttpRequest.newBuilder()
@@ -51,6 +52,7 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
                 .header("Authorization", "Bearer " + token)
                 .build();
         try {
+            System.out.println(labelId + "" + taskId);
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

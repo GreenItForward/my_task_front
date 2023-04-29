@@ -5,8 +5,6 @@ import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
-import com.mytask.front.service.AppService;
-import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
@@ -16,20 +14,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.mytask.front.utils.EPopup.LABELS;
@@ -38,11 +31,19 @@ import static com.mytask.front.utils.EPopup.TASK_DETAILS;
 public class PopupService {
     private static TaskApiClient taskApiClient;
     private static PopupService instance;
+    private final ProjectTabService projectTabService;
 
     private PopupService() {
+        projectTabService = ProjectTabService.getInstance();
 
     }
 
+    public static PopupService getInstance() {
+        if (instance == null) {
+            instance = new PopupService();
+        }
+        return instance;
+    }
 
     public static void setPopupScreen(Stage primaryStage, EPopup page, VBox content) {
         setPopupScreen(primaryStage, page, content, null);
@@ -65,11 +66,15 @@ public class PopupService {
         Button closeButton = new Button(EString.CLOSE.toString());
 
         closeButton.setOnAction(e -> {
-            updateInformation(page, taskSupplier);
+            if (taskSupplier != null) {
+                updateInformation(page, taskSupplier);
+            }
             popup.close();
         });
 
-        popup.setOnCloseRequest(e -> updateInformation(page, taskSupplier));
+        if (taskSupplier != null) {
+            popup.setOnCloseRequest(e -> updateInformation(page, taskSupplier));
+        }
 
         scrollPane.setContent(content);
 
@@ -94,180 +99,35 @@ public class PopupService {
             if (task != null) {
                 taskApiClient.updateTask(task);
             }
-        }else if(page.getFxmlName().equals(LABELS.getFxmlName())){
-            Task task = taskSupplier.get();
-            ShowTabController.getInstance().updateLabels(task);
-            // TaskDetailsController.getInstance().updateAssignedMembers();
         }
     }
 
-    public static void showMemberPopup(Stage primaryStage) {
-        VBox userContainer = createMemberContent();
+    public void showMemberPopup(Stage primaryStage) {
+        VBox userContainer = projectTabService.createMemberContent();
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
     }
 
-    public static PopupService getInstance() {
-        return new PopupService();
+    public static void showProjectSettingsPopup(Stage window, Project project) {
+        VBox projectContainer = ProjectTabService.getInstance().createProjectContent(project);
+        setPopupScreen(window, EPopup.PROJECT_SETTINGS, projectContainer);
+    }
+
+    public void showEditLabelPopup(Stage primaryStage) {
+        VBox labelContainer = LabelService.getInstance().createEditLabelContent();
+        setPopupScreen(primaryStage, LABELS, labelContainer);
     }
 
     public void showLabelPopup(Stage primaryStage, Task task) {
-        VBox labelContainer = this.createLabelContent(task);
+        VBox labelContainer = LabelService.getInstance().createLabelContent(task);
         setPopupScreen(primaryStage, LABELS, labelContainer, () -> task);
     }
 
-    private static HBox createLabelInfo(String[] label, Consumer<HBox> onDelete) {
-        TextField nameLabel = new TextField(label[0]);
-        ColorPicker colorPicker = new ColorPicker(Color.web(label[1]));
-
-        Button deleteButton = new Button(EString.SUPPRIMER.toString());
-        deleteButton.getStyleClass().add("button-delete");
-
-        HBox labelInfo = new HBox(10);
-        labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
-
-        colorPicker.setOnAction(e -> {
-            Color newColor = colorPicker.getValue();
-            String colorString = AppService.colorToHexString(newColor); // Pour l'api
-        });
-
-        return labelInfo;
-    }
-
-    private VBox createLabelContent(Task task) {
-        VBox labelContainer = new VBox();
-        labelContainer.setSpacing(10);
-        labelContainer.setStyle("-fx-padding: 10;");
-
-        // Exemple de données label
-        List<LabelModel> labels = ShowAllTabService.getInstance().getProjects().get(0).getLabels();
-
-        for (LabelModel label : labels) {
-            TextField nameLabel = new TextField(label.getNom());
-            ColorPicker colorPicker = new ColorPicker(label.getCouleur());
-
-            Button toggleButton = new Button();
-            updateToggleButton(toggleButton, task, label);
-
-            HBox labelInfo = new HBox(10);
-            labelInfo.getChildren().addAll(nameLabel, colorPicker, toggleButton);
-            labelContainer.getChildren().add(labelInfo);
-
-            toggleButton.setOnAction(e -> {
-                toggleLabel(toggleButton, task, label);
-            });
-
-            nameLabel.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null && !newValue.isEmpty()) {
-                    label.setNom(newValue);
-                }
-            });
-
-            colorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    label.setCouleur(newValue);
-                }
-            });
-
-            // Update label color when ColorPicker value changes
-            colorPicker.setOnAction(e -> {
-                Color newColor = colorPicker.getValue();
-                String colorString = AppService.colorToHexString(newColor); // Pour l'api
-            });
-        }
-
-        return labelContainer;
-    }
-
-
-    private static void updateToggleButton(Button toggleButton, Task task, LabelModel label) {
+    protected void updateToggleButton(CheckBox checkBox, Task task, LabelModel label) {
         if (task.getLabels().contains(label)) {
-            toggleButton.setText(EString.SUPPRIMER.toString());
-            toggleButton.getStyleClass().remove("button-add");
-            toggleButton.getStyleClass().add("button-delete");
+            checkBox.getStyleClass().remove("checkbox-add");
         } else {
-            toggleButton.setText(EString.AJOUTER.toString());
-            toggleButton.getStyleClass().remove("button-delete");
-            toggleButton.getStyleClass().add("button-add");
+            checkBox.getStyleClass().remove("checkbox-delete");
         }
-    }
-
-    private static void toggleLabel(Button toggleButton, Task task, LabelModel label) {
-        if (task.getLabels().contains(label)) {
-            task.getLabels().remove(label);
-            LabelApiClient.getInstance().removeLabel(label);
-        } else {
-            task.getLabels().add(label);
-            LabelApiClient.getInstance().addLabel(label);
-        }
-        updateToggleButton(toggleButton, task, label);
-    }
-
-    private static HBox createUserInfo(String[] user, Consumer<HBox> onDelete) {
-        Label nameLabel = new Label(user[0]);
-        Label emailLabel = new Label(user[1]);
-
-        ComboBox<String> roleComboBox = new ComboBox<>();
-        roleComboBox.getItems().addAll(EString.getRoleStrings());
-        roleComboBox.setValue(user[2]);
-
-        HBox userInfo = new HBox(10);
-        userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
-
-        roleComboBox.setOnAction(e -> {
-            if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
-                onDelete.accept(userInfo);
-            } else {
-                roleComboBox.setValue(user[2]);
-            }
-        });
-
-        roleComboBox.getStyleClass().add("combo-box");
-
-        return userInfo;
-    }
-
-    private static VBox createMemberContent() {
-        VBox userContainer = new VBox();
-        userContainer.setSpacing(10);
-        userContainer.setStyle("-fx-padding: 10;");
-
-        // Exemple de données utilisateur (on le récupèrera de l'api)
-        List<String[]> users = Arrays.asList(
-                new String[]{"Ronan (vous)", "ronan@gmail.com", "Administrateur"},
-                new String[]{"John", "johndoe@gmail.com", "Membre"}
-        );
-
-        Consumer<HBox> onDelete = userInfo -> {
-            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
-            if (AlertService.isConfirmed(result)) {
-                userContainer.getChildren().remove(userInfo);
-            }
-        };
-
-        users.forEach(user -> userContainer.getChildren().add(createUserInfo(user, onDelete)));
-
-        return userContainer;
-    }
-
-    private static VBox createInviteCodeContent() {
-        VBox inviteCodeContainer = new VBox();
-        HBox inviteCodeBox = new HBox(10);
-        HBox buttonBox = new HBox(10);
-        inviteCodeContainer.setSpacing(10);
-        inviteCodeContainer.setStyle("-fx-padding: 10;");
-        Label inviteCodeLabel = new Label(EString.INVITE_CODE.toString());
-        Label inviteLabel = new Label("");
-        Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.toString());
-        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(AppUtils.generateRandomInviteCode()));
-
-        Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.toString());
-        copyInviteCodeButton.setOnAction(e -> AppUtils.copyToClipboard(inviteLabel));
-
-        buttonBox.getChildren().addAll(generateInviteCodeButton, copyInviteCodeButton);
-        inviteCodeBox.getChildren().addAll(inviteCodeLabel, inviteLabel);
-        inviteCodeContainer.getChildren().addAll(inviteCodeBox, buttonBox);
-
-        return inviteCodeContainer;
     }
 
     public static void showTaskDetailPopup(Stage primaryStage, Task task) {
@@ -315,9 +175,8 @@ public class PopupService {
         popupStage.show();
     }
 
-    public static void showInviteCodePopup(Stage primaryStage) {
-        VBox inviteCodeContainer = createInviteCodeContent();
-
+    public void showInviteCodePopup(Stage primaryStage) {
+        VBox inviteCodeContainer = projectTabService.createInviteCodeContent();
         setPopupScreen(primaryStage, EPopup.INVITE_CODE, inviteCodeContainer);
     }
 

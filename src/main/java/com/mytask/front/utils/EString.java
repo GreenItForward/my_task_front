@@ -16,6 +16,11 @@ public enum EString {
     ADD_LABEL("Ajouter une étiquette"),
     CHANGE_ASSIGNED_MEMBERS("Changer les membres assignés"),
     CHANGE_ASSIGNED_LABELS("Changer les étiquettes assignées"),
+    EDIT_LABELS("Modifier les étiquettes"),
+
+    SAVE("Sauvegarder"),
+    UPDATE("Modifier"),
+    DELETE("Supprimer"),
 
     // Labels
     MY_TABS("Mes tableaux"),
@@ -36,6 +41,7 @@ public enum EString {
     EDIT_USER_ROLE("Modifier les droits ou supprimer les utilisateurs"),
     INVITE_CODE("Code d'invitation : "),
     EXPORT_TO_PDF("Exporter en PDF"),
+    PROJECT_SETTINGS("Paramètres du tableau"),
 
     // Name App
     NAME_APP("MyTask"),
@@ -74,7 +80,6 @@ public enum EString {
     SHOW_TABLES("Afficher les tableaux"),
     DISCONNECT_LOG("Déconnexion de l'utilisateur"),
     ERROR("Erreur");
-
     private String string;
 
     EString(String string) {

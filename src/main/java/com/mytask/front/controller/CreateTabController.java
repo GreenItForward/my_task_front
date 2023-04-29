@@ -17,8 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import org.json.JSONException;
 
-import static com.mytask.front.configuration.AppConfiguration.labels;
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;
 
@@ -57,7 +57,13 @@ public class CreateTabController {
         });
 
         backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
-        createTableBtn.setOnAction(event -> createTable());
+        createTableBtn.setOnAction(event -> {
+            try {
+                createTable();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
         addLabelBtn.setOnAction(event -> addLabel());
     }
 
@@ -77,7 +83,7 @@ public class CreateTabController {
         addLabelBtn.setText(EString.ADD_LABEL.toString());
     }
 
-    private void createTable() {
+    private void createTable() throws JSONException {
         ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
         if (nameTextField.getText().isEmpty()) {
             setErrorMessage(nameTextField);
@@ -86,7 +92,7 @@ public class CreateTabController {
 
         Project project = ShowAllTabService.getInstance().getProjects().get(0);
         projectApiClient.createProject(project);
-        project.setLabels(labels);
+        project.setLabels(project.getLabels());
         ShowTabController.getInstance().setProject(project);
 
         screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
