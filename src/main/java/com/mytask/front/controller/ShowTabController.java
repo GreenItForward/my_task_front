@@ -7,6 +7,7 @@ import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
+import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
@@ -54,6 +55,7 @@ public class ShowTabController {
     private Button viewMembersBtn;
     @FXML
     private Button exportToPdfBtn;
+    @FXML private Button projectSettingBtn;
     @FXML
     private VBox todoTasksList;
     @FXML
@@ -93,7 +95,7 @@ public class ShowTabController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws JSONException {
         initData();
         setTextForUIElements();
         configureButtons();
@@ -115,6 +117,7 @@ public class ShowTabController {
         doneLabel.setText(EString.DONE.toString());
         showTablesBtn.setText(EString.SHOW_TABLES.toString());
         exportToPdfBtn.setText(EString.EXPORT_TO_PDF.toString());
+        projectSettingBtn.setText(EString.PROJECT_SETTINGS.toString());
     }
 
     private void configureButtons() {
@@ -123,6 +126,8 @@ public class ShowTabController {
                 screenService = ScreenService.getInstance((Stage) backToMenuBtn.getScene().getWindow());
             }
         });
+
+        projectSettingBtn.setOnAction(event -> PopupService.showProjectSettingsPopup((Stage) projectSettingBtn.getScene().getWindow(), project));
 
         //TODO: Initialize the controller's logic here
         // ex: add EventHandlers to buttons, set initial data, etc.
@@ -214,11 +219,9 @@ public class ShowTabController {
     private HBox createRandomTask(Task task, String title) {
         HBox taskBox = new HBox(10);
         Random random = new Random();
-
-        List<LabelModel> labels = this.project.getLabels();
-        List<LabelModel> taskLabels = new ArrayList<>();
         HBox colorTags = TabService.createColorTags(task);
-        task.setLabels(taskLabels);
+
+        task.setTaskBox(colorTags);
         task.setTitle(title);
         task.setProjectID(this.project.getId());
 
