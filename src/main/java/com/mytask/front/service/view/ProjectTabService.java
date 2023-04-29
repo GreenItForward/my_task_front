@@ -5,20 +5,27 @@ import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
+import com.mytask.front.utils.AppUtils;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EStatus;
+import com.mytask.front.utils.EString;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ProjectTabService {
     private static ProjectTabService instance;
-    private final ScreenService screenService;
+    private ScreenService screenService;
 
     private ProjectTabService() {
-        screenService = ScreenService.getInstance(null);
     }
 
     public static ProjectTabService getInstance() {

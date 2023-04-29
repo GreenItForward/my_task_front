@@ -100,7 +100,7 @@ public class LabelApiClient implements LabelApiClientInterface {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject label = jsonArray.getJSONObject(i);
-                        labels.add(new LabelModel(label.getString("id"), label.getString("nom"), label.getString("couleur"), label.getJSONObject("project").getInt("id")));
+                        labels.add(new LabelModel(label.getInt("id"), label.getString("nom"), label.getString("couleur"), label.getJSONObject("project").getInt("id")));
                     }
 
                 } else {

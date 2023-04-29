@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
@@ -77,6 +78,7 @@ public class ShowTabController {
     private static SecureRandom rand;
     private static ShowTabController instance;
     private Project project;
+    private Task currentTask;
 
     static {
         try { rand = SecureRandom.getInstanceStrong(); }
@@ -191,12 +193,22 @@ public class ShowTabController {
         addTaskField.setOnAction(event -> {
             String taskText = addTaskField.getText();
             if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
-                Task task = new Task();
-                HBox newTask = createRandomTask(task, taskText);
+                Task taskNew = new Task();
+                HBox newTask = createRandomTask(taskNew, taskText);
                 taskList.getChildren().add(taskList.getChildren().size(), newTask);
-                taskList.setUserData(task);
-                task.setStatus(taskList.getId());
-                TaskApiClient.getInstance().createTask(task);
+                taskList.setUserData(taskNew);
+                taskNew.setStatus(taskList.getId());
+                taskNew.setTaskBox(newTask);
+                try {
+                    taskNew = TaskApiClient.getInstance().createTask(taskNew);
+                    taskList.setUserData(taskNew);
+                    //update the current task
+                    currentTask = taskNew;
+                } catch (JSONException | AuthException e) {
+                    throw new RuntimeException(e);
+                }
+
+
                 addTaskField.setEditable(false);
                 addTaskField.setText(EString.ADD_TASK.toString());
             }
@@ -237,7 +249,22 @@ public class ShowTabController {
         ImageView editImageView = TabService.createEditImageView();
         editImageView.setOnMouseClicked(e -> {
             System.out.println("Edit task");
-            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), task);
+            // get the modified task
+            Task modifiedTask = (Task) taskBox.getUserData();
+            System.out.println("idi"+modifiedTask.getId());
+            List<Task> tasks = TaskApiClient.getInstance().getTasksList();
+            // pour toute les task si l'id nexiste pas dans le modifiedTask alors on va chercher la task ayant le meme nom et meme status
+           /* for (Task t : tasks) {
+                if (t.getTitle().equals(modifiedTask.getTitle()) && t.getStatus().equals(modifiedTask.getStatus())) {
+                    modifiedTask = t;
+                    modifiedTask.setTaskBox(taskBox);
+                    break;
+                }
+            }*/
+
+            modifiedTask = getCurrentTask();
+
+            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), modifiedTask);
         });
 
         taskBox.setOnMouseEntered(e -> {
@@ -367,6 +394,14 @@ public class ShowTabController {
 
     public VBox getDoneTasksList() {
         return doneTasksList;
+    }
+
+    public Task getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setCurrentTask(Task currentTask) {
+        this.currentTask = currentTask;
     }
 
     public void setProject(Project project) {

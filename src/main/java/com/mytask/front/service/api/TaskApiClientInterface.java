@@ -8,7 +8,7 @@ import org.json.JSONException;
 import java.util.List;
 
 public interface TaskApiClientInterface {
-    void createTask(Task project);
+    Task createTask(Task project) throws JSONException, AuthException;
     Task getTaskById(int id);
     void updateTask(Task project);
     void deleteTask(int id);

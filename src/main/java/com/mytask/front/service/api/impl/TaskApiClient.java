@@ -24,6 +24,7 @@ public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
     private static TaskApiClient instance;
     private final String token;
+    private List<Task> tasksList;
 
     private TaskApiClient() {
         httpClient = HttpClient.newBuilder()
@@ -41,7 +42,7 @@ public class TaskApiClient implements TaskApiClientInterface {
     }
 
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) throws JSONException, AuthException {
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/task/"))
@@ -57,10 +58,21 @@ public class TaskApiClient implements TaskApiClientInterface {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
-            if (response != null) {
-                System.out.println(response.body());
+            System.out.println(response.statusCode());
+            if (response != null && response.statusCode() == 201) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONObject jsonObject = new JSONObject(responseBody);
+
+                    task = new Task(jsonObject.getInt("id"), jsonObject.getString("titre"), jsonObject.getString("description"), EStatus.getStatus(jsonObject.getString("status")), jsonObject.getInt("userId"), jsonObject.getInt("projectId"));
+                    System.out.println("task"+task.getId());
+                    tasksList.add(task);
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
             }
         }
+        return task;
 
     }
 
@@ -73,7 +85,7 @@ public class TaskApiClient implements TaskApiClientInterface {
     @Override
     public void updateTask(Task task) {
         HttpResponse<String> response = null;
-       // System.out.println(task.toJSON()); DEBUG
+        System.out.println("zaid"+task.getId()); // DEBUG
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/task"))
                 .PUT(HttpRequest.BodyPublishers.ofString(task.toJSON()))
@@ -82,6 +94,7 @@ public class TaskApiClient implements TaskApiClientInterface {
                 .build();
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            tasksList.set(tasksList.indexOf(task), task);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
@@ -120,8 +133,10 @@ public class TaskApiClient implements TaskApiClientInterface {
                         JSONObject label = jsonArray.getJSONObject(i);
                         if (label.getString("deadline").equals("null")) {
                            tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getInt("userId"), label.getInt("projectId")));
+                           tasksList = tasks;
                         } else {
                             tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getInt("userId"), label.getInt("projectId")));
+                            tasksList = tasks;
                         }
                     }
                 }
@@ -134,4 +149,9 @@ public class TaskApiClient implements TaskApiClientInterface {
     public void deleteTask(int id) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
+    public List<Task> getTasksList() {
+        return tasksList;
+    }
+
 }
