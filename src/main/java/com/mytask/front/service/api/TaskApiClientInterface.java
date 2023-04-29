@@ -1,5 +1,6 @@
 package com.mytask.front.service.api;
 
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import org.json.JSONException;
@@ -11,5 +12,5 @@ public interface TaskApiClientInterface {
     Task getTaskById(int id);
     void updateTask(Task project);
     void deleteTask(int id);
-    List<Task> getTasksByProject(Project project) throws JSONException;
+    List<Task> getTasksByProject(Project project) throws JSONException, AuthException;
 }

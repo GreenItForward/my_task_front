@@ -1,6 +1,7 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.controller.ShowTabController;
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
@@ -29,31 +30,14 @@ public class ProjectTabService {
     public void openProject(Project project) {
         System.out.println("Ouverture du projet " + project.getNom());
         screenService = ScreenService.getInstance(null);
-        // TODO: Décommenter pour utiliser l'API
-/*
         try {
             Project.setTasks(TaskApiClient.getInstance().getTasksByProject(project));
-        } catch (JSONException e) {
+        } catch (JSONException | AuthException e) {
             throw new RuntimeException(e);
         }
-*/
-        // TODO: supprimer ce bloc pour utiliser l'API
-        List<Task> tasks = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Task task = new Task(i, "Tache-"+i, "Ceci est un mock de task ;)", project);
-            if (i % 2 == 0) {
-                task.setStatus(EStatus.DONE);
-            } else if (i % 3 == 0) {
-                task.setStatus(EStatus.IN_PROGRESS);
-            } else {
-                task.setStatus(EStatus.TODO);
-            }
-            tasks.add(task);
-        }
 
-        Project.setTasks(tasks);
         ShowTabController.getInstance().setProject(project);
-        screenService.setScreen(EPage.SHOW_TAB); // A CHANGER
+        screenService.setScreen(EPage.SHOW_TAB);
     }
 
     public void closeCurrentPopup(Window window) {

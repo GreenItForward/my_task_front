@@ -1,5 +1,6 @@
 package com.mytask.front.service.api.impl;
 
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
@@ -18,12 +19,15 @@ import java.time.Duration;
 public class AuthApiClient implements AuthApiClientInterface {
     private final HttpClient httpClient;
     private static AuthApiClient instance;
+    private String token;
+
 
     private AuthApiClient() {
         httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        token = UserService.getCurrentUser().getToken();
     }
 
     /** Méthode statique afin d'obtenir l'instance unique de ProjectApiClient */
@@ -102,5 +106,55 @@ public class AuthApiClient implements AuthApiClientInterface {
             Thread.currentThread().interrupt();
             throw new AuthException(e.getMessage());
         }
+    }
+
+    @Override
+    public User getUserById(int id) throws AuthException {
+        updateToken();
+
+        HttpResponse<String> response;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/auth/getUserById/"+id))
+                .GET()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            JSONObject jsonResponse = new JSONObject(response.body());
+
+            if (statusCode >= 200 && statusCode < 300) {
+                User user = new User();
+                if (jsonResponse.has("email")) {
+                    user.setEmail(jsonResponse.getString("email").replaceAll("[\\[\\]\"]", ""));
+                }
+                if (jsonResponse.has("name")) {
+                    user.setNom(jsonResponse.getString("name").replaceAll("[\\[\\]\"]", ""));
+                }
+                if (jsonResponse.has("firstname")) {
+                    user.setPrenom(jsonResponse.getString("firstname").replaceAll("[\\[\\]\"]", ""));
+                }
+                if (jsonResponse.has("id")) {
+                    user.setId(jsonResponse.getInt("id"));
+                }
+
+                return user;
+            }
+
+            if (jsonResponse.has("message")) {
+                String result = jsonResponse.getString("message").replaceAll("[\\[\\]\"]", "");
+                throw new AuthException(result);
+            }
+            throw new AuthException(response.body());
+        } catch (IOException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            throw new AuthException(e.getMessage());
+        }
+    }
+
+    public void updateToken() {
+        this.token = UserService.getCurrentUser().getToken();
     }
 }

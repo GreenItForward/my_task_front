@@ -1,5 +1,8 @@
 package com.mytask.front.model;
 
+import com.mytask.front.exception.AuthException;
+import com.mytask.front.service.api.impl.AuthApiClient;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EStatus;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -7,6 +10,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.HBox;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -46,15 +50,17 @@ public class Task {
         this(null, null, null, null, null);
     }
 
-    public Task(int id, String titre, String description, EStatus status, String deadline, int userId, int projectID) {
+    public Task(int id, String titre, String description, EStatus status, String deadline, int userId, int projectID) throws AuthException {
         this.id = id;
         this.title = new SimpleStringProperty(titre);
         this.details = new SimpleStringProperty(description);
         this.status = status;
         this.projectID = projectID;
-        this.assignedTo = new SimpleStringProperty(String.valueOf(userId));
+
+        this.assignedTo = new SimpleStringProperty(String.valueOf(AuthApiClient.getInstance().getUserById(userId).getPrenom()));
         this.deadlineDatePicker = new DatePicker();
-        this.deadlineDatePicker.setValue(LocalDate.parse(deadline, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRANCE)));
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        this.deadlineDatePicker.setValue(LocalDate.from(LocalDateTime.parse(deadline, formatter)));
         this.labels = new ArrayList<>();
     }
 

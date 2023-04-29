@@ -3,6 +3,7 @@ package com.mytask.front.model;
 import com.mytask.front.utils.EAuthEndpoint;
 
 public class User {
+    private int id;
     private String email;
     private String nom;
     private String prenom;
@@ -10,6 +11,7 @@ public class User {
     private String token;
 
     public User() {
+        this.id = 0;
         this.email = "";
         this.nom = "";
         this.prenom = "";
@@ -18,6 +20,7 @@ public class User {
     }
 
     public User(String email, String nom, String prenom, String password) {
+        this.id = 0;
         this.email = email;
         this.nom = nom;
         this.prenom = prenom;
@@ -26,6 +29,7 @@ public class User {
     }
 
     public User(String email, String password) {
+        this.id = 0;
         this.email = email;
         this.password = password;
         this.nom = "";
@@ -72,6 +76,10 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public String toJSON(String endpoint) {
         String result = "{\"email\":\"" + this.email + "\",\"password\":\"" + this.password;

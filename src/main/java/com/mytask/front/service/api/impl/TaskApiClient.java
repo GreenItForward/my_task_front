@@ -1,5 +1,6 @@
 package com.mytask.front.service.api.impl;
 
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
@@ -74,17 +75,18 @@ public class TaskApiClient implements TaskApiClientInterface {
     }
 
     @Override
-    public List<Task> getTasksByProject(Project project) throws JSONException {
+    public List<Task> getTasksByProject(Project project) throws JSONException, AuthException {
         HttpResponse<String> response = null;
         List<Task> tasks = new ArrayList<>();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:3000/api/tasks" + project.getId()))
+                .uri(URI.create("http://localhost:3000/api/task/project/" + project.getId()))
                 .GET()
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
                 .build();
         try {
+            System.out.println("Sending request to http://localhost:3000/api/task/project/" + project.getId());
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -97,7 +99,7 @@ public class TaskApiClient implements TaskApiClientInterface {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject label = jsonArray.getJSONObject(i);
-                        tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getJSONObject("userId").getInt("id"), label.getJSONObject("projectId").getInt("id")));
+                        tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getInt("userId"), label.getInt("projectId")));
                     }
                 }
             }
