@@ -135,6 +135,7 @@ public class LabelService {
                 label.setNom(newValue);
                 modifiableLabels.set(index, label);
                 showAllTabService.getProjects().get(0).getLabels().get(index).setNom(newValue);
+                LabelApiClient.getInstance().updateLabel(label);
             }
         }));
 
@@ -149,6 +150,7 @@ public class LabelService {
             label.setCouleur(newValueColorPicker);
             modifiableLabels.set(indexColorPicker, label);
             showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+            LabelApiClient.getInstance().updateLabel(label);
         });
 
         labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);

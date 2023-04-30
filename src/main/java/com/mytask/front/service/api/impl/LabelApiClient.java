@@ -74,7 +74,29 @@ public class LabelApiClient implements LabelApiClientInterface {
 
     @Override
     public void updateLabel(LabelModel label) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        updateToken(UserService.getCurrentUser().getToken());
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/label/" + label.getId()))
+                .POST(HttpRequest.BodyPublishers.ofString(label.toJSON()))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException |InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null && response.statusCode() == 200) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    System.out.println(responseBody);
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
+            }
+        }
     }
 
     @Override
