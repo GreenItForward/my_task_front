@@ -62,7 +62,6 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                         LabelModel newLabel = LabelApiClient.getInstance().createLabel(label);
                         LabelApiClient.getInstance().getLabels(project).add(newLabel);
                     }
-                  //  LabelApiClient.getInstance().getLabels(project).clear();
                 } else {
                     System.err.println("Project creation failed: Forbidden");
                 }

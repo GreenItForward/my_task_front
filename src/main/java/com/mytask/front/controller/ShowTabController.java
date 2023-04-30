@@ -141,7 +141,11 @@ public class ShowTabController {
         // ex: add EventHandlers to buttons, set initial data, etc.
         backToMenuBtn.setOnAction(event -> {
             screenService.setScreen(EPage.INDEX);
-            resetController();
+            try {
+                resetController();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         });
 
 
@@ -390,8 +394,9 @@ public class ShowTabController {
         this.doneTasksList = doneTasksList;
     }
 
-    public void resetController() {
+    public void resetController() throws JSONException {
         TabService.resetTab(todoTasksList, inProgressTasksList, doneTasksList);
+        LabelApiClient.getInstance().getLabels(project).clear();
 
     }
 

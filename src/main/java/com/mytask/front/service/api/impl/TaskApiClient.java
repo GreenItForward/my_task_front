@@ -92,7 +92,11 @@ public class TaskApiClient implements TaskApiClientInterface {
                 .build();
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            tasksList.set(tasksList.indexOf(task), task);
+            if (tasksList.contains(task)) {
+                tasksList.set(tasksList.indexOf(task), task);
+            } else {
+                tasksList.add(task);
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
