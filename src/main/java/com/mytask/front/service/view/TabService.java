@@ -2,6 +2,7 @@ package com.mytask.front.service.view;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.EString;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -55,7 +56,6 @@ public class TabService {
         final HBox result = new HBox();
         result.setSpacing(5); // Ajouter un espacement entre les étiquettes
         result.setId("hbox-labels");
-
         List<LabelModel> labels = task.getLabels();
         labels.forEach(label -> {
             Rectangle colorRect = createColorRectangle(label.getNom(), label.getCouleur(), task.getId());

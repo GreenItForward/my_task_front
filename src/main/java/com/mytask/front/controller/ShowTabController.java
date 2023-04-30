@@ -240,11 +240,15 @@ public class ShowTabController {
     // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
     private HBox createTask(Task task, String title) {
         HBox taskBox = new HBox(10);
-        HBox colorTags = TabService.createColorTags(task);
-
-        task.setTaskBox(colorTags);
         task.setTitle(title);
         task.setProjectID(this.project.getId());
+        try {
+            task.setLabels(TaskLabelApiClient.getInstance().getLabelsByTaskId(task.getId(), project.getId()));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        HBox colorTags = TabService.createColorTags(task);
+        task.setTaskBox(colorTags);
 
         Label titleLabel = new Label(title);
         titleLabel.textProperty().bind(task.titleProperty());
