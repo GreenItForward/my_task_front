@@ -44,8 +44,18 @@ public class ProjectTabService {
             throw new RuntimeException(e);
         }
 
-        ShowTabController.getInstance().setProject(project);
-        screenService.setScreen(EPage.SHOW_TAB);
+        ShowTabController showTabController = ShowTabController.getInstance();
+
+        VBox todoTasksList = showTabController.getTodoTasksList();
+        VBox inProgressTasksList = showTabController.getInProgressTasksList();
+        VBox doneTasksList = showTabController.getDoneTasksList();
+
+        if (todoTasksList != null && inProgressTasksList != null && doneTasksList != null) {
+            showTabController.setProject(project, todoTasksList, inProgressTasksList, doneTasksList);
+            screenService.setScreen(EPage.SHOW_TAB);
+        } else {
+            System.out.println("Erreur lors de l'ouverture du projet");
+        }
     }
 
     public void closeCurrentPopup(Window window) {

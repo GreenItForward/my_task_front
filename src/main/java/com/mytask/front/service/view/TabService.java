@@ -1,9 +1,13 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowTabController;
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
+import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.EString;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Cursor;
@@ -11,16 +15,20 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.json.JSONException;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import static com.mytask.front.utils.EIcon.*;
+import static com.mytask.front.utils.EStatus.IN_PROGRESS;
 
 public class TabService {
     private static PopupService popupService;
@@ -159,5 +167,73 @@ public class TabService {
 
     public static void showLabels(Stage window, Task task) {
         popupService.showLabelPopup(window, task);
+    }
+
+    public static TextField createAddTaskField(VBox taskList) {
+        TextField addTaskField = new TextField(EString.ADD_TASK.toString());
+        addTaskField.getStyleClass().add("add-task-field");
+
+        System.out.println("journée");
+        // Rendre le champ non modifiable jusqu'à ce que l'utilisateur clique dessus
+        addTaskField.setEditable(false);
+        addTaskField.setOnMouseClicked(event -> {
+            if (!addTaskField.isEditable()) {
+                addTaskField.setEditable(true);
+                addTaskField.setText(""); // Vider le texte lorsqu'il est cliqué
+            }
+        });
+
+        // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
+        addTaskField.setOnAction(event -> {
+            String taskText = addTaskField.getText();
+            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
+                Task taskNew = new Task();
+                taskList.setUserData(taskNew);
+                taskNew.setStatus(taskList.getId());
+                taskNew.setTitle(taskText);
+                taskNew.setProjectID(ShowTabController.getInstance().getProject().getId());
+                CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return TaskApiClient.getInstance().createTask(taskNew);
+                    } catch (JSONException | AuthException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).thenAcceptAsync(createdTask -> {
+                    HBox newTask = ShowTabController.getInstance().createTask(createdTask, taskText);
+                    taskList.getChildren().add(taskList.getChildren().size(), newTask);
+                    createdTask.setTaskBox(newTask);
+                    taskList.setUserData(createdTask);
+                    ShowTabController.getInstance().setCurrentTask(createdTask);
+                    addTaskField.setEditable(false);
+                    addTaskField.setText(EString.ADD_TASK.toString());
+                }, Platform::runLater).exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
+            }
+        });
+
+        addTaskField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (Boolean.TRUE.equals(!newValue) && addTaskField.getText().isEmpty()) {
+                addTaskField.setText(EString.ADD_TASK.toString());
+                addTaskField.setEditable(false);
+            }
+        });
+
+        return addTaskField;
+    }
+
+
+    public static void resetTab(VBox todoTasksList, VBox inProgressTasksList, VBox doneTasksList) {
+        //clear sauf le premier élément
+        todoTasksList.getChildren().removeIf(node -> todoTasksList.getChildren().indexOf(node) != 0);
+        inProgressTasksList.getChildren().removeIf(node -> inProgressTasksList.getChildren().indexOf(node) != 0);
+        doneTasksList.getChildren().removeIf(node -> doneTasksList.getChildren().indexOf(node) != 0);
+
+        todoTasksList.setUserData(null);
+        inProgressTasksList.setUserData(null);
+        doneTasksList.setUserData(null);
+
+        ShowTabController.getInstance().setCurrentTask(null);
     }
 }

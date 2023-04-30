@@ -1,6 +1,6 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.exception.AuthException;
+import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.LabelApiClient;
@@ -13,7 +13,6 @@ import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.PdfExportHelper;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -38,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
+import static com.mytask.front.service.view.TabService.createAddTaskField;
 import static com.mytask.front.utils.EStatus.IN_PROGRESS;
 
 public class ShowTabController {
@@ -140,7 +139,11 @@ public class ShowTabController {
 
         //TODO: Initialize the controller's logic here
         // ex: add EventHandlers to buttons, set initial data, etc.
-        backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
+        backToMenuBtn.setOnAction(event -> {
+            screenService.setScreen(EPage.INDEX);
+            resetController();
+        });
+
 
         // quand on appuie sur viewMemberBTn on affiche un popup avec la liste des membres de la table
         viewMembersBtn.setOnAction(event -> TabService.showMembers((Stage) viewMembersBtn.getScene().getWindow()));
@@ -158,7 +161,6 @@ public class ShowTabController {
     private List<VBox> getTasksByColumn() {
         List<VBox> tasksByColumn = new ArrayList<>();
 
-        // vérifier que si il sont vide alors on les ajoute pas
         if (todoTasksList.getChildren().size() > 1) {
             tasksByColumn.add((VBox) todoTasksList.getChildren().get(1));
         }
@@ -174,71 +176,18 @@ public class ShowTabController {
         return tasksByColumn;
     }
 
-    private void initializeTaskLists() {
+    public void initializeTaskLists() {
         todoTasksList.getChildren().add(0, createAddTaskField(todoTasksList));
-        inProgressTasksList.getChildren().add(0,  createAddTaskField(inProgressTasksList));
+        inProgressTasksList.getChildren().add(0, createAddTaskField(inProgressTasksList));
         doneTasksList.getChildren().add(0, createAddTaskField(doneTasksList));
+
         todoTasksList.setId(EStatus.TODO.getValue());
         inProgressTasksList.setId(IN_PROGRESS.getValue());
         doneTasksList.setId(EStatus.DONE.getValue());
     }
 
-    private TextField createAddTaskField(VBox taskList) {
-        TextField addTaskField = new TextField(EString.ADD_TASK.toString());
-        addTaskField.getStyleClass().add("add-task-field");
-
-        // Rendre le champ non modifiable jusqu'à ce que l'utilisateur clique dessus
-        addTaskField.setEditable(false);
-        addTaskField.setOnMouseClicked(event -> {
-            if (!addTaskField.isEditable()) {
-                addTaskField.setEditable(true);
-                addTaskField.setText(""); // Vider le texte lorsqu'il est cliqué
-            }
-        });
-
-        // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
-        addTaskField.setOnAction(event -> {
-            String taskText = addTaskField.getText();
-            if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
-                Task taskNew = new Task();
-                taskList.setUserData(taskNew);
-                taskNew.setStatus(taskList.getId());
-                taskNew.setTitle(taskText);
-                taskNew.setProjectID(project.getId());
-                CompletableFuture.supplyAsync(() -> {
-                    try {
-                        return TaskApiClient.getInstance().createTask(taskNew);
-                    } catch (JSONException | AuthException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).thenAcceptAsync(createdTask -> {
-                    HBox newTask = createTask(createdTask, taskText);
-                    taskList.getChildren().add(taskList.getChildren().size(), newTask);
-                    createdTask.setTaskBox(newTask);
-                    taskList.setUserData(createdTask);
-                    currentTask = createdTask;
-                    addTaskField.setEditable(false);
-                    addTaskField.setText(EString.ADD_TASK.toString());
-                }, Platform::runLater).exceptionally(ex -> {
-                    ex.printStackTrace();
-                    return null;
-                });
-            }
-        });
-
-        addTaskField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (Boolean.TRUE.equals(!newValue) && addTaskField.getText().isEmpty()) {
-                addTaskField.setText(EString.ADD_TASK.toString());
-                addTaskField.setEditable(false);
-            }
-        });
-
-        return addTaskField;
-    }
-
-
     // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-    private HBox createTask(Task task, String title) {
+    public HBox createTask(Task task, String title) {
         HBox taskBox = new HBox(10);
         task.setTitle(title);
         task.setProjectID(this.project.getId());
@@ -367,7 +316,7 @@ public class ShowTabController {
         });
     }
 
-    public void updateLabels(Task Task) {
+    public void updateLabels(Task Task, LabelModel label) {
         HBox taskBox = Task.getLabelBox();
 
         taskBox.getChildren().removeIf(Rectangle.class::isInstance);
@@ -376,9 +325,10 @@ public class ShowTabController {
         HBox colorTags = TabService.createColorTags(Task);
         taskBox.getChildren().add(colorTags);
 
-        TaskLabelApiClient taskLabelApi = TaskLabelApiClient.getInstance();
        // Task.getLabels().forEach(label -> taskLabelApi.updateLabelToTask(Task, label)); // à utiliser quand on aura l'API pour mettre à jour les labels d'une tache
-        taskLabelApi.updateLabelToTask(Task, Task.getLabels().get(0));
+        TaskLabelApiClient taskLabelApi = TaskLabelApiClient.getInstance();
+        taskLabelApi.updateLabelToTask(Task, label);
+
     }
 
     public VBox getTodoTasksList() {
@@ -401,12 +351,16 @@ public class ShowTabController {
         this.currentTask = currentTask;
     }
 
-    public void setProject(Project project) {
+    public void setProject(Project project, VBox todoTasksList, VBox inProgressTasksList, VBox doneTasksList) {
         this.project = project;
         try {
             project.setLabels(LabelApiClient.getInstance().getLabelsByProjectId(project.getId()));
         } catch (JSONException e) {
             throw new RuntimeException(e);
+        }
+
+        if (todoTasksList == null || inProgressTasksList == null || doneTasksList == null) {
+            throw new RuntimeException("You must set the todoTasksList, inProgressTasksList and doneTasksList before setting the project");
         }
 
         Project.getTasks().forEach(task -> {
@@ -423,4 +377,26 @@ public class ShowTabController {
     public Project getProject() {
         return project;
     }
+
+    public void setTodoTasksList(VBox todoTasksList) {
+        this.todoTasksList = todoTasksList;
+    }
+
+    public void setInProgressTasksList(VBox inProgressTasksList) {
+        this.inProgressTasksList = inProgressTasksList;
+    }
+
+    public void setDoneTasksList(VBox doneTasksList) {
+        this.doneTasksList = doneTasksList;
+    }
+
+    public void resetController() {
+        TabService.resetTab(todoTasksList, inProgressTasksList, doneTasksList);
+
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 }
+

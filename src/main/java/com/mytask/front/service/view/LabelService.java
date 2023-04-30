@@ -1,5 +1,6 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.LabelApiClient;
@@ -103,7 +104,7 @@ public class LabelService {
 
     private HBox createLabelProjectInfo(LabelModel label, VBox labelContainer) {
         HBox labelInfo = new HBox(10);
-        List<LabelModel> originalLabels = new ArrayList<>((showAllTabService.getProjects().get(0).getLabels()));
+        List<LabelModel> originalLabels = new ArrayList<>((ShowTabController.getInstance().getProject().getLabels()));
         List<LabelModel> modifiableLabels = new ArrayList<>(originalLabels);
 
         TextField nameLabel = new TextField(label.getNom());
@@ -114,7 +115,7 @@ public class LabelService {
 
         deleteButton.setOnAction(e -> {
             modifiableLabels.remove(label);
-            showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+            ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
             labelContainer.getChildren().remove(labelInfo);
 
             if (originalLabels.contains(label)) {
@@ -158,6 +159,12 @@ public class LabelService {
         return labelInfo;
     }
 
+    // reset the labels of the task when the user clicks on the cancel button
+    private void resetLabels(Task task) {
+        ShowTabController.getInstance().getProject().setLabels(new ArrayList<>());
+
+    }
+
     protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {
        if (task.getLabels().contains(label)) {
             task.getLabels().remove(label);
@@ -165,7 +172,7 @@ public class LabelService {
             task.getLabels().add(label);
         }
 
-        TaskLabelApiClient.getInstance().updateLabelToTask(task, label);
+        ShowTabController.getInstance().updateLabels(task, label);
         PopupService.getInstance().updateToggleButton(toggleCheckBox, task, label);
 
         TabService.updateColorTags(task);
