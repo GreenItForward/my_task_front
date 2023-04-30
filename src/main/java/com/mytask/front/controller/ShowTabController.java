@@ -277,14 +277,7 @@ public class ShowTabController {
 
                     String targetParentId = column.getId();
                     Task task = (Task) draggedTask.getUserData();
-
-                    switch (targetParentId) {
-                        case "TODO" -> task.setStatus(EStatus.TODO.getValue());
-                        case "IN PROGRESS" -> task.setStatus(IN_PROGRESS.getValue());
-                        case "DONE" -> task.setStatus(EStatus.DONE.getValue());
-                    }
-
-
+                    task.setStatus(targetParentId);
                     TaskApiClient.getInstance().updateTask(task);
 
                 } else {
