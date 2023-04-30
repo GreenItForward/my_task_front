@@ -1,37 +1,44 @@
 package com.mytask.front.controller;
 
 import com.mytask.front.exception.AuthException;
-import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
-import com.mytask.front.service.view.ShowAllTabService;
-import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
+import com.mytask.front.utils.EPage;
 import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.EString;
 import com.mytask.front.utils.PdfExportHelper;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.json.JSONException;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.util.*;
-import javafx.scene.control.TextField;
-import org.json.JSONException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 import static com.mytask.front.utils.EStatus.IN_PROGRESS;
@@ -194,28 +201,31 @@ public class ShowTabController {
             String taskText = addTaskField.getText();
             if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
                 Task taskNew = new Task();
-                HBox newTask = createRandomTask(taskNew, taskText);
-                taskList.getChildren().add(taskList.getChildren().size(), newTask);
                 taskList.setUserData(taskNew);
                 taskNew.setStatus(taskList.getId());
-                taskNew.setTaskBox(newTask);
-                try {
-                    taskNew = TaskApiClient.getInstance().createTask(taskNew);
-                    taskList.setUserData(taskNew);
-                    //update the current task
-                    currentTask = taskNew;
-                } catch (JSONException | AuthException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-                addTaskField.setEditable(false);
-                addTaskField.setText(EString.ADD_TASK.toString());
+                taskNew.setTitle(taskText);
+                taskNew.setProjectID(project.getId());
+                CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return TaskApiClient.getInstance().createTask(taskNew);
+                    } catch (JSONException | AuthException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).thenAcceptAsync(createdTask -> {
+                    HBox newTask = createTask(createdTask, taskText);
+                    taskList.getChildren().add(taskList.getChildren().size(), newTask);
+                    createdTask.setTaskBox(newTask);
+                    taskList.setUserData(createdTask);
+                    currentTask = createdTask;
+                    addTaskField.setEditable(false);
+                    addTaskField.setText(EString.ADD_TASK.toString());
+                }, Platform::runLater).exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
             }
         });
 
-
-        // quand l'utilisateur clique en dehors du champ, on remet le champ à son état initial
         addTaskField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (Boolean.TRUE.equals(!newValue) && addTaskField.getText().isEmpty()) {
                 addTaskField.setText(EString.ADD_TASK.toString());
@@ -228,42 +238,25 @@ public class ShowTabController {
 
 
     // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
-    private HBox createRandomTask(Task task, String title) {
+    private HBox createTask(Task task, String title) {
         HBox taskBox = new HBox(10);
-        Random random = new Random();
         HBox colorTags = TabService.createColorTags(task);
 
         task.setTaskBox(colorTags);
         task.setTitle(title);
         task.setProjectID(this.project.getId());
 
-        //TODO: quand on créera les taches sans les données aléatoires, on devra enlever ça et mettre les données de la tache (projectID, assignedTo, etc.)
         Label titleLabel = new Label(title);
         titleLabel.textProperty().bind(task.titleProperty());
         HBox deadlineBox = TabService.createDeadlineBox(task);
 
-        TextField assignedToField = TabService.createAssignedToField(random);
+        TextField assignedToField = TabService.createAssignedToField();
         assignedToField.textProperty().bindBidirectional(task.assignedToProperty());
         VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
         ImageView editImageView = TabService.createEditImageView();
         editImageView.setOnMouseClicked(e -> {
-            System.out.println("Edit task");
-            // get the modified task
-            Task modifiedTask = (Task) taskBox.getUserData();
-            System.out.println("idi"+modifiedTask.getId());
-            List<Task> tasks = TaskApiClient.getInstance().getTasksList();
-            // pour toute les task si l'id nexiste pas dans le modifiedTask alors on va chercher la task ayant le meme nom et meme status
-           /* for (Task t : tasks) {
-                if (t.getTitle().equals(modifiedTask.getTitle()) && t.getStatus().equals(modifiedTask.getStatus())) {
-                    modifiedTask = t;
-                    modifiedTask.setTaskBox(taskBox);
-                    break;
-                }
-            }*/
-
-            modifiedTask = getCurrentTask();
-
+            Task modifiedTask = modifiedTask = getCurrentTask() != null ? getCurrentTask() : task;
             PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), modifiedTask);
         });
 
@@ -299,7 +292,7 @@ public class ShowTabController {
             return new VBox();
         }
 
-        HBox taskBox = createRandomTask(new Task(), "Task " + nbTasks);
+        HBox taskBox = createTask(new Task(), "Task " + nbTasks);
         VBox tasksContainer = createRandomTasksRecursively(random, nbTasks - 1);
         tasksContainer.getChildren().add(taskBox);
         VBox.setMargin(taskBox, new Insets(10, 0, 0, 0));
@@ -413,7 +406,7 @@ public class ShowTabController {
         }
 
         Project.getTasks().forEach(task -> {
-            createRandomTask(task, task.getTitle());
+            createTask(task, task.getTitle());
             switch (task.getStatus()) {
                 case "TODO" -> todoTasksList.getChildren().add(task.getTaskBox());
                 case "IN PROGRESS" -> inProgressTasksList.getChildren().add(task.getTaskBox());

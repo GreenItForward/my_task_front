@@ -100,7 +100,6 @@ public class TabService {
 
         dueDateLabel.textProperty().bind(formattedDateProperty);
 
-        System.out.println(task.getdeadlineDatePicker().getValue());
         if (task.getdeadlineDatePicker().getValue() != null) {
             String formattedDate = task.parseDueDate(task.getdeadlineDatePicker().getValue().format(DateTimeFormatter.ofPattern(EString.DATE_FORMAT.toString())));
             formattedDateProperty.set(formattedDate);
@@ -131,8 +130,8 @@ public class TabService {
     }
 
 
-    public static TextField createAssignedToField(Random random) {
-        TextField assignedToField = new TextField("Personne " + (random.nextInt(10) + 1));
+    public static TextField createAssignedToField() {
+        TextField assignedToField = new TextField("");
         assignedToField.setEditable(false);
         assignedToField.getStyleClass().add("dueDateLabel");
         assignedToField.setOnMouseEntered(e -> assignedToField.setCursor(Cursor.HAND));
