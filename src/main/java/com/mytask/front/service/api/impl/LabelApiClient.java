@@ -2,8 +2,10 @@ package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
 import com.mytask.front.service.api.LabelApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.HttpClientApi;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +42,7 @@ public class LabelApiClient implements LabelApiClientInterface {
         }
 
     @Override
-    public void createLabel(LabelModel label) {
+    public LabelModel createLabel(LabelModel label) throws JSONException {
         updateToken(UserService.getCurrentUser().getToken());
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
@@ -51,14 +53,25 @@ public class LabelApiClient implements LabelApiClientInterface {
                 .build();
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException |InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
-            if (response != null) {
-                System.out.println(response.body());
+            System.out.println(response.statusCode());
+            if (response != null && response.statusCode() == 201) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONObject jsonObject = new JSONObject(responseBody);
+
+                    label = new LabelModel(jsonObject.getInt("id"), jsonObject.getString("nom"), jsonObject.getString("couleur"), jsonObject.getJSONObject("project").getInt("id"));
+                    labels.add(label);
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
             }
         }
+
+        return label;
 
     }
 
@@ -74,7 +87,29 @@ public class LabelApiClient implements LabelApiClientInterface {
 
     @Override
     public void updateLabel(LabelModel label) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        updateToken(UserService.getCurrentUser().getToken());
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/label/" + label.getId()))
+                .POST(HttpRequest.BodyPublishers.ofString(label.toJSON()))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException |InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null && response.statusCode() == 200) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    System.out.println(responseBody);
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
+            }
+        }
     }
 
     @Override
@@ -100,7 +135,7 @@ public class LabelApiClient implements LabelApiClientInterface {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject label = jsonArray.getJSONObject(i);
-                        labels.add(new LabelModel(label.getString("id"), label.getString("nom"), label.getString("couleur"), label.getJSONObject("project").getInt("id")));
+                        labels.add(new LabelModel(label.getInt("id"), label.getString("nom"), label.getString("couleur"), label.getJSONObject("project").getInt("id")));
                     }
 
                 } else {
@@ -123,4 +158,42 @@ public class LabelApiClient implements LabelApiClientInterface {
     public void updateToken(String token) {
         this.token = token;
     }
+
+    @Override
+    public List<LabelModel> getLabelsByProjectId(int id) throws JSONException {
+        updateToken(UserService.getCurrentUser().getToken());
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/label/" + id))
+                .GET()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null && response.statusCode() == 200) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONArray jsonArray = new JSONArray(responseBody);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject label = jsonArray.getJSONObject(i);
+                        labels.add(new LabelModel(label.getInt("id"), label.getString("nom"), label.getString("couleur"), label.getJSONObject("project").getInt("id")));
+                    }
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
+            } else {
+                System.err.println("Get project failed, status code: " + response.statusCode() + "\body: " + response.body());
+            }
+        }
+
+        return labels;
+    }
+
 }

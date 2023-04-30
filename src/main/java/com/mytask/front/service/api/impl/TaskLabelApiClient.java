@@ -1,11 +1,13 @@
 package com.mytask.front.service.api.impl;
 
+import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.model.LabelModel;
-import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.TaskLabelApiClientInterface;
 import com.mytask.front.service.view.UserService;
-import com.mytask.front.utils.HttpClientApi;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +15,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskLabelApiClient implements TaskLabelApiClientInterface {
     private static TaskLabelApiClient instance;
@@ -42,7 +46,6 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
     @Override
     public void updateLabelToTask(Task task, LabelModel label) {
         HttpResponse<String> response = null;
-        task.setId(1);
         this.taskId = task.getId();
         this.labelId = label.getId();
         HttpRequest request = HttpRequest.newBuilder()
@@ -52,7 +55,6 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
                 .header("Authorization", "Bearer " + token)
                 .build();
         try {
-            System.out.println(labelId + "" + taskId);
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -63,6 +65,44 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
             }
         }
     }
+
+    @Override
+    public List<LabelModel> getLabelsByTaskId(int taskId, int projectId) throws JSONException {
+        List<LabelModel> labels = new ArrayList<>();
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/task-label/" + taskId))
+                .GET()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null && response.statusCode() == 200) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONArray jsonArray = new JSONArray(responseBody);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject label = jsonArray.getJSONObject(i);
+                        labels.add(new LabelModel(label.getInt("id"), label.getString("nom"), label.getString("couleur"), projectId));
+                    }
+
+                } else {
+                    System.err.println("Get labels by TaskId failed: Forbidden");
+                }
+            } else {
+                System.err.println("Get labels by TaskId failed, status code: " + response.statusCode() + "\body: "+ response.body());
+            }
+        }
+        return labels;
+    }
+
+
 
     private String toJSON() {
         return "{" +

@@ -69,5 +69,4 @@ public class ScreenService {
         stage.show();
     }
 
-
 }

@@ -1,25 +1,31 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowTabController;
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
 import com.mytask.front.utils.EPage;
+import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.EString;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ProjectTabService {
     private static ProjectTabService instance;
-    private final ScreenService screenService;
+    private ScreenService screenService;
 
     private ProjectTabService() {
-        screenService = ScreenService.getInstance(null);
     }
 
     public static ProjectTabService getInstance() {
@@ -31,8 +37,25 @@ public class ProjectTabService {
 
     public void openProject(Project project) {
         System.out.println("Ouverture du projet " + project.getNom());
-        screenService.setScreen(EPage.SHOW_TAB); // A CHANGER
-        //TODO: Open project in new window
+        screenService = ScreenService.getInstance(null);
+        try {
+            Project.setTasks(TaskApiClient.getInstance().getTasksByProject(project));
+        } catch (JSONException | AuthException e) {
+            throw new RuntimeException(e);
+        }
+
+        ShowTabController showTabController = ShowTabController.getInstance();
+
+        VBox todoTasksList = showTabController.getTodoTasksList();
+        VBox inProgressTasksList = showTabController.getInProgressTasksList();
+        VBox doneTasksList = showTabController.getDoneTasksList();
+
+        if (todoTasksList != null && inProgressTasksList != null && doneTasksList != null) {
+            showTabController.setProject(project, todoTasksList, inProgressTasksList, doneTasksList);
+            screenService.setScreen(EPage.SHOW_TAB);
+        } else {
+            System.out.println("Erreur lors de l'ouverture du projet");
+        }
     }
 
     public void closeCurrentPopup(Window window) {

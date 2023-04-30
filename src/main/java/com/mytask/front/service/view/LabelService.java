@@ -1,5 +1,6 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.LabelApiClient;
@@ -10,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +35,11 @@ public class LabelService {
         VBox labelContainer = new VBox();
         labelContainer.setSpacing(10);
         labelContainer.setStyle("-fx-padding: 10;");
-        List<LabelModel> originalLabels = showAllTabService.getProjects().get(0).getLabels();
+        List<LabelModel> originalLabels = ShowTabController.getInstance().getProject().getLabels();
         List<LabelModel> modifiableLabels = new ArrayList<>(originalLabels);
 
-        List<LabelModel> labels = showAllTabService.getProjects().get(0).getLabels();
+        List<LabelModel> labels = ShowTabController.getInstance().getProject().getLabels();
+
         for (LabelModel label : labels) {
             HBox labelInfo = createLabelProjectInfo(label, labelContainer);
             labelContainer.getChildren().add(labelInfo);
@@ -55,8 +58,19 @@ public class LabelService {
 
         addLabelButton.setOnAction(e -> {
             LabelModel label = new LabelModel("", Color.WHITE);
+
+            label.setProjectId(ShowTabController.getInstance().getProject().getId());
+            label.setNom(" ");
+            try {
+                label = LabelApiClient.getInstance().createLabel(label);
+            } catch (JSONException ex) {
+                throw new RuntimeException(ex);
+            }
+
             HBox labelInfo = createLabelProjectInfo(label, labelContainer);
             labelContainer.getChildren().add(labelContainer.getChildren().size() - 1, labelInfo);
+
+            modifiableLabels.add(label);
         });
 
         // enregistrer les modifications
@@ -103,7 +117,7 @@ public class LabelService {
 
     private HBox createLabelProjectInfo(LabelModel label, VBox labelContainer) {
         HBox labelInfo = new HBox(10);
-        List<LabelModel> originalLabels = new ArrayList<>((showAllTabService.getProjects().get(0).getLabels()));
+        List<LabelModel> originalLabels = new ArrayList<>((ShowTabController.getInstance().getProject().getLabels()));
         List<LabelModel> modifiableLabels = new ArrayList<>(originalLabels);
 
         TextField nameLabel = new TextField(label.getNom());
@@ -114,7 +128,7 @@ public class LabelService {
 
         deleteButton.setOnAction(e -> {
             modifiableLabels.remove(label);
-            showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+            ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
             labelContainer.getChildren().remove(labelInfo);
 
             if (originalLabels.contains(label)) {
@@ -129,12 +143,13 @@ public class LabelService {
                 if (index == -1) {
                     modifiableLabels.add(label);
                     index = modifiableLabels.indexOf(label);
-                    showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+                    ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
                 }
 
                 label.setNom(newValue);
                 modifiableLabels.set(index, label);
-                showAllTabService.getProjects().get(0).getLabels().get(index).setNom(newValue);
+                ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
+                LabelApiClient.getInstance().updateLabel(label);
             }
         }));
 
@@ -143,17 +158,24 @@ public class LabelService {
             if (indexColorPicker == -1) {
                 modifiableLabels.add(label);
                 indexColorPicker = modifiableLabels.indexOf(label);
-                showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+                ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
             }
 
             label.setCouleur(newValueColorPicker);
             modifiableLabels.set(indexColorPicker, label);
-            showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+            ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
+            LabelApiClient.getInstance().updateLabel(label);
         });
 
         labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
 
         return labelInfo;
+    }
+
+    // reset the labels of the task when the user clicks on the cancel button
+    private void resetLabels(Task task) {
+        ShowTabController.getInstance().getProject().setLabels(new ArrayList<>());
+
     }
 
     protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {
@@ -163,7 +185,7 @@ public class LabelService {
             task.getLabels().add(label);
         }
 
-        TaskLabelApiClient.getInstance().updateLabelToTask(task, label);
+        ShowTabController.getInstance().updateLabels(task, label);
         PopupService.getInstance().updateToggleButton(toggleCheckBox, task, label);
 
         TabService.updateColorTags(task);

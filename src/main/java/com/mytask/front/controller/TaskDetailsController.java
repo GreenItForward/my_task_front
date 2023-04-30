@@ -96,6 +96,10 @@ public class TaskDetailsController {
 
     private void displayLabels() {
         Task task = getTask();
+        if (task == null) {
+            throw new IllegalArgumentException("Cannot display labels because task is null.");
+        }
+
         List<LabelModel> labels = task.getLabels();
 
         VBox labelsContainer = new VBox(10);

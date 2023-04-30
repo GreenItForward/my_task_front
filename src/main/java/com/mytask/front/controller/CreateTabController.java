@@ -4,7 +4,6 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
-import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.utils.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.EString;
@@ -90,7 +89,7 @@ public class CreateTabController {
             return;
         }
 
-        Project project = ShowAllTabService.getInstance().getProjects().get(0);
+        Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
         projectApiClient.createProject(project);
         project.setLabels(project.getLabels());
         ShowTabController.getInstance().setProject(project);

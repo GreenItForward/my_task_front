@@ -9,6 +9,7 @@ public class Project {
     private String codeJoin;
     private int userId;
    // private User user;
+    private static List<Task> tasks;
    private List<LabelModel> labels;
 
     public Project(String nom, String description) {
@@ -27,6 +28,14 @@ public class Project {
         this.description = description;
         this.codeJoin = codeJoin;
         this.id = id;
+    }
+
+    public static void setTasks(List<Task> tasksByProject) {
+        tasks = tasksByProject;
+    }
+
+    public static List<Task> getTasks() {
+        return tasks;
     }
 
     public int getUserId() {
