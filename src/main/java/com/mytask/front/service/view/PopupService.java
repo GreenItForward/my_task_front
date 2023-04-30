@@ -1,5 +1,11 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowTabController;
+import com.mytask.front.controller.TaskDetailsController;
+import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -8,25 +14,43 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
+
+import static com.mytask.front.utils.EPopup.LABELS;
+import static com.mytask.front.utils.EPopup.TASK_DETAILS;
 
 public class PopupService {
-
+    private static TaskApiClient taskApiClient;
+    private static PopupService instance;
+    private final ProjectTabService projectTabService;
 
     private PopupService() {
-        throw new IllegalStateException("Utility class");
+        projectTabService = ProjectTabService.getInstance();
+
+    }
+
+    public static PopupService getInstance() {
+        if (instance == null) {
+            instance = new PopupService();
+        }
+        return instance;
     }
 
     public static void setPopupScreen(Stage primaryStage, EPopup page, VBox content) {
+        setPopupScreen(primaryStage, page, content, null);
+    }
+
+    public static void setPopupScreen(Stage primaryStage, EPopup page, VBox content, Supplier<Task> taskSupplier) {
+        taskApiClient = TaskApiClient.getInstance();
         Stage popup = new Stage();
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
@@ -40,7 +64,17 @@ public class PopupService {
         Label label = new Label(page.getWindowTitle());
         label.getStyleClass().add("popup-title");
         Button closeButton = new Button(EString.CLOSE.toString());
-        closeButton.setOnAction(e -> popup.close());
+
+        closeButton.setOnAction(e -> {
+            if (taskSupplier != null) {
+                updateInformation(page, taskSupplier);
+            }
+            popup.close();
+        });
+
+        if (taskSupplier != null) {
+            popup.setOnCloseRequest(e -> updateInformation(page, taskSupplier));
+        }
 
         scrollPane.setContent(content);
 
@@ -51,7 +85,7 @@ public class PopupService {
         Scene popupScene = new Scene(layout, page.getWidth(), page.getHeight());
         popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.STYLES.getCssPath())).toExternalForm());
         popupScene.getStylesheets().add(Objects.requireNonNull(PopupService.class.getResource(EStyle.POPUP.getCssPath())).toExternalForm());
-
+        
         popup.setScene(popupScene);
         popup.getIcons().add(new Image(Objects.requireNonNull(PopupService.class.getResourceAsStream(EIcon.GIF.getImagePath()))));
         popup.centerOnScreen();
@@ -59,104 +93,81 @@ public class PopupService {
         popup.showAndWait();
     }
 
-    public static void showMemberPopup(Stage primaryStage) {
-        VBox userContainer = createMemberContent();
+    private static void updateInformation(EPopup page, Supplier<Task> taskSupplier) {
+        if (page.getFxmlName().equals(TASK_DETAILS.getFxmlName())) {
+            Task task = taskSupplier.get();
+            if (task != null) {
+                taskApiClient.updateTask(task);
+            }
+        }
+    }
+
+    public void showMemberPopup(Stage primaryStage) {
+        VBox userContainer = projectTabService.createMemberContent();
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
     }
 
-    public static void showInviteCodePopup(Stage primaryStage) {
-        VBox inviteCodeContainer = createInviteCodeContent();
-
-        setPopupScreen(primaryStage, EPopup.INVITE_CODE, inviteCodeContainer);
+    public static void showProjectSettingsPopup(Stage window, Project project) {
+        VBox projectContainer = ProjectTabService.getInstance().createProjectContent(project);
+        setPopupScreen(window, EPopup.PROJECT_SETTINGS, projectContainer);
     }
 
-    private static VBox createMemberContent() {
-        VBox userContainer = new VBox();
-        userContainer.setSpacing(10);
-        userContainer.setStyle("-fx-padding: 10;");
+    public void showEditLabelPopup(Stage primaryStage) {
+        VBox labelContainer = LabelService.getInstance().createEditLabelContent();
+        setPopupScreen(primaryStage, LABELS, labelContainer);
+    }
 
-        // Exemple de données utilisateur
-        List<String[]> users = Arrays.asList(
-                new String[]{"Ronan (vous)", "ronan@gmail.com", "Administrateur"},
-                new String[]{"John", "johndoe@gmail.com", "Membre"}
-        );
+    public void showLabelPopup(Stage primaryStage, Task task) {
+        VBox labelContainer = LabelService.getInstance().createLabelContent(task);
+        setPopupScreen(primaryStage, LABELS, labelContainer, () -> task);
+    }
 
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(20, 20, 20, 20));
-
-        for (int i = 0; i < users.size(); i++) {
-            Label nameLabel = new Label(users.get(i)[0]);
-            Label emailLabel = new Label(users.get(i)[1]);
-
-            ComboBox<String> roleComboBox = new ComboBox<>();
-            roleComboBox.getItems().addAll(EString.getRoleStrings());
-            roleComboBox.setValue(users.get(i)[2]);
-
-            HBox userInfo = new HBox(10);
-            userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
-            userContainer.getChildren().add(userInfo);
-
-            int finalI = i;
-            roleComboBox.setOnAction(e -> {
-                if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
-                    ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
-                    if (AlertService.isConfirmed(result)) {
-                        userContainer.getChildren().remove(userInfo);
-                    } else {
-                        roleComboBox.setValue(users.get(finalI)[2]);
-                    }
-                }
-            });
-
-            roleComboBox.getStyleClass().add("combo-box");
+    protected void updateToggleButton(CheckBox checkBox, Task task, LabelModel label) {
+        if (task.getLabels().contains(label)) {
+            checkBox.getStyleClass().remove("checkbox-add");
+        } else {
+            checkBox.getStyleClass().remove("checkbox-delete");
         }
-
-        gridPane.add(userContainer, 0, 0, 3, 1);
-
-        return userContainer;
     }
 
-    private static VBox createInviteCodeContent() {
-        VBox inviteCodeContainer = new VBox();
-        HBox inviteCodeBox = new HBox(10);
-        HBox buttonBox = new HBox(10);
-        inviteCodeContainer.setSpacing(10);
-        inviteCodeContainer.setStyle("-fx-padding: 10;");
-        Label inviteCodeLabel = new Label(EString.INVITE_CODE.toString());
-        Label inviteLabel = new Label("");
-        Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.toString());
-        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(AppUtils.generateRandomInviteCode()));
-
-        Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.toString());
-        copyInviteCodeButton.setOnAction(e -> AppUtils.copyToClipboard(inviteLabel));
-
-        buttonBox.getChildren().addAll(generateInviteCodeButton, copyInviteCodeButton);
-        inviteCodeBox.getChildren().addAll(inviteCodeLabel, inviteLabel);
-        inviteCodeContainer.getChildren().addAll(inviteCodeBox, buttonBox);
-
-        return inviteCodeContainer;
-    }
-
-    public static void showTaskDetailPopup(Stage primaryStage) {
+    public static void showTaskDetailPopup(Stage primaryStage, Task task) {
         try {
-            Parent taskDetailContent = loadFXML(EPopup.TASK_DETAILS.getFxmlPath());
-            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent));
+            URL fxmlUrl = EPopup.TASK_DETAILS.getFxmlPath();
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent taskDetailContent = loader.load();
+            TaskDetailsController taskDetailController = loader.getController();
+            taskDetailController.setTaskAndUpdateUI(task);
+            setPopupScreen(primaryStage, EPopup.TASK_DETAILS, new VBox(taskDetailContent), taskDetailController::getTask);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     public static void showTablesPopup() {
         ListView<String> tablesPopupListView = new ListView<>();
+        List<Project> projects =  ShowAllTabService.getInstance().getProjects();
+        projects.forEach(project -> tablesPopupListView.getItems().add(project.getNom()));
+        Button openTableButton = new Button(EString.OPEN_TABLE.toString());
+        openTableButton.setOnAction(e -> {
+            String selectedTable = tablesPopupListView.getSelectionModel().getSelectedItem();
+            if (selectedTable != null) {
+                Project project = projects.stream().filter(p -> p.getNom().equals(selectedTable)).findFirst().orElse(null);
+                if (project != null) {
+                    ProjectTabService projectTabService = ProjectTabService.getInstance();
+                    projectTabService.closeCurrentPopup(openTableButton.getScene().getWindow());
+                    projectTabService.openProject(project);
+                }
+            }
+
+        });
 
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(EString.MY_TABS.toString());
 
         VBox popupVBox = new VBox(10);
-        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.toString()), tablesPopupListView);
+        popupVBox.getChildren().addAll(new Label(EString.MY_TABS.toString()), tablesPopupListView, openTableButton);
         popupVBox.setPadding(new Insets(10, 10, 10, 10));
 
         Scene popupScene = new Scene(popupVBox, EPopup.TABLE_LIST.getWidth(), EPopup.TABLE_LIST.getHeight());
@@ -164,9 +175,20 @@ public class PopupService {
         popupStage.show();
     }
 
+    public void showInviteCodePopup(Stage primaryStage) {
+        VBox inviteCodeContainer = projectTabService.createInviteCodeContent();
+        setPopupScreen(primaryStage, EPopup.INVITE_CODE, inviteCodeContainer);
+    }
+
     private static Parent loadFXML(String fxmlPath) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(PopupService.class.getResource(fxmlPath));
         return fxmlLoader.load();
     }
 
+
+    public void closeCurrentPopup(Window window) {
+        if (window != null) {
+            window.hide();
+        }
+    }
 }

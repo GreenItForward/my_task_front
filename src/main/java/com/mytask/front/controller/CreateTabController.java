@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import org.json.JSONException;
 
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;
@@ -37,17 +38,36 @@ public class CreateTabController {
 
     LabelApiClient labelApiClient;
 
-
-
     @FXML
     public void initialize() {
-        this.labelApiClient = LabelApiClient.getInstance();
+        initData();
+        configureButtons();
+        setTextForUIElements();
+    }
 
+    private void initData() {
+        this.labelApiClient = LabelApiClient.getInstance();
+    }
+
+    private void configureButtons() {
         createTableBtn.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) createTableBtn.getScene().getWindow());
             }
         });
+
+        backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
+        createTableBtn.setOnAction(event -> {
+            try {
+                createTable();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        addLabelBtn.setOnAction(event -> addLabel());
+    }
+
+    private void setTextForUIElements() {
         backToMenuBtn.setText(EString.BACK_TO_MENU.toString());
         joinTableBtn.setText(EString.JOIN_TAB.toString());
         joinTableLabel.setText(EString.LABEL_JOIN_TAB.toString());
@@ -61,37 +81,40 @@ public class CreateTabController {
         descriptionLabel.setText(EString.DESCRIPTION.toString());
         nameLabel.setText(EString.NAME.toString());
         addLabelBtn.setText(EString.ADD_LABEL.toString());
+    }
 
-        backToMenuBtn.setOnAction(event -> screenService.setScreen(EPage.INDEX));
-        createTableBtn.setOnAction(event -> {
-            ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
-            if (nameTextField.getText().isEmpty()) {
-                setErrorMessage(nameTextField);
-                return;
-            }
+    private void createTable() throws JSONException {
+        ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
+        if (nameTextField.getText().isEmpty()) {
+            setErrorMessage(nameTextField);
+            return;
+        }
 
-            projectApiClient.createProject(new Project(nameTextField.getText(), descriptionTextField.getText()));
-            screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::new);
-            screenService.setScreen(EPage.SHOW_TAB);
-            resetFields(null);
-        });
+        Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
+        projectApiClient.createProject(project);
+        project.setLabels(project.getLabels());
+        ShowTabController.getInstance().setProject(project);
 
-        addLabelBtn.setOnAction(event -> {
-            if (labelTextField.getText().isEmpty()) {
-                setErrorMessage(labelTextField);
-                return;
-            }
+        screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+        screenService.setScreen(EPage.SHOW_TAB);
+        resetFields(null);
+    }
 
-            LabelModel labelModel = new LabelModel(labelTextField.getText(), colorPicker.getValue());
-            labelApiClient.addLabel(labelModel);
-            createRectangle(labelModel);
-            resetFields(labelTextField);
-        });
+    private void addLabel() {
+        if (labelTextField.getText().isEmpty()) {
+            setErrorMessage(labelTextField);
+            return;
+        }
+
+        LabelModel labelModel = new LabelModel(labelTextField.getText(), colorPicker.getValue());
+        labelApiClient.addLabel(labelModel);
+        createRectangle(labelModel);
+        resetFields(labelTextField);
     }
 
     private void setErrorMessage(TextField textField) {
-        textField.setStyle("-fx-prompt-text-fill: red;");
-        textField.setPromptText(EString.EMPTY_FIELD.toString());
+        textField.setStyle("-fx-border-color: red");
+        textField.setPromptText(EString.ERROR.toString());
     }
 
     private void resetErrorMessage(TextField textField) {
@@ -109,6 +132,8 @@ public class CreateTabController {
         } else {
             textField.setText("");
         }
+
+        resetErrorMessage(nameTextField);
     }
 
     private void createRectangle(LabelModel labelModel) {

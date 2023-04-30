@@ -1,10 +1,13 @@
 package com.mytask.front.model;
 
+import com.mytask.front.utils.EStatus;
 import javafx.scene.paint.Color;
 
 import static com.mytask.front.service.AppService.colorToHexString;
 
 public class LabelModel {
+
+    private int id;
     private String nom;
     private Color couleur;
     private int projectId;
@@ -13,7 +16,19 @@ public class LabelModel {
         this.nom = nom;
         this.couleur = couleur;
         this.projectId = 0;
+        this.id = 0;
     }
+
+    public LabelModel(int id, String nom, String couleur, int projectId) {
+        this.id = id;
+        this.nom = nom;
+        this.couleur = Color.web(couleur);
+        this.projectId = projectId;
+    }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public String getNom() {
         return nom;

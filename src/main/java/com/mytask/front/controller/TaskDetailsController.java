@@ -1,45 +1,142 @@
 package com.mytask.front.controller;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.service.view.ScreenService;
-import javafx.application.Platform;
+
+import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Task;
+import com.mytask.front.service.AppService;
+import com.mytask.front.service.view.TabService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import java.util.List;
+
+import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_LABELS;
+import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_MEMBERS;
 
 public class TaskDetailsController {
     @FXML
-    private Text bienvenue;
+    private TextField titleTextField;
+    @FXML
+    private TextArea detailsTextArea;
 
     @FXML
-    private Button voir_tableau;
+    private DatePicker deadlineDatePicker;
 
     @FXML
-    private Button creer_tableau;
+    private Button changeAssignedMembersBtn, changeAssignedLabelsBtn;
 
     @FXML
-    private Button quitter;
+    private ScrollPane labelsScrollPane;
 
-    private final ScreenService screenService;
+    private Task task;
 
-    public TaskDetailsController(ScreenService screenService) {
-        this.screenService = screenService;
+    private static TaskDetailsController instance;
+
+    public TaskDetailsController() {
+
     }
 
-    public void initialize() {
-        bienvenue.setText("Bienvenue Ronan");
+    public static TaskDetailsController getInstance() {
+        if (instance == null) {
+            instance = new TaskDetailsController();
+        }
+        return instance;
+    }
 
-        voir_tableau.setOnAction(event -> {
-            System.out.println("Voir tableau");
-            screenService.setScreen(EPage.SHOW_ALL_TAB);
+
+    @FXML
+    private void initialize() {
+        initData();
+        setTextForUIElements();
+        configureButtons();
+        initializeListeners();
+    }
+
+    private void initData() {
+        task = null;
+    }
+
+    private void configureButtons() {
+        changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
+        changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow(), task));
+    }
+
+    private void setTextForUIElements() {
+        changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
+        changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
+    }
+
+    public void setTaskAndUpdateUI(Task task) {
+        setTask(task);
+        displayLabels();
+        updateFields();
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    @FXML
+    public Task getTask() {
+        return task;
+    }
+
+    private void updateFields() {
+        if (task == null) {
+            System.err.println("Cannot update task because task is null.");
+            return;
+        }
+
+        titleTextField.setText(task.getTitle());
+        detailsTextArea.setText(task.getDetails());
+        deadlineDatePicker.setValue(task.getDeadline());
+    }
+
+    private void displayLabels() {
+        Task task = getTask();
+        if (task == null) {
+            throw new IllegalArgumentException("Cannot display labels because task is null.");
+        }
+
+        List<LabelModel> labels = task.getLabels();
+
+        VBox labelsContainer = new VBox(10);
+        labelsContainer.setPadding(new Insets(10, 10, 10, 10));
+        labelsContainer.setStyle("-fx-background-color: transparent;");
+
+        for (LabelModel labelModel : labels) {
+            Label label = new Label(labelModel.getNom());
+            label.setTextFill(Color.WHITE);
+            String color = AppService.colorToHexString(labelModel.getCouleur());
+            label.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 5px; -fx-padding: 4; -fx-text-fill: black;");
+
+            labelsContainer.getChildren().add(label);
+        }
+
+        labelsScrollPane.setContent(labelsContainer);
+    }
+
+    private void initializeListeners() {
+        this.titleTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.setTitle(newValue);
+            }
         });
 
-        creer_tableau.setOnAction(event -> {
-            System.out.println("Creer tableau");
-            screenService.setScreen(EPage.CREATE_TAB);
+        this.detailsTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.setDetails(newValue);
+            }
         });
 
-        quitter.setOnAction(event -> {
-            Platform.exit();
+        deadlineDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (task != null) {
+                task.getdeadlineDatePicker().setValue(newValue);
+            }
         });
     }
+
+
 }

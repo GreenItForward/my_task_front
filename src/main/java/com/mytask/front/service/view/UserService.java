@@ -1,56 +1,56 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.model.User;
+import com.mytask.front.utils.EString;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 
-import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class UserService {
-    private static User currentUser = new User();
-    private static final ArrayList<User> allUsers = new ArrayList<>();
-
-    static {
-        allUsers.add(new User("admin", "admin", "admin", "admin"));
+    private static UserService instance;
+    private UserService() {
     }
+
+    public static UserService getInstance() {
+        if (instance == null) {
+            instance = new UserService();
+        }
+        return instance;
+    }
+
+    private static User currentUser = new User();
 
     public static User getCurrentUser() {
         return currentUser;
     }
-
-    /** Connecte l'utilisateur si il existe dans la liste des utilisateurs.
-     * Renvoie une booléen indiquant si la connection a été réalisé avec succès */
-    public static String connectUser(String email, String password) {
-        if(email.equals("") || password.equals("")) {
-            return "Certains champs sont vides";
-        }
-
-        for(User u : allUsers) {
-            if(u.getEmail().equals(email)) {
-                if(u.getPassword().equals(password)) {
-                    UserService.currentUser = u;
-                    return "ok";
-                }
-                else {
-                    return "Le mot de passe est incorrect";
-                }
-            }
-        }
-        return "Il n'existe pas d'utilisateur avec cet adresse email";
+    public static void setCurrentUser(User currentUser) {
+        UserService.currentUser = currentUser;
     }
 
-    /** Inscrit l'utilisateur si son email n'est pas déjà utilisé.
-     * Renvoie une booléen indiquant si l'inscription a été réalisé avec succès */
-    public static String signUpUser(User user) {
-        if(user.getEmail().equals("") || user.getNom().equals("") || user.getPrenom().equals("") || user.getPassword().equals("")) {
-            return "Certains champs sont vides";
-        }
 
-        for(User u : allUsers) {
-            if(u.getEmail().equals(user.getEmail())) {
-                return "Cet email est déjà utilisé";
+    protected static HBox createUserInfo(String[] user, Consumer<HBox> onDelete) {
+        Label nameLabel = new Label(user[0]);
+        Label emailLabel = new Label(user[1]);
+
+        ComboBox<String> roleComboBox = new ComboBox<>();
+        roleComboBox.getItems().addAll(EString.getRoleStrings());
+        roleComboBox.setValue(user[2]);
+
+        HBox userInfo = new HBox(10);
+        userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
+
+        roleComboBox.setOnAction(e -> {
+            if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
+                onDelete.accept(userInfo);
+            } else {
+                roleComboBox.setValue(user[2]);
             }
-        }
-        allUsers.add(user);
-        UserService.currentUser = user;
-        return "ok";
+        });
+
+        roleComboBox.getStyleClass().add("combo-box");
+
+        return userInfo;
     }
 }
