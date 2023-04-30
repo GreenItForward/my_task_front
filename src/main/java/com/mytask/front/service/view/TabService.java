@@ -172,8 +172,6 @@ public class TabService {
     public static TextField createAddTaskField(VBox taskList) {
         TextField addTaskField = new TextField(EString.ADD_TASK.toString());
         addTaskField.getStyleClass().add("add-task-field");
-
-        System.out.println("journée");
         // Rendre le champ non modifiable jusqu'à ce que l'utilisateur clique dessus
         addTaskField.setEditable(false);
         addTaskField.setOnMouseClicked(event -> {

@@ -2,8 +2,10 @@ package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
 import com.mytask.front.service.api.LabelApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.HttpClientApi;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +42,7 @@ public class LabelApiClient implements LabelApiClientInterface {
         }
 
     @Override
-    public void createLabel(LabelModel label) {
+    public LabelModel createLabel(LabelModel label) throws JSONException {
         updateToken(UserService.getCurrentUser().getToken());
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
@@ -51,14 +53,25 @@ public class LabelApiClient implements LabelApiClientInterface {
                 .build();
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException |InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
-            if (response != null) {
-                System.out.println(response.body());
+            System.out.println(response.statusCode());
+            if (response != null && response.statusCode() == 201) {
+                String responseBody = response.body();
+                if (!responseBody.contains("Forbidden")) {
+                    JSONObject jsonObject = new JSONObject(responseBody);
+
+                    label = new LabelModel(jsonObject.getInt("id"), jsonObject.getString("nom"), jsonObject.getString("couleur"), jsonObject.getJSONObject("project").getInt("id"));
+                    labels.add(label);
+                } else {
+                    System.err.println("Get project failed: Forbidden");
+                }
             }
         }
+
+        return label;
 
     }
 

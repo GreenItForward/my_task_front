@@ -59,9 +59,10 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                     String id = responseArray[responseArray.length - 1].split(":")[1].replace("}", "").trim();
                     for (LabelModel label : LabelApiClient.getInstance().getLabels(project)) {
                         label.setProjectId(Integer.parseInt(id));
-                        LabelApiClient.getInstance().createLabel(label);
+                        LabelModel newLabel = LabelApiClient.getInstance().createLabel(label);
+                        LabelApiClient.getInstance().getLabels(project).add(newLabel);
                     }
-                    LabelApiClient.getInstance().getLabels(project).clear();
+                  //  LabelApiClient.getInstance().getLabels(project).clear();
                 } else {
                     System.err.println("Project creation failed: Forbidden");
                 }

@@ -65,7 +65,6 @@ public class TaskApiClient implements TaskApiClientInterface {
                     JSONObject jsonObject = new JSONObject(responseBody);
 
                     task = new Task(jsonObject.getInt("id"), jsonObject.getString("titre"), jsonObject.getString("description"), EStatus.getStatus(jsonObject.getString("status")), jsonObject.getInt("userId"), jsonObject.getInt("projectId"));
-                    System.out.println("task"+task.getId());
                     tasksList.add(task);
                 } else {
                     System.err.println("Get project failed: Forbidden");

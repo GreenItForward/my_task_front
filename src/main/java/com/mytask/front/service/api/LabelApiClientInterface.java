@@ -3,13 +3,12 @@ package com.mytask.front.service.api;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
-import javafx.scene.control.Label;
 import org.json.JSONException;
 
 import java.util.List;
 
 public interface LabelApiClientInterface {
-    void createLabel(LabelModel label);
+    LabelModel createLabel(LabelModel label) throws JSONException;
     void addLabel(LabelModel label);
     void removeLabel(LabelModel label);
     void deleteLabel(LabelModel label);

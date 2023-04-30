@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,11 @@ public class LabelService {
         VBox labelContainer = new VBox();
         labelContainer.setSpacing(10);
         labelContainer.setStyle("-fx-padding: 10;");
-        List<LabelModel> originalLabels = showAllTabService.getProjects().get(0).getLabels();
+        List<LabelModel> originalLabels = ShowTabController.getInstance().getProject().getLabels();
         List<LabelModel> modifiableLabels = new ArrayList<>(originalLabels);
 
-        List<LabelModel> labels = showAllTabService.getProjects().get(0).getLabels();
+        List<LabelModel> labels = ShowTabController.getInstance().getProject().getLabels();
+
         for (LabelModel label : labels) {
             HBox labelInfo = createLabelProjectInfo(label, labelContainer);
             labelContainer.getChildren().add(labelInfo);
@@ -56,8 +58,19 @@ public class LabelService {
 
         addLabelButton.setOnAction(e -> {
             LabelModel label = new LabelModel("", Color.WHITE);
+
+            label.setProjectId(ShowTabController.getInstance().getProject().getId());
+            label.setNom(" ");
+            try {
+                label = LabelApiClient.getInstance().createLabel(label);
+            } catch (JSONException ex) {
+                throw new RuntimeException(ex);
+            }
+
             HBox labelInfo = createLabelProjectInfo(label, labelContainer);
             labelContainer.getChildren().add(labelContainer.getChildren().size() - 1, labelInfo);
+
+            modifiableLabels.add(label);
         });
 
         // enregistrer les modifications
@@ -130,12 +143,12 @@ public class LabelService {
                 if (index == -1) {
                     modifiableLabels.add(label);
                     index = modifiableLabels.indexOf(label);
-                    showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+                    ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
                 }
 
                 label.setNom(newValue);
                 modifiableLabels.set(index, label);
-                showAllTabService.getProjects().get(0).getLabels().get(index).setNom(newValue);
+                ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
                 LabelApiClient.getInstance().updateLabel(label);
             }
         }));
@@ -145,12 +158,12 @@ public class LabelService {
             if (indexColorPicker == -1) {
                 modifiableLabels.add(label);
                 indexColorPicker = modifiableLabels.indexOf(label);
-                showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+                ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
             }
 
             label.setCouleur(newValueColorPicker);
             modifiableLabels.set(indexColorPicker, label);
-            showAllTabService.getProjects().get(0).setLabels(modifiableLabels);
+            ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
             LabelApiClient.getInstance().updateLabel(label);
         });
 
