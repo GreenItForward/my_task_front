@@ -4,6 +4,7 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.ProjectApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.HttpClientApi;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -114,7 +115,8 @@ public class ProjectApiClient implements ProjectApiClientInterface {
 
     @Override
     public void updateProject(Project project) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        HttpRequest request = HttpClientApi.createPostRequest("http://localhost:3000/api/project/update/" + project.getId(), project.toJSON(), token);
+        HttpClientApi.sendRequestAndPrintResponse(httpClient, request);
     }
 
     @Override

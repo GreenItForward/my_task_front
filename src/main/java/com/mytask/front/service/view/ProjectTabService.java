@@ -1,9 +1,11 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowAllTabController;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
 import com.mytask.front.utils.EPage;
@@ -20,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static com.mytask.front.service.AppService.listenerDisableButton;
 
 public class ProjectTabService {
     private static ProjectTabService instance;
@@ -92,12 +96,20 @@ public class ProjectTabService {
         saveButton.setOnAction(e -> {
             project.setNom(nameField.getText());
             project.setDescription(descriptionField.getText());
-            // ProjectService.getInstance().updateProject(project);
+            ProjectApiClient.getInstance().updateProject(project);
+
+            ShowAllTabController.getInstance().updateProjectList();
+            try {
+                ShowAllTabController.getInstance().setProjects(ProjectApiClient.getInstance().getProjectByUser());
+            } catch (JSONException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
+        listenerDisableButton(nameField, saveButton);
+        listenerDisableButton(descriptionField, saveButton);
+
         editLabelsButton.setOnAction(e -> PopupService.getInstance().showEditLabelPopup((Stage) editLabelsButton.getScene().getWindow()));
-
-
         projectContainer.getChildren().addAll(nameField, descriptionField, editLabelsButton, saveButton);
 
         return projectContainer;
