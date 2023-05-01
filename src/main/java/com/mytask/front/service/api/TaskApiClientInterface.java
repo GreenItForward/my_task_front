@@ -13,4 +13,6 @@ public interface TaskApiClientInterface {
     void updateTask(Task project);
     void deleteTask(int id);
     List<Task> getTasksByProject(Project project) throws JSONException, AuthException;
+
+    void exportTasksToPdf(Project project);
 }

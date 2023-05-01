@@ -102,6 +102,11 @@ public class PopupService {
         }
     }
 
+    public static void showExportPopup(Stage window, Project project) {
+        VBox exportContainer = ProjectTabService.getInstance().createExportContent(project);
+        setPopupScreen(window, EPopup.EXPORT, exportContainer);
+    }
+
     public void showMemberPopup(Stage primaryStage) {
         VBox userContainer = projectTabService.createMemberContent();
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);

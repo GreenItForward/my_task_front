@@ -164,4 +164,23 @@ public class ProjectTabService {
         ShowTabController showTabController = ShowTabController.getInstance();
         showTabController.setProject(project);
     }
+
+    public VBox createExportContent(Project project) {
+        VBox exportContainer = new VBox();
+        exportContainer.setSpacing(10);
+        exportContainer.setStyle("-fx-padding: 10;");
+
+        Button exportPdfButton = new Button(EString.EXPORT_TO_PDF.toString());
+        exportPdfButton.getStyleClass().add("button-export-pdf");
+
+        exportPdfButton.setOnAction(e -> {
+            TaskApiClient.getInstance().exportTasksToPdf(project);
+        });
+
+
+
+        exportContainer.getChildren().addAll(exportPdfButton);
+
+        return exportContainer;
+    }
 }

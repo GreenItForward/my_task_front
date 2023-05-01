@@ -1,5 +1,13 @@
 package com.mytask.front.service.api.impl;
 
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.UnitValue;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
@@ -7,17 +15,23 @@ import com.mytask.front.model.Task;
 import com.mytask.front.service.api.TaskApiClientInterface;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.EStatus;
+import com.mytask.front.utils.PdfExportHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TaskApiClient implements TaskApiClientInterface {
@@ -145,6 +159,28 @@ public class TaskApiClient implements TaskApiClientInterface {
             }
         }
         return tasks;
+    }
+
+    @Override
+    public void exportTasksToPdf(Project project) {
+        try {
+            List<Task> tasks = getTasksByProject(project);
+
+            if (!tasks.isEmpty()) {
+                String outDirectory = "out";
+                Files.createDirectories(Paths.get(outDirectory));
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+                String fileName = String.format("Tasks_%s_%s.pdf", project.getNom(), sdf.format(new Date()));
+                String filePath = outDirectory + File.separator + fileName;
+
+                PdfExportHelper.exportToPdf(project, tasks, filePath);
+            } else {
+                System.err.println("No tasks found for project: " + project.getNom());
+            }
+        } catch (IOException | JSONException | AuthException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

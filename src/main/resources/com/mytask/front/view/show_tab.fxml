@@ -23,7 +23,7 @@
             <HBox spacing="10">
                 <Button fx:id="generateInviteCodeBtn" />
                 <Button fx:id="viewMembersBtn" />
-                <Button fx:id="exportToPdfBtn" />
+                <Button fx:id="exportToBtn" />
                 <Button fx:id="showTablesBtn" />
                 <Button fx:id="projectSettingBtn" />
                 <Button fx:id="backToMenuBtn" />

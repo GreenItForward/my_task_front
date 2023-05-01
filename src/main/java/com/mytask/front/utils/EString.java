@@ -40,7 +40,10 @@ public enum EString {
     OPEN_TABLE("Ouvrir le tableau"),
     EDIT_USER_ROLE("Modifier les droits ou supprimer les utilisateurs"),
     INVITE_CODE("Code d'invitation : "),
+    EXPORT("Exporter le tableau"),
     EXPORT_TO_PDF("Exporter en PDF"),
+    EXPORT_TO_CSV("Exporter en CSV"),
+    EXPORT_TO_JSON("Exporter en JSON"),
     PROJECT_SETTINGS("Paramètres du tableau"),
 
     // Name App

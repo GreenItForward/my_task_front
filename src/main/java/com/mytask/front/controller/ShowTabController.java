@@ -61,7 +61,7 @@ public class ShowTabController {
     @FXML
     private Button viewMembersBtn;
     @FXML
-    private Button exportToPdfBtn;
+    private Button exportToBtn;
     @FXML private Button projectSettingBtn;
     @FXML
     private VBox todoTasksList;
@@ -123,7 +123,7 @@ public class ShowTabController {
         inProgressLabel.setText(EString.IN_PROGRESS.toString());
         doneLabel.setText(EString.DONE.toString());
         showTablesBtn.setText(EString.SHOW_TABLES.toString());
-        exportToPdfBtn.setText(EString.EXPORT_TO_PDF.toString());
+        exportToBtn.setText(EString.EXPORT.toString());
         projectSettingBtn.setText(EString.PROJECT_SETTINGS.toString());
     }
 
@@ -157,8 +157,8 @@ public class ShowTabController {
         // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
         showTablesBtn.setOnAction(event -> showTablesPopup());
 
-        // quand on appuie sur exportToPdfBtn on exporte la table en pdf
-        exportToPdfBtn.setOnAction(event -> PdfExportHelper.exportToPdf(getTasksByColumn()));
+        // quand on appuie sur exportToBtn on ouvre un Popup pour exporter le tableau en pdf ou en csv
+        exportToBtn.setOnAction(event -> PopupService.showExportPopup((Stage) exportToBtn.getScene().getWindow(), project));
     }
 
     private List<VBox> getTasksByColumn() {
