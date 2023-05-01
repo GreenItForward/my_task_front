@@ -112,7 +112,6 @@ public class ShowTabController {
     }
 
     private void initData() {
-      //  project.setLabels(labels);
     }
 
     private void setTextForUIElements() {

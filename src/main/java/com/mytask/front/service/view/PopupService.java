@@ -156,6 +156,8 @@ public class PopupService {
                 if (project != null) {
                     ProjectTabService projectTabService = ProjectTabService.getInstance();
                     projectTabService.closeCurrentPopup(openTableButton.getScene().getWindow());
+                    ShowTabController.getInstance().setProject(project);
+                    LabelService.getInstance().createEditLabelContent();
                     projectTabService.openProject(project);
                 }
             }

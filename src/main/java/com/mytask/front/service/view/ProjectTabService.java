@@ -37,7 +37,15 @@ public class ProjectTabService {
 
     public void openProject(Project project) {
         System.out.println("Ouverture du projet " + project.getNom());
+
         screenService = ScreenService.getInstance(null);
+
+
+        if (Project.getTasks() != null) {
+            Project.getTasks().clear();
+            LabelService.getInstance().resetAllLabels();
+        }
+
         try {
             Project.setTasks(TaskApiClient.getInstance().getTasksByProject(project));
         } catch (JSONException | AuthException e) {
@@ -46,9 +54,12 @@ public class ProjectTabService {
 
         ShowTabController showTabController = ShowTabController.getInstance();
 
+
         VBox todoTasksList = showTabController.getTodoTasksList();
         VBox inProgressTasksList = showTabController.getInProgressTasksList();
         VBox doneTasksList = showTabController.getDoneTasksList();
+
+        TabService.resetTab(todoTasksList, inProgressTasksList, doneTasksList);
 
         if (todoTasksList != null && inProgressTasksList != null && doneTasksList != null) {
             showTabController.setProject(project, todoTasksList, inProgressTasksList, doneTasksList);
@@ -137,5 +148,8 @@ public class ProjectTabService {
     }
 
 
-
+    public void setProject(Project project) {
+        ShowTabController showTabController = ShowTabController.getInstance();
+        showTabController.setProject(project);
+    }
 }

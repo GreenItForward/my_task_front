@@ -2,8 +2,10 @@ package com.mytask.front.service.view;
 
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.LabelApiClient;
+import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.utils.EString;
@@ -172,10 +174,13 @@ public class LabelService {
         return labelInfo;
     }
 
-    // reset the labels of the task when the user clicks on the cancel button
-    private void resetLabels(Task task) {
+    private void resetLabelsByTask(Task task) {
         ShowTabController.getInstance().getProject().setLabels(new ArrayList<>());
+    }
 
+    public List<LabelModel> resetAllLabels() {
+        List<LabelModel> labels = new ArrayList<>();
+        return labels;
     }
 
     protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {
