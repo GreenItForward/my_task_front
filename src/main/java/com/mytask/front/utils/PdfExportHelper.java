@@ -15,6 +15,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.UnitValue;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.ExportService;
 
 public class PdfExportHelper {
     private PdfExportHelper() {
@@ -26,12 +27,13 @@ public class PdfExportHelper {
      */
     public static void exportToPdf(Project project, List<Task> tasks, String filePath) {
         try {
+            ExportService.createDirectoryIfNotExist(filePath);
             if (!tasks.isEmpty()) {
                 PdfWriter writer = new PdfWriter(filePath);
                 PdfDocument pdfDocument = new PdfDocument(writer);
                 Document document = new Document(pdfDocument, PageSize.A4);
 
-                document.add(new Paragraph("Project: " + project.getNom()).setBold());
+                document.add(new Paragraph("Project: " + project.getNom() + " (" + project.getId() + ")").setBold());
                 document.add(new Paragraph("Tasks:"));
 
                 float[] columnWidths = {1, 1, 1};

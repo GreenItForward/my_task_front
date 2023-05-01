@@ -15,4 +15,6 @@ public interface TaskApiClientInterface {
     List<Task> getTasksByProject(Project project) throws JSONException, AuthException;
 
     void exportTasksToPdf(Project project);
+
+    void exportTasksToCsv(Project project);
 }

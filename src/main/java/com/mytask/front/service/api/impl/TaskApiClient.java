@@ -14,6 +14,8 @@ import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.TaskApiClientInterface;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.CsvExportHelper;
+import com.mytask.front.utils.EPath;
 import com.mytask.front.utils.EStatus;
 import com.mytask.front.utils.PdfExportHelper;
 import org.json.JSONArray;
@@ -33,6 +35,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.mytask.front.utils.EPath.CSV;
+import static com.mytask.front.utils.EPath.PDF;
 
 public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
@@ -167,14 +172,36 @@ public class TaskApiClient implements TaskApiClientInterface {
             List<Task> tasks = getTasksByProject(project);
 
             if (!tasks.isEmpty()) {
-                String outDirectory = "out";
+                String outDirectory = PDF.getPath();
                 Files.createDirectories(Paths.get(outDirectory));
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-                String fileName = String.format("Tasks_%s_%s.pdf", project.getNom(), sdf.format(new Date()));
+                String fileName = String.format("%s_%s.pdf", project.getNom(), sdf.format(new Date()));
                 String filePath = outDirectory + File.separator + fileName;
 
                 PdfExportHelper.exportToPdf(project, tasks, filePath);
+            } else {
+                System.err.println("No tasks found for project: " + project.getNom());
+            }
+        } catch (IOException | JSONException | AuthException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void exportTasksToCsv(Project project) {
+        try {
+            List<Task> tasks = getTasksByProject(project);
+
+            if (!tasks.isEmpty()) {
+                String outDirectory = CSV.getPath();
+                Files.createDirectories(Paths.get(outDirectory));
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+                String fileName = String.format("%s_%s.csv", project.getNom(), sdf.format(new Date()));
+                String filePath = outDirectory + File.separator + fileName;
+
+                CsvExportHelper.exportToCsv(project, tasks, filePath);
             } else {
                 System.err.println("No tasks found for project: " + project.getNom());
             }

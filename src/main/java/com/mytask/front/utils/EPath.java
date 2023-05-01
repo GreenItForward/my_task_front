@@ -4,7 +4,9 @@ public enum EPath {
     FXML("/com/mytask/front/view/"),
     CSS("/com/mytask/front/style/"),
     ICONS("/com/mytask/front/icons/"),
-    PDF("out/pdf/");
+    PDF("out/pdf/"),
+    CSV("out/csv/"),
+    JSON("out/json/");
 
     private String path;
 

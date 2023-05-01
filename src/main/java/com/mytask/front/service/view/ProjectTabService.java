@@ -173,13 +173,14 @@ public class ProjectTabService {
         Button exportPdfButton = new Button(EString.EXPORT_TO_PDF.toString());
         exportPdfButton.getStyleClass().add("button-export-pdf");
 
-        exportPdfButton.setOnAction(e -> {
-            TaskApiClient.getInstance().exportTasksToPdf(project);
-        });
+        exportPdfButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToPdf(project));
 
+        Button exportCsvButton = new Button(EString.EXPORT_TO_CSV.toString());
+        exportCsvButton.getStyleClass().add("button-export-pdf");
 
+        exportCsvButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToCsv(project));
 
-        exportContainer.getChildren().addAll(exportPdfButton);
+        exportContainer.getChildren().addAll(exportPdfButton, exportCsvButton);
 
         return exportContainer;
     }

@@ -46,3 +46,5 @@ build/
 *.pdf
 
 mvnw
+
+out/
