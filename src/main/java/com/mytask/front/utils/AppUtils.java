@@ -1,6 +1,7 @@
 package com.mytask.front.utils;
 
 import com.mytask.front.service.view.AlertService;
+import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;

@@ -1,4 +1,4 @@
-package com.mytask.front.utils;
+package com.mytask.front.utils.enums;
 
 public enum EPath {
     FXML("/com/mytask/front/view/"),
@@ -16,5 +16,15 @@ public enum EPath {
 
     public String getPath() {
         return path;
+    }
+
+    //find by name
+    public static EPath findByName(String name) {
+        for (EPath ePath : EPath.values()) {
+            if (ePath.name().equals(name)) {
+                return ePath;
+            }
+        }
+        return null;
     }
 }

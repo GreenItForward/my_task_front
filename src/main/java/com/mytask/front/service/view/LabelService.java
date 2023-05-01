@@ -2,13 +2,9 @@ package com.mytask.front.service.view;
 
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.model.LabelModel;
-import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.LabelApiClient;
-import com.mytask.front.service.api.impl.ProjectApiClient;
-import com.mytask.front.service.api.impl.TaskApiClient;
-import com.mytask.front.service.api.impl.TaskLabelApiClient;
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;

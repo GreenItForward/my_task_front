@@ -1,7 +1,7 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.model.User;
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;

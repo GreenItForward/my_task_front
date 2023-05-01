@@ -1,22 +1,15 @@
 package com.mytask.front.service.api.impl;
 
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.properties.UnitValue;
 import com.mytask.front.exception.AuthException;
-import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.ExportService;
 import com.mytask.front.service.api.TaskApiClientInterface;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.CsvExportHelper;
-import com.mytask.front.utils.EPath;
-import com.mytask.front.utils.EStatus;
+import com.mytask.front.utils.JsonExportHelper;
+import com.mytask.front.utils.enums.EExportType;
+import com.mytask.front.utils.enums.EStatus;
 import com.mytask.front.utils.PdfExportHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,8 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.mytask.front.utils.EPath.CSV;
-import static com.mytask.front.utils.EPath.PDF;
+import static com.mytask.front.utils.enums.EPath.*;
 
 public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
@@ -168,46 +160,17 @@ public class TaskApiClient implements TaskApiClientInterface {
 
     @Override
     public void exportTasksToPdf(Project project) {
-        try {
-            List<Task> tasks = getTasksByProject(project);
-
-            if (!tasks.isEmpty()) {
-                String outDirectory = PDF.getPath();
-                Files.createDirectories(Paths.get(outDirectory));
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-                String fileName = String.format("%s_%s.pdf", project.getNom(), sdf.format(new Date()));
-                String filePath = outDirectory + File.separator + fileName;
-
-                PdfExportHelper.exportToPdf(project, tasks, filePath);
-            } else {
-                System.err.println("No tasks found for project: " + project.getNom());
-            }
-        } catch (IOException | JSONException | AuthException e) {
-            e.printStackTrace();
-        }
+        ExportService.createExport(project, String.valueOf(EExportType.PDF), EExportType.PDF.getType());
     }
 
     @Override
     public void exportTasksToCsv(Project project) {
-        try {
-            List<Task> tasks = getTasksByProject(project);
+        ExportService.createExport(project, String.valueOf(EExportType.CSV), EExportType.CSV.getType());
+    }
 
-            if (!tasks.isEmpty()) {
-                String outDirectory = CSV.getPath();
-                Files.createDirectories(Paths.get(outDirectory));
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-                String fileName = String.format("%s_%s.csv", project.getNom(), sdf.format(new Date()));
-                String filePath = outDirectory + File.separator + fileName;
-
-                CsvExportHelper.exportToCsv(project, tasks, filePath);
-            } else {
-                System.err.println("No tasks found for project: " + project.getNom());
-            }
-        } catch (IOException | JSONException | AuthException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void exportTasksToJson(Project project) {
+        ExportService.createExport(project, String.valueOf(EExportType.JSON), EExportType.JSON.getType());
     }
 
     @Override

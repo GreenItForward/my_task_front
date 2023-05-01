@@ -5,8 +5,7 @@ import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
-import com.mytask.front.utils.EStatus;
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EString;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -27,8 +26,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
-import static com.mytask.front.utils.EIcon.*;
-import static com.mytask.front.utils.EStatus.IN_PROGRESS;
+import static com.mytask.front.utils.enums.EIcon.*;
 
 public class TabService {
     private static PopupService popupService;

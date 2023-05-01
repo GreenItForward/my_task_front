@@ -4,13 +4,11 @@ import com.mytask.front.controller.ShowAllTabController;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
-import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EStatus;
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,7 +16,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -171,16 +168,17 @@ public class ProjectTabService {
         exportContainer.setStyle("-fx-padding: 10;");
 
         Button exportPdfButton = new Button(EString.EXPORT_TO_PDF.toString());
-        exportPdfButton.getStyleClass().add("button-export-pdf");
+        Button exportJsonButton = new Button(EString.EXPORT_TO_JSON.toString());
+        Button exportCsvButton = new Button(EString.EXPORT_TO_CSV.toString());
 
         exportPdfButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToPdf(project));
-
-        Button exportCsvButton = new Button(EString.EXPORT_TO_CSV.toString());
-        exportCsvButton.getStyleClass().add("button-export-pdf");
-
         exportCsvButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToCsv(project));
+        exportJsonButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToJson(project));
 
-        exportContainer.getChildren().addAll(exportPdfButton, exportCsvButton);
+
+
+
+        exportContainer.getChildren().addAll(exportPdfButton, exportCsvButton, exportJsonButton);
 
         return exportContainer;
     }

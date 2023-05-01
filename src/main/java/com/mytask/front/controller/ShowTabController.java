@@ -9,10 +9,9 @@ import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EStatus;
-import com.mytask.front.utils.EString;
-import com.mytask.front.utils.PdfExportHelper;
+import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.EStatus;
+import com.mytask.front.utils.enums.EString;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -40,7 +39,7 @@ import java.util.Random;
 
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 import static com.mytask.front.service.view.TabService.createAddTaskField;
-import static com.mytask.front.utils.EStatus.IN_PROGRESS;
+import static com.mytask.front.utils.enums.EStatus.IN_PROGRESS;
 
 public class ShowTabController {
 

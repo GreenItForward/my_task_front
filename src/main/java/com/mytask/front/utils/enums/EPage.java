@@ -1,4 +1,4 @@
-package com.mytask.front.utils;
+package com.mytask.front.utils.enums;
 
 public enum EPage {
     SHOW_ALL_TAB("show_all_tab", "", 1280, 720),

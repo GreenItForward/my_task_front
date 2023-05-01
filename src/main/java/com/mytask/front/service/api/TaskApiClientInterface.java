@@ -17,4 +17,6 @@ public interface TaskApiClientInterface {
     void exportTasksToPdf(Project project);
 
     void exportTasksToCsv(Project project);
+
+    void exportTasksToJson(Project project);
 }

@@ -1,6 +1,6 @@
 package com.mytask.front.service.view;
 
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 

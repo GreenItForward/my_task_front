@@ -1,16 +1,12 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.configuration.AppConfiguration;
-import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
-import com.mytask.front.service.api.ProjectApiClientInterface;
-import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.view.ProjectTabService;
 import com.mytask.front.service.view.ShowAllTabService;
-import com.mytask.front.utils.EPage;
+import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EString;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,12 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ShowAllTabController {
 
