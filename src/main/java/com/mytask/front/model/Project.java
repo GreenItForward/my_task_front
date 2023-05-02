@@ -29,6 +29,13 @@ public class Project {
         this.codeJoin = codeJoin;
         this.id = id;
     }
+    public Project(String nom, String description, String codeJoin, int id, int userId) {
+        this.nom = nom;
+        this.description = description;
+        this.codeJoin = codeJoin;
+        this.id = id;
+        this.userId = userId;
+    }
 
     public static void setTasks(List<Task> tasksByProject) {
         tasks = tasksByProject;
@@ -89,5 +96,9 @@ public class Project {
     // transforme un objet Project en JSON
     public String toJSON() {
         return "{\"nom\":\"" + this.nom + "\",\"description\":\"" + this.description + "\",\"codeJoin\":\"" + this.codeJoin + "\",\"userId\":\"" + this.userId + "\"}";
+    }
+
+    public void deleteTask(Task task) {
+        tasks.remove(task);
     }
 }

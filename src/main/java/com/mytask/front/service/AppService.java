@@ -1,5 +1,7 @@
 package com.mytask.front.service;
 
+import com.mytask.front.service.api.TaskApiClientInterface;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -32,4 +34,7 @@ public class AppService {
         });
     }
 
+    public static TaskApiClient getTaskApiClient() {
+        return TaskApiClient.getInstance();
+    }
 }

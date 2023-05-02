@@ -55,12 +55,10 @@ public class LabelApiClient implements LabelApiClientInterface {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
-            System.out.println(response.statusCode());
             if (response != null && response.statusCode() == 201) {
                 String responseBody = response.body();
                 if (!responseBody.contains("Forbidden")) {
                     JSONObject jsonObject = new JSONObject(responseBody);
-
                     label = new LabelModel(jsonObject.getInt("id"), jsonObject.getString("nom"), jsonObject.getString("couleur"), jsonObject.getJSONObject("project").getInt("id"));
                     labels.add(label);
                 } else {
