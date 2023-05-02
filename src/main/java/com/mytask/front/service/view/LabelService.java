@@ -91,7 +91,7 @@ public class LabelService {
         labelContainer.setSpacing(10);
         labelContainer.setStyle("-fx-padding: 10;");
 
-        List<LabelModel> labels = showAllTabService.getProjects().get(0).getLabels();
+        List<LabelModel> labels = ShowTabController.getInstance().getProject().getLabels();
 
         for (LabelModel label : labels) {
             TextField nameLabel = new TextField(label.getNom());

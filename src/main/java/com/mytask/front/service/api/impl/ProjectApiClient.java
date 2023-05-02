@@ -39,7 +39,7 @@ public class ProjectApiClient implements ProjectApiClientInterface {
     }
 
     @Override
-    public void createProject(Project project) throws JSONException {
+    public Project createProject(Project project) throws JSONException {
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/project"))
@@ -63,12 +63,18 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                         LabelModel newLabel = LabelApiClient.getInstance().createLabel(label);
                         LabelApiClient.getInstance().getLabels(project).add(newLabel);
                     }
+
+                    project.setId(Integer.parseInt(id));
+                    project.setLabels(LabelApiClient.getInstance().getLabels(project));
+
                 } else {
                     System.err.println("Project creation failed: Forbidden");
                 }
             } else {
                 System.err.println("Project creation failed, status code: " + response.statusCode() + "\body: "+ response.body());
             }
+
+            return project;
         }
     }
 

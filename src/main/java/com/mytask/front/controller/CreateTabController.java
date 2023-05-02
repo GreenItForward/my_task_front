@@ -4,6 +4,7 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
+import com.mytask.front.service.view.TabService;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.enums.EString;
@@ -17,6 +18,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import org.json.JSONException;
+
+import java.util.ArrayList;
 
 import static javafx.scene.Cursor.DEFAULT;
 import static javafx.scene.Cursor.HAND;
@@ -90,10 +93,13 @@ public class CreateTabController {
         }
 
         Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
-        projectApiClient.createProject(project);
+        Project newProject = projectApiClient.createProject(project);
         project.setLabels(project.getLabels());
+        project.setId(newProject.getId());
         ShowTabController.getInstance().setProject(project);
-
+        ShowTabController.getInstance().resetController();
+        ShowTabController.getInstance().refreshTasks();
+        Project.setTasks(new ArrayList<>());
         screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
         screenService.setScreen(EPage.SHOW_TAB);
         resetFields(null);

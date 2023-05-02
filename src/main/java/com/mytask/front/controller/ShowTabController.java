@@ -186,7 +186,7 @@ public class ShowTabController {
         doneTasksList.setId(EStatus.DONE.getValue());
     }
 
-    // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
+    // Ajouter une tache dans la liste des taches
     public HBox createTask(Task task, String title) {
         HBox taskBox = new HBox(10);
         task.setTitle(title);
@@ -209,8 +209,7 @@ public class ShowTabController {
 
         ImageView editImageView = TabService.createEditImageView();
         editImageView.setOnMouseClicked(e -> {
-            Task modifiedTask = modifiedTask = getCurrentTask() != null ? getCurrentTask() : task;
-            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), modifiedTask);
+            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), task);
         });
 
         taskBox.setOnMouseEntered(e -> {
@@ -379,7 +378,6 @@ public class ShowTabController {
     public void resetController() throws JSONException {
         TabService.resetTab(todoTasksList, inProgressTasksList, doneTasksList);
         LabelApiClient.getInstance().getLabels(project).clear();
-
     }
 
     public void setProject(Project project) {
@@ -392,6 +390,8 @@ public class ShowTabController {
     }
 
     private void addTaskToTasksList(VBox todoTasksList, VBox inProgressTasksList, VBox doneTasksList) {
+        if (Project.getTasks() == null) return;
+
         Project.getTasks().forEach(task -> {
             createTask(task, task.getTitle());
             switch (task.getStatus()) {
