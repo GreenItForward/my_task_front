@@ -134,11 +134,8 @@ public class ShowTabController {
         });
 
         projectSettingBtn.setOnAction(event -> PopupService.showProjectSettingsPopup((Stage) projectSettingBtn.getScene().getWindow(), project));
-
-        //TODO: Initialize the controller's logic here
-        // ex: add EventHandlers to buttons, set initial data, etc.
         backToMenuBtn.setOnAction(event -> {
-            screenService.setScreen(EPage.INDEX);
+            screenService.setScreen(EPage.SHOW_ALL_TAB);
             try {
                 resetController();
             } catch (JSONException e) {
