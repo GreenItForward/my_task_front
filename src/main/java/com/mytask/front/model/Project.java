@@ -90,4 +90,8 @@ public class Project {
     public String toJSON() {
         return "{\"nom\":\"" + this.nom + "\",\"description\":\"" + this.description + "\",\"codeJoin\":\"" + this.codeJoin + "\",\"userId\":\"" + this.userId + "\"}";
     }
+
+    public void deleteTask(Task task) {
+        tasks.remove(task);
+    }
 }

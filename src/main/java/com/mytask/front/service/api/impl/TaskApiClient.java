@@ -6,30 +6,21 @@ import com.mytask.front.model.Task;
 import com.mytask.front.service.ExportService;
 import com.mytask.front.service.api.TaskApiClientInterface;
 import com.mytask.front.service.view.UserService;
-import com.mytask.front.utils.CsvExportHelper;
-import com.mytask.front.utils.JsonExportHelper;
+import com.mytask.front.utils.HttpClientApi;
 import com.mytask.front.utils.enums.EExportType;
 import com.mytask.front.utils.enums.EStatus;
-import com.mytask.front.utils.PdfExportHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static com.mytask.front.utils.enums.EPath.*;
 
 public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
@@ -76,6 +67,10 @@ public class TaskApiClient implements TaskApiClientInterface {
                     JSONObject jsonObject = new JSONObject(responseBody);
 
                     task = new Task(jsonObject.getInt("id"), jsonObject.getString("titre"), jsonObject.getString("description"), EStatus.getStatus(jsonObject.getString("status")), jsonObject.getInt("userId"), jsonObject.getInt("projectId"));
+                    if (tasksList == null) {
+                        tasksList = new ArrayList<>();
+                    }
+
                     tasksList.add(task);
                 } else {
                     System.err.println("Get project failed: Forbidden");
@@ -174,8 +169,9 @@ public class TaskApiClient implements TaskApiClientInterface {
     }
 
     @Override
-    public void deleteTask(int id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void deleteTask(Task task) {
+        HttpRequest request = HttpClientApi.createDeleteRequest("http://localhost:3000/api/task/" + task.getId(), token);
+        HttpClientApi.sendRequestAndPrintResponse(request);
     }
 
     public List<Task> getTasksList() {
