@@ -29,6 +29,13 @@ public class Project {
         this.codeJoin = codeJoin;
         this.id = id;
     }
+    public Project(String nom, String description, String codeJoin, int id, int userId) {
+        this.nom = nom;
+        this.description = description;
+        this.codeJoin = codeJoin;
+        this.id = id;
+        this.userId = userId;
+    }
 
     public static void setTasks(List<Task> tasksByProject) {
         tasks = tasksByProject;

@@ -2,9 +2,12 @@ package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
 import com.mytask.front.service.api.ProjectApiClientInterface;
+import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.HttpClientApi;
+import com.mytask.front.utils.enums.EStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +20,8 @@ import java.net.http.HttpResponse;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class ProjectApiClient implements ProjectApiClientInterface {
     private final HttpClient httpClient;
@@ -56,17 +61,31 @@ public class ProjectApiClient implements ProjectApiClientInterface {
             if (response != null && response.statusCode() == 201) {
                 String responseBody = response.body();
                 if (!responseBody.contains("Forbidden")) {
-                    String[] responseArray = responseBody.split(",");
-                    String id = responseArray[responseArray.length - 1].split(":")[1].replace("}", "").trim();
-                    for (LabelModel label : LabelApiClient.getInstance().getLabels(project)) {
-                        label.setProjectId(Integer.parseInt(id));
+                    JSONObject responseObject = new JSONObject(responseBody);
+                    JSONObject projectJson = responseObject;
+                    JSONObject user = responseObject.getJSONObject("user");
+
+                    int idUser = user.getInt("id");
+                    int idProject = projectJson.getInt("id");
+
+                    Project newProject = new Project(
+                            projectJson.getString("nom"),
+                            projectJson.getString("description"),
+                            projectJson.getString("codeJoin"),
+                            idProject,
+                            idUser
+                    );
+
+                    project.setId(idProject);
+                    ShowAllTabService.getInstance().getProjects().add(newProject);
+                    List<LabelModel> originalLabels = new ArrayList<>(project.getLabels());
+                    List<LabelModel> newLabels = new ArrayList<>();
+                    for (LabelModel label : originalLabels) {
+                        label.setProjectId(project.getId());
                         LabelModel newLabel = LabelApiClient.getInstance().createLabel(label);
-                        LabelApiClient.getInstance().getLabels(project).add(newLabel);
+                        newLabels.add(newLabel);
                     }
-
-                    project.setId(Integer.parseInt(id));
-                    project.setLabels(LabelApiClient.getInstance().getLabels(project));
-
+                    project.setLabels(newLabels);
                 } else {
                     System.err.println("Project creation failed: Forbidden");
                 }

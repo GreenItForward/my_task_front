@@ -93,8 +93,8 @@ public class CreateTabController {
         }
 
         Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
+        project.setLabels(labelApiClient.getLabels(project));
         Project newProject = projectApiClient.createProject(project);
-        project.setLabels(project.getLabels());
         project.setId(newProject.getId());
         ShowTabController.getInstance().setProject(project);
         ShowTabController.getInstance().resetController();
