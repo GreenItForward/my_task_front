@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
@@ -134,11 +135,8 @@ public class ShowTabController {
         });
 
         projectSettingBtn.setOnAction(event -> PopupService.showProjectSettingsPopup((Stage) projectSettingBtn.getScene().getWindow(), project));
-
-        //TODO: Initialize the controller's logic here
-        // ex: add EventHandlers to buttons, set initial data, etc.
         backToMenuBtn.setOnAction(event -> {
-            screenService.setScreen(EPage.INDEX);
+            screenService.setScreen(EPage.SHOW_ALL_TAB);
             try {
                 resetController();
             } catch (JSONException e) {
@@ -188,7 +186,7 @@ public class ShowTabController {
         doneTasksList.setId(EStatus.DONE.getValue());
     }
 
-    // Ajouter des tâches aléatoires (pour les tests avant d'implémenter l'API)
+    // Ajouter une tache dans la liste des taches
     public HBox createTask(Task task, String title) {
         HBox taskBox = new HBox(10);
         task.setTitle(title);
@@ -211,8 +209,7 @@ public class ShowTabController {
 
         ImageView editImageView = TabService.createEditImageView();
         editImageView.setOnMouseClicked(e -> {
-            Task modifiedTask = modifiedTask = getCurrentTask() != null ? getCurrentTask() : task;
-            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), modifiedTask);
+            PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), task);
         });
 
         taskBox.setOnMouseEntered(e -> {
@@ -358,14 +355,7 @@ public class ShowTabController {
             throw new RuntimeException("You must set the todoTasksList, inProgressTasksList and doneTasksList before setting the project");
         }
 
-        Project.getTasks().forEach(task -> {
-            createTask(task, task.getTitle());
-            switch (task.getStatus()) {
-                case "TODO" -> todoTasksList.getChildren().add(task.getTaskBox());
-                case "IN PROGRESS" -> inProgressTasksList.getChildren().add(task.getTaskBox());
-                case "DONE" -> doneTasksList.getChildren().add(task.getTaskBox());
-            }
-        });
+        addTaskToTasksList(todoTasksList, inProgressTasksList, doneTasksList);
 
     }
 
@@ -388,11 +378,28 @@ public class ShowTabController {
     public void resetController() throws JSONException {
         TabService.resetTab(todoTasksList, inProgressTasksList, doneTasksList);
         LabelApiClient.getInstance().getLabels(project).clear();
-
     }
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public void refreshTasks()  {
+        TabService.resetTab(todoTasksList, inProgressTasksList, doneTasksList);
+        addTaskToTasksList(todoTasksList, inProgressTasksList, doneTasksList);
+    }
+
+    private void addTaskToTasksList(VBox todoTasksList, VBox inProgressTasksList, VBox doneTasksList) {
+        if (Project.getTasks() == null) return;
+
+        Project.getTasks().forEach(task -> {
+            createTask(task, task.getTitle());
+            switch (task.getStatus()) {
+                case "TODO" -> todoTasksList.getChildren().add(task.getTaskBox());
+                case "IN PROGRESS" -> inProgressTasksList.getChildren().add(task.getTaskBox());
+                case "DONE" -> doneTasksList.getChildren().add(task.getTaskBox());
+            }
+        });
     }
 }
 

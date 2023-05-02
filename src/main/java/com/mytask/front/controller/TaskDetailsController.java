@@ -3,7 +3,10 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
+import com.mytask.front.service.view.PopupService;
+import com.mytask.front.service.view.ProjectTabService;
 import com.mytask.front.service.view.TabService;
+import com.mytask.front.utils.enums.EString;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -25,7 +28,7 @@ public class TaskDetailsController {
     private DatePicker deadlineDatePicker;
 
     @FXML
-    private Button changeAssignedMembersBtn, changeAssignedLabelsBtn;
+    private Button changeAssignedMembersBtn, changeAssignedLabelsBtn, deleteTaskBtn;
 
     @FXML
     private ScrollPane labelsScrollPane;
@@ -61,11 +64,22 @@ public class TaskDetailsController {
     private void configureButtons() {
         changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
         changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow(), task));
+        deleteTaskBtn.setOnAction(event -> {
+            if (task == null) {
+                System.err.println("Cannot delete task because task is null.");
+                return;
+            }
+            AppService.getTaskApiClient().deleteTask(task);
+            ShowTabController.getInstance().getProject().deleteTask(task);
+            ShowTabController.getInstance().refreshTasks();
+            ProjectTabService.getInstance().closeCurrentPopup(deleteTaskBtn.getScene().getWindow());
+        });
     }
 
     private void setTextForUIElements() {
         changeAssignedMembersBtn.setText(CHANGE_ASSIGNED_MEMBERS.toString());
         changeAssignedLabelsBtn.setText(CHANGE_ASSIGNED_LABELS.toString());
+        deleteTaskBtn.setText(EString.DELETE_TASK.toString());
     }
 
     public void setTaskAndUpdateUI(Task task) {
