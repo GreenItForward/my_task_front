@@ -1,6 +1,6 @@
 package com.mytask.front.model;
 
-import com.mytask.front.utils.EAuthEndpoint;
+import com.mytask.front.utils.enums.EAuthEndpoint;
 
 public class User {
     private int id;

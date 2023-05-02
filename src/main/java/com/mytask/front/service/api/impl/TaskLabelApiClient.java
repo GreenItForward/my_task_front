@@ -42,7 +42,6 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
         return instance;
     }
 
-
     @Override
     public void updateLabelToTask(Task task, LabelModel label) {
         HttpResponse<String> response = null;

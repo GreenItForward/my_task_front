@@ -1,14 +1,14 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowAllTabController;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
-import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EStatus;
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -16,10 +16,11 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static com.mytask.front.service.AppService.listenerDisableButton;
 
 public class ProjectTabService {
     private static ProjectTabService instance;
@@ -37,7 +38,15 @@ public class ProjectTabService {
 
     public void openProject(Project project) {
         System.out.println("Ouverture du projet " + project.getNom());
+
         screenService = ScreenService.getInstance(null);
+
+
+        if (Project.getTasks() != null) {
+            Project.getTasks().clear();
+            LabelService.getInstance().resetAllLabels();
+        }
+
         try {
             Project.setTasks(TaskApiClient.getInstance().getTasksByProject(project));
         } catch (JSONException | AuthException e) {
@@ -46,9 +55,12 @@ public class ProjectTabService {
 
         ShowTabController showTabController = ShowTabController.getInstance();
 
+
         VBox todoTasksList = showTabController.getTodoTasksList();
         VBox inProgressTasksList = showTabController.getInProgressTasksList();
         VBox doneTasksList = showTabController.getDoneTasksList();
+
+        TabService.resetTab(todoTasksList, inProgressTasksList, doneTasksList);
 
         if (todoTasksList != null && inProgressTasksList != null && doneTasksList != null) {
             showTabController.setProject(project, todoTasksList, inProgressTasksList, doneTasksList);
@@ -81,12 +93,20 @@ public class ProjectTabService {
         saveButton.setOnAction(e -> {
             project.setNom(nameField.getText());
             project.setDescription(descriptionField.getText());
-            // ProjectService.getInstance().updateProject(project);
+            ProjectApiClient.getInstance().updateProject(project);
+
+            ShowAllTabController.getInstance().updateProjectList();
+            try {
+                ShowAllTabController.getInstance().setProjects(ProjectApiClient.getInstance().getProjectByUser());
+            } catch (JSONException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
+        listenerDisableButton(nameField, saveButton);
+        listenerDisableButton(descriptionField, saveButton);
+
         editLabelsButton.setOnAction(e -> PopupService.getInstance().showEditLabelPopup((Stage) editLabelsButton.getScene().getWindow()));
-
-
         projectContainer.getChildren().addAll(nameField, descriptionField, editLabelsButton, saveButton);
 
         return projectContainer;
@@ -137,5 +157,29 @@ public class ProjectTabService {
     }
 
 
+    public void setProject(Project project) {
+        ShowTabController showTabController = ShowTabController.getInstance();
+        showTabController.setProject(project);
+    }
 
+    public VBox createExportContent(Project project) {
+        VBox exportContainer = new VBox();
+        exportContainer.setSpacing(10);
+        exportContainer.setStyle("-fx-padding: 10;");
+
+        Button exportPdfButton = new Button(EString.EXPORT_TO_PDF.toString());
+        Button exportJsonButton = new Button(EString.EXPORT_TO_JSON.toString());
+        Button exportCsvButton = new Button(EString.EXPORT_TO_CSV.toString());
+
+        exportPdfButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToPdf(project));
+        exportCsvButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToCsv(project));
+        exportJsonButton.setOnAction(e -> TaskApiClient.getInstance().exportTasksToJson(project));
+
+
+
+
+        exportContainer.getChildren().addAll(exportPdfButton, exportCsvButton, exportJsonButton);
+
+        return exportContainer;
+    }
 }

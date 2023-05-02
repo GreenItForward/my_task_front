@@ -1,4 +1,4 @@
-package com.mytask.front.utils;
+package com.mytask.front.utils.enums;
 
 public enum EStyle {
     STYLES("styles.css"),

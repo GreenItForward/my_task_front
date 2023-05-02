@@ -1,24 +1,35 @@
 package com.mytask.front.service.api.impl;
 
 import com.mytask.front.exception.AuthException;
-import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.ExportService;
 import com.mytask.front.service.api.TaskApiClientInterface;
 import com.mytask.front.service.view.UserService;
-import com.mytask.front.utils.EStatus;
+import com.mytask.front.utils.CsvExportHelper;
+import com.mytask.front.utils.JsonExportHelper;
+import com.mytask.front.utils.enums.EExportType;
+import com.mytask.front.utils.enums.EStatus;
+import com.mytask.front.utils.PdfExportHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.mytask.front.utils.enums.EPath.*;
 
 public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
@@ -145,6 +156,21 @@ public class TaskApiClient implements TaskApiClientInterface {
             }
         }
         return tasks;
+    }
+
+    @Override
+    public void exportTasksToPdf(Project project) {
+        ExportService.createExport(project, String.valueOf(EExportType.PDF), EExportType.PDF.getType());
+    }
+
+    @Override
+    public void exportTasksToCsv(Project project) {
+        ExportService.createExport(project, String.valueOf(EExportType.CSV), EExportType.CSV.getType());
+    }
+
+    @Override
+    public void exportTasksToJson(Project project) {
+        ExportService.createExport(project, String.valueOf(EExportType.JSON), EExportType.JSON.getType());
     }
 
     @Override

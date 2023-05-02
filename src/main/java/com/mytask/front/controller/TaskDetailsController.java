@@ -12,8 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.List;
 
-import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_LABELS;
-import static com.mytask.front.utils.EString.CHANGE_ASSIGNED_MEMBERS;
+import static com.mytask.front.utils.enums.EString.CHANGE_ASSIGNED_LABELS;
+import static com.mytask.front.utils.enums.EString.CHANGE_ASSIGNED_MEMBERS;
 
 public class TaskDetailsController {
     @FXML

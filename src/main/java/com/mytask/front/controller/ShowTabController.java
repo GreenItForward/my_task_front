@@ -9,10 +9,9 @@ import com.mytask.front.service.api.impl.TaskLabelApiClient;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EStatus;
-import com.mytask.front.utils.EString;
-import com.mytask.front.utils.PdfExportHelper;
+import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.EStatus;
+import com.mytask.front.utils.enums.EString;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -40,7 +39,7 @@ import java.util.Random;
 
 import static com.mytask.front.service.view.PopupService.showTablesPopup;
 import static com.mytask.front.service.view.TabService.createAddTaskField;
-import static com.mytask.front.utils.EStatus.IN_PROGRESS;
+import static com.mytask.front.utils.enums.EStatus.IN_PROGRESS;
 
 public class ShowTabController {
 
@@ -61,7 +60,7 @@ public class ShowTabController {
     @FXML
     private Button viewMembersBtn;
     @FXML
-    private Button exportToPdfBtn;
+    private Button exportToBtn;
     @FXML private Button projectSettingBtn;
     @FXML
     private VBox todoTasksList;
@@ -112,7 +111,6 @@ public class ShowTabController {
     }
 
     private void initData() {
-      //  project.setLabels(labels);
     }
 
     private void setTextForUIElements() {
@@ -124,7 +122,7 @@ public class ShowTabController {
         inProgressLabel.setText(EString.IN_PROGRESS.toString());
         doneLabel.setText(EString.DONE.toString());
         showTablesBtn.setText(EString.SHOW_TABLES.toString());
-        exportToPdfBtn.setText(EString.EXPORT_TO_PDF.toString());
+        exportToBtn.setText(EString.EXPORT.toString());
         projectSettingBtn.setText(EString.PROJECT_SETTINGS.toString());
     }
 
@@ -158,8 +156,8 @@ public class ShowTabController {
         // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
         showTablesBtn.setOnAction(event -> showTablesPopup());
 
-        // quand on appuie sur exportToPdfBtn on exporte la table en pdf
-        exportToPdfBtn.setOnAction(event -> PdfExportHelper.exportToPdf(getTasksByColumn()));
+        // quand on appuie sur exportToBtn on ouvre un Popup pour exporter le tableau en pdf ou en csv
+        exportToBtn.setOnAction(event -> PopupService.showExportPopup((Stage) exportToBtn.getScene().getWindow(), project));
     }
 
     private List<VBox> getTasksByColumn() {

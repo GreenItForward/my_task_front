@@ -6,7 +6,10 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
-import com.mytask.front.utils.*;
+import com.mytask.front.utils.enums.EIcon;
+import com.mytask.front.utils.enums.EPopup;
+import com.mytask.front.utils.enums.EString;
+import com.mytask.front.utils.enums.EStyle;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,8 +28,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import static com.mytask.front.utils.EPopup.LABELS;
-import static com.mytask.front.utils.EPopup.TASK_DETAILS;
+import static com.mytask.front.utils.enums.EPopup.LABELS;
+import static com.mytask.front.utils.enums.EPopup.TASK_DETAILS;
 
 public class PopupService {
     private static TaskApiClient taskApiClient;
@@ -102,6 +105,11 @@ public class PopupService {
         }
     }
 
+    public static void showExportPopup(Stage window, Project project) {
+        VBox exportContainer = ProjectTabService.getInstance().createExportContent(project);
+        setPopupScreen(window, EPopup.EXPORT, exportContainer);
+    }
+
     public void showMemberPopup(Stage primaryStage) {
         VBox userContainer = projectTabService.createMemberContent();
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
@@ -156,6 +164,8 @@ public class PopupService {
                 if (project != null) {
                     ProjectTabService projectTabService = ProjectTabService.getInstance();
                     projectTabService.closeCurrentPopup(openTableButton.getScene().getWindow());
+                    ShowTabController.getInstance().setProject(project);
+                    LabelService.getInstance().createEditLabelContent();
                     projectTabService.openProject(project);
                 }
             }

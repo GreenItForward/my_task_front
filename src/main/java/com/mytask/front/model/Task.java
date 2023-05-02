@@ -2,7 +2,7 @@ package com.mytask.front.model;
 
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.service.api.impl.AuthApiClient;
-import com.mytask.front.utils.EStatus;
+import com.mytask.front.utils.enums.EStatus;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.DatePicker;

@@ -29,4 +29,27 @@ public class HttpClientApi {
             }
         }
     }
+
+    public static HttpRequest createPostRequest(String s, String toJSON, String token) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create(s))
+                .POST(HttpRequest.BodyPublishers.ofString(toJSON))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+    }
+
+    public static void sendRequestAndPrintResponse(HttpRequest request) {
+        HttpResponse<String> response = null;
+        try {
+            response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } finally {
+            if (response != null) {
+                System.out.println(response.body());
+            }
+        }
+    }
 }

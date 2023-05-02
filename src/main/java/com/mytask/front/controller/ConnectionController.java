@@ -59,7 +59,7 @@ public class ConnectionController {
                 if (token.equals(UserService.getCurrentUser().getToken())) {
                     screenService.loadScreen(EPage.INDEX, IndexController::new);
                     screenService.setScreen(EPage.INDEX);
-                    screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::new);
+                    screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::getInstance);
                     screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
                 }
             } catch (AuthException e) {

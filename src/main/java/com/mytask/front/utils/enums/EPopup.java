@@ -1,4 +1,6 @@
-package com.mytask.front.utils;
+package com.mytask.front.utils.enums;
+
+import java.net.URL;
 
 import java.net.URL;
 
@@ -8,7 +10,8 @@ public enum EPopup {
     TASK_DETAILS("task_details_popup", "Editer la tâche", 700, 525),
     TABLE_LIST("tables_list_popup", "Liste des tableaux", 420, 500),
     LABELS("labels", "Gestion des labels", 450, 500),
-    PROJECT_SETTINGS("project_settings", "Paramètres du tableau", 450, 500);
+    PROJECT_SETTINGS("project_settings", "Paramètres du tableau", 450, 500),
+    EXPORT("export", "Exporter le tableau", 450, 500);
 
     private String fxmlName;
     private String windowTitle;

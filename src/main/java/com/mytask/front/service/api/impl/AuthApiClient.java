@@ -1,7 +1,7 @@
 package com.mytask.front.service.api.impl;
 
 import com.mytask.front.service.view.UserService;
-import com.mytask.front.utils.EAuthEndpoint;
+import com.mytask.front.utils.enums.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.AuthApiClientInterface;

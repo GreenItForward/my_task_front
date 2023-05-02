@@ -1,9 +1,9 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.App;
-import com.mytask.front.utils.EIcon;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EPath;
+import com.mytask.front.utils.enums.EIcon;
+import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.EPath;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
