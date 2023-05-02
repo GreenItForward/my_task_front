@@ -17,6 +17,7 @@ public enum EString {
     CHANGE_ASSIGNED_MEMBERS("Changer les membres assignés"),
     CHANGE_ASSIGNED_LABELS("Changer les étiquettes assignées"),
     EDIT_LABELS("Modifier les étiquettes"),
+    DELETE_TASK("Supprimer la tâche"),
 
     SAVE("Sauvegarder"),
     UPDATE("Modifier"),
