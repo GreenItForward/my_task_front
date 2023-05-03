@@ -5,6 +5,7 @@ import com.mytask.front.controller.TaskDetailsController;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.enums.EIcon;
 import com.mytask.front.utils.enums.EPopup;
@@ -21,9 +22,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -165,6 +168,12 @@ public class PopupService {
                     ProjectTabService projectTabService = ProjectTabService.getInstance();
                     projectTabService.closeCurrentPopup(openTableButton.getScene().getWindow());
                     ShowTabController.getInstance().setProject(project);
+                    ShowTabController.getInstance().getProject().setLabels(new ArrayList<>());
+                    try {
+                        ShowTabController.getInstance().getProject().setLabels(LabelApiClient.getInstance().getLabels(project));
+                    } catch (JSONException ex) {
+                        ex.printStackTrace();
+                    }
                     LabelService.getInstance().createEditLabelContent();
                     projectTabService.openProject(project);
                 }

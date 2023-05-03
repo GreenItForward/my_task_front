@@ -16,6 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
+import static com.mytask.front.service.AppService.activerToucheEntree;
+
 public class InscriptionController {
     @FXML
     private TextField email, nom, prenom;
@@ -64,6 +66,7 @@ public class InscriptionController {
                 error.setText(e.getMessage());
             }
         });
+        gestionBoutons();
     }
 
     private void resetFields(TextField textField) {
@@ -78,19 +81,6 @@ public class InscriptionController {
         password.setText("");
     }
 
-    public void activerToucheEntree(Button button, Runnable actionOnEntree) {
-        button.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                actionOnEntree.run();
-                e.consume();
-            }
-        });
-
-        activerToucheEntree(sinscrire, () -> sinscrire.fire());
-        activerToucheEntree(seconnecter, () -> seconnecter.fire());
-
-        gestionBoutons();
-    }
 
     private void gestionBoutons() {
         activerToucheEntree(seconnecter, this::seConnecter);

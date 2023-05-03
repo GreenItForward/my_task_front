@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 public class AppService {
@@ -31,6 +32,15 @@ public class AppService {
     private static void addListenerToTextInputControl(TextInputControl textInputControl, Button button) {
         textInputControl.textProperty().addListener((observable, oldValue, newValue) -> {
             button.setDisable(newValue.isEmpty());
+        });
+    }
+
+    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
+        button.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                actionOnEntree.run();
+                e.consume();
+            }
         });
     }
 

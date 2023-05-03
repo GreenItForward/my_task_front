@@ -16,6 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
+import static com.mytask.front.service.AppService.activerToucheEntree;
+
 
 public class ConnectionController {
     @FXML
@@ -75,14 +77,6 @@ public class ConnectionController {
         gestionBoutons();
     }
 
-    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
-        button.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                actionOnEntree.run();
-                e.consume();
-            }
-        });
-    }
 
     private void gestionBoutons() {
         activerToucheEntree(seconnecter, this::seConnecter);
