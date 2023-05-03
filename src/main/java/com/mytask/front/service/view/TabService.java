@@ -181,7 +181,7 @@ public class TabService {
 
         // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
         addTaskField.setOnAction(event -> {
-            String taskText = addTaskField.getText();
+            String taskText = addTaskField.getText().trim();
             if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
                 Task taskNew = new Task();
                 taskList.setUserData(taskNew);

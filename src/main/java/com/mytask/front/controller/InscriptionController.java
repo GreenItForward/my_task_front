@@ -1,10 +1,10 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.utils.enums.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.enums.EAuthEndpoint;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.utils.enums.EString;
 import com.mytask.front.model.User;

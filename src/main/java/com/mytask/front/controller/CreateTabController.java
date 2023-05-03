@@ -87,11 +87,12 @@ public class CreateTabController {
 
     private void createTable() throws JSONException {
         ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
-        if (nameTextField.getText().isEmpty()) {
+        if (nameTextField.getText().isBlank()) {
             setErrorMessage(nameTextField);
             return;
         }
 
+        nameTextField.setText(nameTextField.getText().trim());
         Project project = new Project(nameTextField.getText(), descriptionTextField.getText());
         project.setLabels(labelApiClient.getLabels(project));
         Project newProject = projectApiClient.createProject(project);
@@ -100,6 +101,8 @@ public class CreateTabController {
         ShowTabController.getInstance().resetController();
         ShowTabController.getInstance().refreshTasks();
         Project.setTasks(new ArrayList<>());
+        ShowAllTabController.getInstance().setProjects(projectApiClient.getProjectByUser());
+        ShowAllTabController.getInstance().updateProjectList();
         screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
         screenService.setScreen(EPage.SHOW_TAB);
         resetFields(null);
