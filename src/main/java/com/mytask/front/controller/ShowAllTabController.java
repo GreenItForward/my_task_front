@@ -79,19 +79,7 @@ public class ShowAllTabController {
 
 
     private void configureButtons() {
-        tablesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                Project project = (Project) tablesListView.getSelectionModel().getSelectedItem();
-                tableTitleLabel.setText(project.getNom());
-                tableDescriptionLabel.setText(project.getDescription());
-                openTableBtn.setDisable(false);
-            } else {
-                tableTitleLabel.setText("");
-                tableDescriptionLabel.setText("");
-                openTableBtn.setDisable(true);
-            }
-        });
-
+        configureListView();
         openTableBtn.setOnAction(e -> {
             Project selectedProject = (Project) tablesListView.getSelectionModel().getSelectedItem();
             if (selectedProject != null) {
@@ -107,6 +95,34 @@ public class ShowAllTabController {
         });
     }
 
+    private void configureListView() {
+        tablesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updateTableInfo(newValue);
+        });
+
+        tablesListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Project selectedProject = (Project) tablesListView.getSelectionModel().getSelectedItem();
+                if (selectedProject != null) {
+                    ProjectTabService projectTabService = ProjectTabService.getInstance();
+                    projectTabService.openProject(selectedProject);
+                }
+            }
+        });
+    }
+
+    private void updateTableInfo(Object newValue) {
+        if (newValue != null) {
+            Project project = (Project) newValue;
+            tableTitleLabel.setText(project.getNom());
+            tableDescriptionLabel.setText(project.getDescription());
+            openTableBtn.setDisable(false);
+        } else {
+            tableTitleLabel.setText("");
+            tableDescriptionLabel.setText("");
+            openTableBtn.setDisable(true);
+        }
+    }
 
 
     private void setTextForUIElements() {
