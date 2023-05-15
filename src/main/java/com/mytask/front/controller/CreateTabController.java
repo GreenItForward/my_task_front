@@ -4,7 +4,7 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
-import com.mytask.front.service.view.TabService;
+import com.mytask.front.service.api.impl.RoleApiClient;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.enums.EString;
@@ -39,6 +39,7 @@ public class CreateTabController {
     private HBox labelHBox;
 
     LabelApiClient labelApiClient;
+    RoleApiClient roleApiClient;
 
     @FXML
     public void initialize() {
@@ -67,6 +68,7 @@ public class CreateTabController {
             }
         });
         addLabelBtn.setOnAction(event -> addLabel());
+        joinTableBtn.setOnAction(event -> joinTable());
     }
 
     private void setTextForUIElements() {
@@ -118,6 +120,15 @@ public class CreateTabController {
         labelApiClient.addLabel(labelModel);
         createRectangle(labelModel);
         resetFields(labelTextField);
+    }
+
+    private void joinTable() {
+        joinTableLabel.setText(joinTableLabel.getText().trim());
+        if (joinTableLabel.getText().isEmpty()) {
+            setErrorMessage(joinCodeTextField);
+        }
+
+        roleApiClient.joinProject(joinTableLabel.getText());
     }
 
     private void setErrorMessage(TextField textField) {
