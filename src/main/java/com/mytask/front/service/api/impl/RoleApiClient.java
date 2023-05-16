@@ -3,9 +3,11 @@ package com.mytask.front.service.api.impl;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.User;
+import com.mytask.front.model.UserProject;
 import com.mytask.front.service.api.RoleApiClientInterface;
 import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.enums.ERole;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +42,7 @@ public class RoleApiClient implements RoleApiClientInterface {
     }
 
     @Override
-    public Project joinProject(String codeJoin) throws JSONException {
+    public UserProject joinProject(String codeJoin) throws JSONException {
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/user-project/join"))
@@ -69,35 +71,26 @@ public class RoleApiClient implements RoleApiClientInterface {
         JSONObject userJson = responseJson.getJSONObject("user");
         JSONObject projectJson = responseJson.getJSONObject("project");
 
-        int idUser = userJson.getInt("id");
-        int idProject = projectJson.getInt("id");
         Project project = new Project(
                 projectJson.getString("nom"),
                 projectJson.getString("description"),
                 projectJson.getString("codeJoin"),
-                idProject,
-                idUser
+                projectJson.getInt("id")
         );
 
-        project.setId(idProject);
-        ShowAllTabService.getInstance().getProjects().add(project);
-        List<LabelModel> originalLabels = new ArrayList<>(project.getLabels());
-        List<LabelModel> newLabels = new ArrayList<>();
-        for (LabelModel label : originalLabels) {
-            label.setProjectId(project.getId());
-            LabelModel newLabel = LabelApiClient.getInstance().createLabel(label);
-            newLabels.add(newLabel);
-        }
-        
+        int idUser = userJson.getInt("id");
+        ERole role = ERole.findByName(responseJson.getString("role"));
+        User user = new User(
+                idUser,
+                userJson.getString("email"),
+                userJson.getString("nom"),
+                userJson.getString("prenom"),
+                "",
+                role,
+                token
+        );
 
-        /*
-    id: number;
-    user: User;
-    project: Project;
-    role: RoleEnum;
-        */
-
-        return project;
+        return new UserProject(user, project);
     }
 
     @Override
