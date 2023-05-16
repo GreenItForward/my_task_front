@@ -2,6 +2,7 @@ package com.mytask.front.controller;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.UserProject;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.RoleApiClient;
@@ -68,7 +69,13 @@ public class CreateTabController {
             }
         });
         addLabelBtn.setOnAction(event -> addLabel());
-        joinTableBtn.setOnAction(event -> joinTable());
+        joinTableBtn.setOnAction(event -> {
+            try {
+                joinTable();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void setTextForUIElements() {
@@ -122,13 +129,13 @@ public class CreateTabController {
         resetFields(labelTextField);
     }
 
-    private void joinTable() {
+    private void joinTable() throws JSONException {
         joinTableLabel.setText(joinTableLabel.getText().trim());
         if (joinTableLabel.getText().isEmpty()) {
             setErrorMessage(joinCodeTextField);
         }
 
-        roleApiClient.joinProject(joinTableLabel.getText());
+        UserProject userProject = roleApiClient.joinProject(joinTableLabel.getText());
     }
 
     private void setErrorMessage(TextField textField) {
