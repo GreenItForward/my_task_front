@@ -153,6 +153,7 @@ public class ShowTabController {
 
         // quand on appuie sur showTablesBtn on affiche un popup avec la liste des tableaux
         showTablesBtn.setOnAction(event -> showTablesPopup());
+        showTablesBtn.setVisible(false); // remove this line when the feature is ready 17/05/2023
 
         // quand on appuie sur exportToBtn on ouvre un Popup pour exporter le tableau en pdf ou en csv
         exportToBtn.setOnAction(event -> PopupService.showExportPopup((Stage) exportToBtn.getScene().getWindow(), project));

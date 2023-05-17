@@ -175,8 +175,7 @@ public class LabelService {
     }
 
     public List<LabelModel> resetAllLabels() {
-        List<LabelModel> labels = new ArrayList<>();
-        return labels;
+        return new ArrayList<>();
     }
 
     protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {

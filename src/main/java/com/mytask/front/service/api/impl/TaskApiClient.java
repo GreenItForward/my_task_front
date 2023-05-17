@@ -148,11 +148,10 @@ public class TaskApiClient implements TaskApiClientInterface {
                         JSONObject label = jsonArray.getJSONObject(i);
                         if (label.getString("deadline").equals("null")) {
                            tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getInt("userId"), label.getInt("projectId")));
-                           tasksList = tasks;
                         } else {
                             tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getInt("userId"), label.getInt("projectId")));
-                            tasksList = tasks;
                         }
+                        tasksList = tasks;
                     }
                 }
             }
