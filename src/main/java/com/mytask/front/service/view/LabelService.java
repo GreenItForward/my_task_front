@@ -70,15 +70,7 @@ public class LabelService {
 
             modifiableLabels.add(label);
         });
-
-        // enregistrer les modifications
-        Button saveButton = new Button(EString.SAVE.toString());
-        saveButton.getStyleClass().add("button-save");
-        saveButton.setOnAction(e -> {
-            //   originalLabels.clear();
-            //  originalLabels.addAll(modifiableLabels);
-        });
-
+        
         addLabelContainer.getChildren().addAll(labelTitle, addLabelButton);
         labelContainer.getChildren().addAll(addLabelContainer);
 
