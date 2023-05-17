@@ -73,7 +73,7 @@ public class AuthApiClient implements AuthApiClientInterface {
         HttpResponse<String> response;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/auth/getUser"))
-                .POST(HttpRequest.BodyPublishers.ofString("{\"token\":\"" + token + "\"}"))
+                .GET()
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer "+token)
                 .build();

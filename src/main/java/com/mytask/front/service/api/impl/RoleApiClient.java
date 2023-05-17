@@ -68,23 +68,23 @@ public class RoleApiClient implements RoleApiClientInterface {
             return null;
         }
         JSONObject responseJson = new JSONObject(responseBody);
+        System.out.println(responseJson);
         JSONObject userJson = responseJson.getJSONObject("user");
         JSONObject projectJson = responseJson.getJSONObject("project");
 
         Project project = new Project(
                 projectJson.getString("nom"),
-                projectJson.getString("description"),
-                projectJson.getString("codeJoin"),
-                projectJson.getInt("id")
+                projectJson.getString("description")
         );
+        project.setId(projectJson.getInt("id"));
 
         int idUser = userJson.getInt("id");
         ERole role = ERole.findByName(responseJson.getString("role"));
         User user = new User(
                 idUser,
                 userJson.getString("email"),
-                userJson.getString("nom"),
-                userJson.getString("prenom"),
+                userJson.getString("name"),
+                userJson.getString("firstname"),
                 "",
                 role,
                 token
