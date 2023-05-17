@@ -80,7 +80,7 @@ public class TaskApiClient implements TaskApiClientInterface {
 
                     tasksList.add(task);
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             }
         }

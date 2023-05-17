@@ -123,7 +123,7 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                     }
 
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             } else {
                 System.err.println("Get project failed, status code: " + response.statusCode() + "\body: "+ response.body());
