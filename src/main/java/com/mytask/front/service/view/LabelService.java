@@ -58,7 +58,7 @@ public class LabelService {
             LabelModel label = new LabelModel("", Color.WHITE);
 
             label.setProjectId(ShowTabController.getInstance().getProject().getId());
-            label.setNom(" ");
+            label.setNom("undefined");
             try {
                 label = LabelApiClient.getInstance().createLabel(label);
             } catch (JSONException ex) {
