@@ -6,6 +6,7 @@ import com.mytask.front.model.UserProject;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.RoleApiClient;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.enums.EString;
@@ -130,12 +131,26 @@ public class CreateTabController {
     }
 
     private void joinTable() throws JSONException {
-        joinTableLabel.setText(joinTableLabel.getText().trim());
-        if (joinTableLabel.getText().isEmpty()) {
+        ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
+        RoleApiClient roleApiClient = RoleApiClient.getInstance();
+
+        joinCodeTextField.setText(joinCodeTextField.getText().trim());
+        if (joinCodeTextField.getText().isEmpty()) {
             setErrorMessage(joinCodeTextField);
         }
 
-        UserProject userProject = roleApiClient.joinProject(joinTableLabel.getText());
+        UserProject userProject = roleApiClient.joinProject(joinCodeTextField.getText());
+        UserService.setCurrentUser(userProject.getUser());
+        Project project = userProject.getProject();
+        ShowTabController.getInstance().setProject(project);
+        ShowTabController.getInstance().resetController();
+        ShowTabController.getInstance().refreshTasks();
+        Project.setTasks(new ArrayList<>());
+        ShowAllTabController.getInstance().setProjects(projectApiClient.getProjectByUser());
+        ShowAllTabController.getInstance().updateProjectList();
+        screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+        screenService.setScreen(EPage.SHOW_TAB);
+        resetFields(null);
     }
 
     private void setErrorMessage(TextField textField) {
