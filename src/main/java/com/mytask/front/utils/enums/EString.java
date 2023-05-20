@@ -57,10 +57,7 @@ public enum EString {
     // Formatters
     DATE_FORMAT("yyyy-MM-dd"),
 
-
     // Roles and actions
-    ADMINISTRATEUR("Administrateur"),
-    MEMBRE("Membre"),
     SUPPRIMER("Supprimer"),
     AJOUTER("Ajouter"),
 
@@ -97,8 +94,8 @@ public enum EString {
 
     public static String[] getRoleStrings() {
         return new String[]{
-                ADMINISTRATEUR.toString(),
-                MEMBRE.toString(),
+                ERole.ADMINISTRATEUR.getValue(),
+                ERole.MEMBRE.getValue(),
                 SUPPRIMER.toString()
         };
     }

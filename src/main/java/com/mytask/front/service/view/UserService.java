@@ -1,12 +1,12 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.model.User;
+import com.mytask.front.utils.enums.ERole;
 import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class UserService {
@@ -41,6 +41,10 @@ public class UserService {
 
         HBox userInfo = new HBox(10);
         userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
+
+        if(!UserService.getCurrentUser().getRole().equals(ERole.ADMINISTRATEUR.getValue())) {
+            roleComboBox.setDisable(true);
+        }
 
         roleComboBox.setOnAction(e -> {
             if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {

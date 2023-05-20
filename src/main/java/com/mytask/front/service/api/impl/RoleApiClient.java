@@ -23,7 +23,6 @@ import java.util.List;
 public class RoleApiClient implements RoleApiClientInterface {
     private final HttpClient httpClient;
     private static RoleApiClient instance;
-    private final ArrayList<User> users = new ArrayList<>();
     private static String token;
 
     private RoleApiClient() {
@@ -128,6 +127,8 @@ public class RoleApiClient implements RoleApiClientInterface {
     @Override
     public List<User> getUsersByProject(int projectId) throws JSONException {
         HttpResponse<String> response = null;
+        ArrayList<User> users = new ArrayList<>();
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/user-project/get-users-by-project/" + projectId))
                 .GET()
@@ -160,4 +161,35 @@ public class RoleApiClient implements RoleApiClientInterface {
 
         return users;
     }
+
+
+    @Override
+    public ERole getRoleByProject(int projectId) throws JSONException {
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/user-project/get_role/" + projectId))
+                .GET()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (response == null || response.statusCode() != 200) {
+            System.err.println("Error when accessing the role, status code: " + response.statusCode());
+            return null;
+        }
+
+        String responseBody = response.body();
+        if (responseBody.contains("Forbidden")) {
+            System.err.println("Get role failed: Forbidden");
+            return null;
+        }
+        return ERole.findByName(responseBody);
+    }
+
 }
