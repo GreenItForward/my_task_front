@@ -50,6 +50,14 @@ public class User {
         this.token = "";
     }
 
+    public User(int id, String nom, String prenom, String email, ERole role) {
+        this.id = id;
+        this.email = email;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.role = role;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -109,5 +117,9 @@ public class User {
             result += "\",\"name\":\"" + this.nom + "\",\"firstname\":\"" + this.prenom;
         }
         return result + "\"}";
+    }
+
+    public String getRole() {
+        return role.toString();
     }
 }

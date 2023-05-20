@@ -114,7 +114,7 @@ public class PopupService {
     }
 
     public void showMemberPopup(Stage primaryStage) {
-        VBox userContainer = projectTabService.createMemberContent();
+        VBox userContainer = projectTabService.createMemberContent(ShowTabController.getInstance().getProject());
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
     }
 

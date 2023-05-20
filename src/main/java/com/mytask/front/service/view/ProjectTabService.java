@@ -4,7 +4,9 @@ import com.mytask.front.controller.ShowAllTabController;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.ProjectApiClient;
+import com.mytask.front.service.api.impl.RoleApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
 import com.mytask.front.utils.enums.EPage;
@@ -133,16 +135,17 @@ public class ProjectTabService {
         return inviteCodeContainer;
     }
 
-    protected VBox createMemberContent() {
+    protected VBox createMemberContent(Project project) {
         VBox userContainer = new VBox();
         userContainer.setSpacing(10);
         userContainer.setStyle("-fx-padding: 10;");
 
-        // Exemple de données utilisateur (on le récupèrera de l'api)
-        List<String[]> users = Arrays.asList(
-                new String[]{"Ronan (vous)", "ronan@gmail.com", "Administrateur"},
-                new String[]{"John", "johndoe@gmail.com", "Membre"}
-        );
+        List<User> users = null;
+        try {
+            users = RoleApiClient.getInstance().getUsersByProject(project.getId());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
         Consumer<HBox> onDelete = userInfo -> {
             ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());

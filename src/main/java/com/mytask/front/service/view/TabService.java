@@ -3,6 +3,7 @@ package com.mytask.front.service.view;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.enums.EString;

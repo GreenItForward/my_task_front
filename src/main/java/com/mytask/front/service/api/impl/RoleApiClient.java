@@ -1,13 +1,12 @@
 package com.mytask.front.service.api.impl;
 
-import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.User;
 import com.mytask.front.model.UserProject;
 import com.mytask.front.service.api.RoleApiClientInterface;
-import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.enums.ERole;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +23,7 @@ import java.util.List;
 public class RoleApiClient implements RoleApiClientInterface {
     private final HttpClient httpClient;
     private static RoleApiClient instance;
+    private final ArrayList<User> users = new ArrayList<>();
     private static String token;
 
     private RoleApiClient() {
@@ -126,7 +126,7 @@ public class RoleApiClient implements RoleApiClientInterface {
     }
 
     @Override
-    public User[] getUsersByProject(int projectId) throws JSONException {
+    public List<User> getUsersByProject(int projectId) throws JSONException {
         HttpResponse<String> response = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/user-project/get-users-by-project/" + projectId))
@@ -139,19 +139,25 @@ public class RoleApiClient implements RoleApiClientInterface {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            if (response != null && response.statusCode() == 201) {
-                String responseBody = response.body();
-                if (!responseBody.contains("Forbidden")) {
-                    JSONObject jsonObject = new JSONObject(responseBody);
-//                    label = new LabelModel(jsonObject.getInt("id"), jsonObject.getString("nom"), jsonObject.getString("couleur"), jsonObject.getJSONObject("project").getInt("id"));
-//                    labels.add(label);
-                } else {
-                    System.err.println("Get project failed: Forbidden");
-                }
-            }
         }
 
-        return new User[0]; //TODO
+        if (response == null || response.statusCode() != 200) {
+            System.err.println("Error when joining the project, status code: " + response.statusCode());
+            return new ArrayList<User>();
+        }
+
+        String responseBody = response.body();
+        if (responseBody.contains("Forbidden")) {
+            System.err.println("Get project failed: Forbidden");
+            return new ArrayList<User>();
+        }
+        JSONArray jsonArray = new JSONArray(responseBody);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            ERole role = ERole.findByName(jsonArray.getJSONObject(i).getString("role"));
+            JSONObject user = jsonArray.getJSONObject(i).getJSONObject("user");
+            users.add(new User(user.getInt("id"), user.getString("name"), user.getString("firstname"), user.getString("email"), role));
+        }
+
+        return users;
     }
 }

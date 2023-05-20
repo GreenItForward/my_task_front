@@ -6,6 +6,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class UserService {
@@ -30,13 +31,13 @@ public class UserService {
     }
 
 
-    protected static HBox createUserInfo(String[] user, Consumer<HBox> onDelete) {
-        Label nameLabel = new Label(user[0]);
-        Label emailLabel = new Label(user[1]);
+    protected static HBox createUserInfo(User user, Consumer<HBox> onDelete) {
+        Label nameLabel = new Label(user.getPrenom());
+        Label emailLabel = new Label(user.getEmail());
 
         ComboBox<String> roleComboBox = new ComboBox<>();
         roleComboBox.getItems().addAll(EString.getRoleStrings());
-        roleComboBox.setValue(user[2]);
+        roleComboBox.setValue(user.getRole());
 
         HBox userInfo = new HBox(10);
         userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
@@ -45,7 +46,7 @@ public class UserService {
             if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
                 onDelete.accept(userInfo);
             } else {
-                roleComboBox.setValue(user[2]);
+                roleComboBox.setValue(user.getRole());
             }
         });
 
