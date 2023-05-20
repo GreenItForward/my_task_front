@@ -84,6 +84,9 @@ public class AuthApiClient implements AuthApiClientInterface {
 
             if (statusCode >= 200 && statusCode < 300) {
                 User user = new User();
+                if (jsonResponse.has("id")) {
+                    user.setId(jsonResponse.getInt("id"));
+                }
                 if (jsonResponse.has("email")) {
                     user.setEmail(jsonResponse.getString("email").replaceAll("[\\[\\]\"]", ""));
                 }

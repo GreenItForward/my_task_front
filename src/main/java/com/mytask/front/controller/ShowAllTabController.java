@@ -87,7 +87,6 @@ public class ShowAllTabController {
             if (selectedProject != null) {
                 try {
                     UserService.getCurrentUser().setRole(RoleApiClient.getInstance().getRoleByProject(selectedProject.getId()));
-                    System.out.println("ici:"+UserService.getCurrentUser().getRole());
                 } catch (JSONException ex) {
                     throw new RuntimeException(ex);
                 }

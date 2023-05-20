@@ -33,8 +33,6 @@ public class ConnectionController {
 
     @FXML
     public void initialize() {
-        email.setText("thierry@maillard.com");
-        password.setText("123456789");
         authApiClient = AuthApiClient.getInstance();
         seconnecter.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

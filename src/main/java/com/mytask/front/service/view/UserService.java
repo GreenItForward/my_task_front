@@ -1,11 +1,14 @@
 package com.mytask.front.service.view;
 
+import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.model.User;
+import com.mytask.front.service.api.impl.RoleApiClient;
 import com.mytask.front.utils.enums.ERole;
 import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import org.json.JSONException;
 
 import java.util.function.Consumer;
 
@@ -42,14 +45,23 @@ public class UserService {
         HBox userInfo = new HBox(10);
         userInfo.getChildren().addAll(nameLabel, emailLabel, roleComboBox);
 
-        if(!UserService.getCurrentUser().getRole().equals(ERole.ADMINISTRATEUR.getValue())) {
+        if(!UserService.getCurrentUser().getRole().equals(ERole.ADMINISTRATEUR.getValue()) || UserService.getCurrentUser().getId() == user.getId()) {
             roleComboBox.setDisable(true);
         }
 
         roleComboBox.setOnAction(e -> {
             if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
                 onDelete.accept(userInfo);
+                // TODO
             } else {
+                try {
+                    RoleApiClient.getInstance().changeRole(user.getId(), ShowTabController.getInstance().getProject().getId(),
+                            ERole.findByName(roleComboBox.getValue()).getValue());
+                } catch (JSONException ex) {
+                    throw new RuntimeException(ex);
+                }
+                user.setRole(ERole.valueOf(ERole.findByName(roleComboBox.getValue()).getValue()));
+
                 roleComboBox.setValue(user.getRole());
             }
         });

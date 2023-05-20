@@ -93,12 +93,19 @@ public class RoleApiClient implements RoleApiClientInterface {
     }
 
     @Override
-    public void changeRole(int userIdToChange, int projectId, String role) throws JSONException {
-        /*
+    public ERole changeRole(int userIdToChange, int projectId, String role) throws JSONException {
         HttpResponse<String> response = null;
+
+        String body = "{" +
+                "\"userId\":" + userIdToChange +
+                ",\"projectId\":" + projectId +
+                ",\"role\":\"" + role +
+                "\"}";
+
+        System.out.println("body:"+ body);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/user-project/change-role"))
-                .PUT(HttpRequest.BodyPublishers.ofString("")
+                .PUT(HttpRequest.BodyPublishers.ofString(body))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
                 .build();
@@ -107,21 +114,19 @@ public class RoleApiClient implements RoleApiClientInterface {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            if (response != null && response.statusCode() == 201) {
-                String responseBody = response.body();
-                if (!responseBody.contains("Forbidden")) {
-                    JSONObject jsonObject = new JSONObject(responseBody);
-//                    label = new LabelModel(jsonObject.getInt("id"), jsonObject.getString("nom"), jsonObject.getString("couleur"), jsonObject.getJSONObject("project").getInt("id"));
-//                    labels.add(label);
-                } else {
-                    System.err.println("Get project failed: Forbidden");
-                }
-            }
         }
-         */
 
-        //return label;
+        if (response == null || response.statusCode() != 200) {
+            System.err.println("Change role failed: "+ response.body() + response.statusCode());
+            return null;
+        }
+        String responseBody = response.body();
+        if (responseBody.contains("Forbidden")) {
+            System.err.println("Change role failed: Forbidden");
+            return null;
+        }
+
+        return ERole.valueOf(responseBody);
     }
 
     @Override
