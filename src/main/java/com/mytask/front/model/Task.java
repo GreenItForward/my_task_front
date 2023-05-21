@@ -142,8 +142,16 @@ public class Task {
         this.title.set(title);
     }
 
-    public String getAssignedTo() {
-        return assignedTo.get();
+    public User getAssignedTo() {
+        if (assignedTo.get() == null || assignedTo.get().equals("")) {
+            return new User();
+        }
+
+        try {
+            return AuthApiClient.getInstance().getUserById(Integer.parseInt(assignedTo.get()));
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public StringProperty assignedToProperty() {
@@ -277,7 +285,7 @@ public class Task {
                 ", status='" + status + '\'' +
                 ", projectID=" + projectID +
                 ", deadlineDatePicker=" + deadlineDatePicker +
-                ", assignedTo=" + assignedTo +
+                ", assignedTo=" + getAssignedTo().getPrenom() +
                 ", labels=" + labels +
                 ", taskBox=" + taskBox +
                 ", labelBox=" + labelBox +

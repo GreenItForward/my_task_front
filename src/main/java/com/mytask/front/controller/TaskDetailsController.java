@@ -62,7 +62,7 @@ public class TaskDetailsController {
     }
 
     private void configureButtons() {
-        changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
+        changeAssignedMembersBtn.setOnAction(event -> TabService.showAssignedMembers((Stage) changeAssignedMembersBtn.getScene().getWindow(), task));
         changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow(), task));
         deleteTaskBtn.setOnAction(event -> {
             if (task == null) {

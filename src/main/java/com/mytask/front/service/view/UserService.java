@@ -5,11 +5,14 @@ import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.RoleApiClient;
 import com.mytask.front.utils.enums.ERole;
 import com.mytask.front.utils.enums.EString;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.util.StringConverter;
 import org.json.JSONException;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class UserService {
@@ -70,4 +73,57 @@ public class UserService {
 
         return userInfo;
     }
+
+    protected static HBox createAssignedUserInfo(User user, Consumer<HBox> onDelete) {
+        List<User> allUsers = ShowTabController.getInstance().getAllUsers();
+
+        ComboBox<User> userComboBox = new ComboBox<>();
+        // add a empty user to the list
+        allUsers.add(new User());
+        userComboBox.getItems().addAll(allUsers);
+
+        // configure l'affichage des utilisateurs dans la ComboBox
+        userComboBox.setConverter(new StringConverter<User>() {
+            @Override
+            public String toString(User user) {
+                return user.getPrenom(); // ou toute autre propriété de l'utilisateur à afficher
+            }
+
+            @Override
+            public User fromString(String string) {
+                return userComboBox.getItems().stream()
+                        .filter(user -> user.getPrenom().equals(string))
+                        .findFirst().orElse(null);
+            }
+        });
+
+        userComboBox.setValue(user);
+
+        userComboBox.setOnAction(e -> {
+            User selectedUser = userComboBox.getValue();
+            System.out.println("Selected User: " + selectedUser.getPrenom());
+            // met à jour l'utilisateur assigné à la tâche
+            // TODO
+            // si l'objet utilisateur est vide, on supprime l'utilisateur assigné
+            if (selectedUser.getPrenom().isEmpty()) {
+                System.out.println("Selected User is null");
+                // TODO
+            } else {
+                System.out.println("Selected User is not null");
+                // TODO
+            }
+
+        });
+
+        Button deleteButton = new Button("Supprimer");
+        HBox userInfo = new HBox(10);
+
+
+        deleteButton.setOnAction(e -> onDelete.accept(userInfo));
+
+        userInfo.getChildren().addAll(userComboBox, deleteButton);
+
+        return userInfo;
+    }
+
 }

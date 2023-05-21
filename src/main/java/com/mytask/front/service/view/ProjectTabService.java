@@ -4,6 +4,7 @@ import com.mytask.front.controller.ShowAllTabController;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.RoleApiClient;
@@ -18,7 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.json.JSONException;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -140,12 +141,7 @@ public class ProjectTabService {
         userContainer.setSpacing(10);
         userContainer.setStyle("-fx-padding: 10;");
 
-        List<User> users = null;
-        try {
-            users = RoleApiClient.getInstance().getUsersByProject(project.getId());
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        List<User> users = ShowTabController.getInstance().getAllUsers();
 
         Consumer<HBox> onDelete = userInfo -> {
             ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
@@ -155,6 +151,24 @@ public class ProjectTabService {
         };
 
         users.forEach(user -> userContainer.getChildren().add(UserService.createUserInfo(user, onDelete)));
+
+        return userContainer;
+    }
+
+    protected VBox createAssignedMemberContent(Task task) {
+        VBox userContainer = new VBox();
+        userContainer.setSpacing(10);
+        userContainer.setStyle("-fx-padding: 10;");
+
+        List<User> users = ShowTabController.getInstance().getAllUsers();
+        Consumer<HBox> onDelete = userInfo -> {
+            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
+            if (AlertService.isConfirmed(result)) {
+                userContainer.getChildren().remove(userInfo);
+            }
+        };
+
+        userContainer.getChildren().add(UserService.createAssignedUserInfo(task.getAssignedTo(), onDelete));
 
         return userContainer;
     }

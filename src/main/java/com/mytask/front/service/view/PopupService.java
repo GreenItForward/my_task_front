@@ -118,6 +118,11 @@ public class PopupService {
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
     }
 
+    public void showAssignedMemberPopup(Stage primaryStage, Task task) {
+        VBox userContainer = projectTabService.createAssignedMemberContent(task);
+        setPopupScreen(primaryStage, EPopup.ASSIGNED_MEMBERS, userContainer);
+    }
+
     public static void showProjectSettingsPopup(Stage window, Project project) {
         VBox projectContainer = ProjectTabService.getInstance().createProjectContent(project);
         setPopupScreen(window, EPopup.PROJECT_SETTINGS, projectContainer);

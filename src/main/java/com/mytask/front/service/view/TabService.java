@@ -160,6 +160,10 @@ public class TabService {
         popupService.showMemberPopup(primaryStage);
     }
 
+    public static void showAssignedMembers(Stage primaryStage, Task task) {
+        popupService.showAssignedMemberPopup(primaryStage, task);
+    }
+
     public static void showInviteCode(Stage primaryStage) {
         popupService.showInviteCodePopup(primaryStage);
     }
