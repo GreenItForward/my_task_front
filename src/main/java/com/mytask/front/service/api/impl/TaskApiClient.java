@@ -73,7 +73,19 @@ public class TaskApiClient implements TaskApiClientInterface {
                 if (!responseBody.contains("Forbidden")) {
                     JSONObject jsonObject = new JSONObject(responseBody);
 
-                    task = new Task(jsonObject.getInt("id"), jsonObject.getString("titre"), jsonObject.getString("description"), EStatus.getStatus(jsonObject.getString("status")), jsonObject.getInt("userId"), jsonObject.getInt("projectId"));
+                    int id = jsonObject.getInt("id");
+                    String titre = jsonObject.getString("titre");
+                    String description = jsonObject.getString("description");
+                    EStatus status = EStatus.getStatusEnum(jsonObject.getString("status"));
+                    int projectId = jsonObject.getInt("projectId");
+
+                    if (!jsonObject.isNull("userId")) {
+                        Integer userId = jsonObject.getInt("userId");
+                        task = new Task(id, titre, description, status, userId, projectId);
+                    } else {
+                        task = new Task(id, titre, description, status, projectId);
+                    }
+
                     if (tasksList == null) {
                         tasksList = new ArrayList<>();
                     }
@@ -83,6 +95,7 @@ public class TaskApiClient implements TaskApiClientInterface {
                     System.err.println("Get project failed: Forbidden");
                 }
             }
+
         }
         return task;
 
@@ -133,7 +146,7 @@ public class TaskApiClient implements TaskApiClientInterface {
                 .header("Authorization", "Bearer " + token)
                 .build();
         try {
-           // System.out.println("Sending request to http://localhost:3000/api/task/project/" + project.getId()); // DEBUG
+            // System.out.println("Sending request to http://localhost:3000/api/task/project/" + project.getId()); // DEBUG
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -145,19 +158,35 @@ public class TaskApiClient implements TaskApiClientInterface {
                     JSONArray jsonArray = new JSONArray(responseBody);
 
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject label = jsonArray.getJSONObject(i);
-                        if (label.getString("deadline").equals("null")) {
-                           tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getInt("userId"), label.getInt("projectId")));
-                           tasksList = tasks;
+                        JSONObject task = jsonArray.getJSONObject(i);
+
+                        int id = task.getInt("id");
+                        String titre = task.getString("titre");
+                        String description = task.getString("description");
+                        EStatus status = EStatus.getStatusEnum(task.getString("status"));
+                        int projectId = task.getInt("projectId");
+
+                        String deadline = task.optString("deadline", null);
+                        Integer userId = null;
+                        if (!task.isNull("userId")) {
+                            userId = task.getInt("userId");
+                        }
+
+                        if (deadline == null && userId == null) {
+                            tasks.add(new Task(id, titre, description, status, projectId));
+                        } else if (deadline == null) {
+                            tasks.add(new Task(id, titre, description, status, userId, projectId));
+                        } else if (userId == null) {
+                            tasks.add(new Task(id, titre, description, status, deadline, projectId));
                         } else {
-                            tasks.add(new Task(label.getInt("id"), label.getString("titre"), label.getString("description"), EStatus.getStatus(label.getString("status")), label.getString("deadline"), label.getInt("userId"), label.getInt("projectId")));
-                            tasksList = tasks;
+                            tasks.add(new Task(id, titre, description, status, deadline, userId, projectId));
                         }
                     }
+                    tasksList = tasks;
                 }
             }
+            return tasks;
         }
-        return tasks;
     }
 
     @Override

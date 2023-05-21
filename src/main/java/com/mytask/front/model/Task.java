@@ -34,6 +34,11 @@ public class Task {
     private HBox taskBox;
     private HBox labelBox;
 
+
+    public Task() {
+        this(null, null, null, null, null);
+    }
+
     public Task(String title, LocalDate deadline, String assignedTo, DatePicker datePicker, String details) {
         this.id = 0;
         this.title = new SimpleStringProperty(title);
@@ -45,18 +50,57 @@ public class Task {
         this.labels = new ArrayList<>();
     }
 
-    public Task() {
-        this(null, null, null, null, null);
-    }
-
-    public Task(int id, String titre, String description, String status, String deadline, int userId, int projectID) throws AuthException {
+    public Task(int id, String titre, String description, String status, int userId, int projectId) throws AuthException {
         this.id = id;
         this.title = new SimpleStringProperty(titre);
         this.details = new SimpleStringProperty(description);
         this.status = status;
-        this.projectID = projectID;
-
+        this.projectID = projectId;
         this.assignedTo = new SimpleStringProperty(String.valueOf(AuthApiClient.getInstance().getUserById(userId).getPrenom()));
+        this.deadlineDatePicker = new DatePicker();
+        this.labels = new ArrayList<>();
+    }
+
+    public Task(int id, String titre, String description, String status, int projectId) {
+        this.id = id;
+        this.title = new SimpleStringProperty(titre);
+        this.details = new SimpleStringProperty(description);
+        this.status = status;
+        this.projectID = projectId;
+        this.deadlineDatePicker = new DatePicker();
+        this.labels = new ArrayList<>();
+        this.assignedTo = new SimpleStringProperty("");
+    }
+
+    public Task(int id, String titre, String description, EStatus status, int projectId) {
+        this.id = id;
+        this.title = new SimpleStringProperty(titre);
+        this.details = new SimpleStringProperty(description);
+        this.status = status.getValue();
+        this.projectID = projectId;
+        this.assignedTo = new SimpleStringProperty("");
+        this.deadlineDatePicker = new DatePicker();
+        this.labels = new ArrayList<>();
+    }
+
+    public Task(int id, String titre, String description, EStatus status, Integer userId, int projectId) {
+        this.id = id;
+        this.title = new SimpleStringProperty(titre);
+        this.details = new SimpleStringProperty(description);
+        this.status = status.getValue();
+        this.projectID = projectId;
+        this.assignedTo = new SimpleStringProperty(String.valueOf(userId));
+        this.deadlineDatePicker = new DatePicker();
+        this.labels = new ArrayList<>();
+    }
+
+    public Task(int id, String titre, String description, EStatus status, String deadline, int projectId) {
+        this.id = id;
+        this.title = new SimpleStringProperty(titre);
+        this.details = new SimpleStringProperty(description);
+        this.status = status.getValue();
+        this.projectID = projectId;
+        this.assignedTo = new SimpleStringProperty("");
         this.deadlineDatePicker = new DatePicker();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
@@ -68,14 +112,21 @@ public class Task {
         this.labels = new ArrayList<>();
     }
 
-    public Task(int id, String titre, String description, String status, int userId, int projectId) throws AuthException {
+    public Task(int id, String titre, String description, EStatus status, String deadline, Integer userId, int projectId) {
         this.id = id;
         this.title = new SimpleStringProperty(titre);
         this.details = new SimpleStringProperty(description);
-        this.status = status;
+        this.status = status.getValue();
         this.projectID = projectId;
-        this.assignedTo = new SimpleStringProperty(String.valueOf(AuthApiClient.getInstance().getUserById(userId).getPrenom()));
+        this.assignedTo = new SimpleStringProperty(String.valueOf(userId));
         this.deadlineDatePicker = new DatePicker();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+        if (deadline != null && !deadline.equals("null")) {
+            this.deadlineDatePicker.setValue(LocalDate.from(LocalDateTime.parse(deadline, formatter)));
+        } else {
+            this.deadlineDatePicker.setValue(LocalDate.now());
+        }
         this.labels = new ArrayList<>();
     }
 
