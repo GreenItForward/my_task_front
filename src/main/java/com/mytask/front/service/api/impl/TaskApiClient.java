@@ -85,7 +85,7 @@ public class TaskApiClient implements TaskApiClientInterface {
 
                     tasksList.add(task);
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             }
 
@@ -217,6 +217,7 @@ public class TaskApiClient implements TaskApiClientInterface {
                         } else {
                             tasks.add(new Task(id, titre, description, status, deadline, userId, projectId));
                         }
+                        tasksList = tasks;
                     }
                     tasksList = tasks;
                 }

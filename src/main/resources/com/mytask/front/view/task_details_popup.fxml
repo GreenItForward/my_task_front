@@ -22,6 +22,8 @@
     <Label layoutX="243.0" layoutY="146.0" prefHeight="17.0" prefWidth="45.0" text="Labels :"/>
     <Button layoutX="437.0" layoutY="123.0" mnemonicParsing="false"
             fx:id="changeAssignedLabelsBtn"/>
+    <Button layoutX="320.0" layoutY="123.0" mnemonicParsing="false" text="Réinitialiser"
+            fx:id="resetDatePickerBtn"/>
     <ScrollPane layoutX="243.0" layoutY="167.0" prefHeight="212.0" prefWidth="325.0" fx:id="labelsScrollPane">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
         </AnchorPane>

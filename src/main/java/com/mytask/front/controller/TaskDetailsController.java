@@ -29,7 +29,7 @@ public class TaskDetailsController {
     private DatePicker deadlineDatePicker;
 
     @FXML
-    private Button changeAssignedMembersBtn, changeAssignedLabelsBtn, deleteTaskBtn;
+    private Button changeAssignedMembersBtn, changeAssignedLabelsBtn, deleteTaskBtn, resetDatePickerBtn;
 
     @FXML
     private ScrollPane labelsScrollPane;
@@ -74,6 +74,16 @@ public class TaskDetailsController {
             ShowTabController.getInstance().getProject().deleteTask(task);
             ShowTabController.getInstance().refreshTasks();
             ProjectTabService.getInstance().closeCurrentPopup(deleteTaskBtn.getScene().getWindow());
+        });
+
+        resetDatePickerBtn.setOnAction(event -> {
+            if (task == null) {
+                System.err.println("Cannot reset date picker because task is null.");
+                return;
+            }
+            task.setDeadline(null);
+            updateFields();
+
         });
     }
 
