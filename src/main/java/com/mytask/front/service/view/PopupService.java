@@ -180,6 +180,7 @@ public class PopupService {
                         ex.printStackTrace();
                     }
                     LabelService.getInstance().createEditLabelContent();
+                    LabelApiClient.getInstance().resetAllLabels();
                     projectTabService.openProject(project);
                 }
             }

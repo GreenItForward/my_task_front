@@ -151,6 +151,12 @@ public class LabelApiClient implements LabelApiClientInterface {
         labels.remove(label);
     }
 
+    // resetAllLabels
+    @Override
+    public void resetAllLabels() {
+        labels.clear();
+    }
+
     public void updateToken(String token) {
         this.token = token;
     }
