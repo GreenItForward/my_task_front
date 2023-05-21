@@ -7,7 +7,6 @@ import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.ProjectApiClient;
-import com.mytask.front.service.api.impl.RoleApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
 import com.mytask.front.utils.enums.EPage;
@@ -19,7 +18,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -124,8 +122,8 @@ public class ProjectTabService {
         Label inviteCodeLabel = new Label(EString.INVITE_CODE.toString());
         Label inviteLabel = new Label("");
         Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.toString());
-        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(AppUtils.generateRandomInviteCode()));
 
+        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(ShowTabController.getInstance().getProject().getCodeJoin()));
         Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.toString());
         copyInviteCodeButton.setOnAction(e -> AppUtils.copyToClipboard(inviteLabel));
 
