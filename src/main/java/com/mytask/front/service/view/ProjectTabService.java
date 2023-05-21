@@ -124,8 +124,8 @@ public class ProjectTabService {
         Label inviteCodeLabel = new Label(EString.INVITE_CODE.toString());
         Label inviteLabel = new Label("");
         Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.toString());
-        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(AppUtils.generateRandomInviteCode()));
 
+        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(ShowTabController.getInstance().getProject().getCodeJoin()));
         Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.toString());
         copyInviteCodeButton.setOnAction(e -> AppUtils.copyToClipboard(inviteLabel));
 
