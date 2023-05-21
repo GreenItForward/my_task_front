@@ -6,6 +6,7 @@ import com.mytask.front.model.UserProject;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.RoleApiClient;
+import com.mytask.front.service.view.ProjectTabService;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
@@ -148,9 +149,7 @@ public class CreateTabController {
         Project.setTasks(new ArrayList<>());
         ShowAllTabController.getInstance().setProjects(projectApiClient.getProjectByUser());
         ShowAllTabController.getInstance().updateProjectList();
-        screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
-        screenService.setScreen(EPage.SHOW_TAB);
-        resetFields(null);
+        ProjectTabService.getInstance().openProject(project);
     }
 
     private void setErrorMessage(TextField textField) {
