@@ -125,12 +125,7 @@ public class UserService {
 
                 ShowTabController.getInstance().getProject().deleteTask(task);
 
-                try {
-                    ShowTabController.getInstance().resetController();
-                } catch (JSONException ex) {
-                    throw new RuntimeException(ex);
-                }
-                ShowTabController.getInstance().refreshTasks();
+                TabService.refreshTab();
             } else {
                 // TODO: Gérer le cas où la tâche n'est pas trouvée
             }

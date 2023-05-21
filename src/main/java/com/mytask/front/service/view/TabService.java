@@ -237,4 +237,13 @@ public class TabService {
 
         ShowTabController.getInstance().setCurrentTask(null);
     }
+
+    public static void refreshTab() {
+        try {
+            ShowTabController.getInstance().resetController();
+        } catch (JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+        ShowTabController.getInstance().refreshTasks();
+    }
 }

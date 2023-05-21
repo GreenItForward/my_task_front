@@ -42,7 +42,6 @@ public class ProjectTabService {
 
         screenService = ScreenService.getInstance(null);
 
-
         if (Project.getTasks() != null) {
             Project.getTasks().clear();
             LabelService.getInstance().resetAllLabels();
