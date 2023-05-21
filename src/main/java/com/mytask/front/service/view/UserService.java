@@ -78,15 +78,12 @@ public class UserService {
         List<User> allUsers = ShowTabController.getInstance().getAllUsers();
 
         ComboBox<User> userComboBox = new ComboBox<>();
-        // add a empty user to the list
         allUsers.add(new User());
         userComboBox.getItems().addAll(allUsers);
-
-        // configure l'affichage des utilisateurs dans la ComboBox
         userComboBox.setConverter(new StringConverter<User>() {
             @Override
             public String toString(User user) {
-                return user.getPrenom(); // ou toute autre propriété de l'utilisateur à afficher
+                return user.getPrenom();
             }
 
             @Override
@@ -102,15 +99,13 @@ public class UserService {
         userComboBox.setOnAction(e -> {
             User selectedUser = userComboBox.getValue();
             System.out.println("Selected User: " + selectedUser.getPrenom());
-            // met à jour l'utilisateur assigné à la tâche
-            // TODO
-            // si l'objet utilisateur est vide, on supprime l'utilisateur assigné
+            // TODO :  met à jour l'utilisateur assigné à la tâche
             if (selectedUser.getPrenom().isEmpty()) {
                 System.out.println("Selected User is null");
-                // TODO
+                // TODO :  supprime l'utilisateur assigné à la tâche
             } else {
                 System.out.println("Selected User is not null");
-                // TODO
+                // TODO :  met à jour l'utilisateur assigné à la tâche
             }
 
         });
