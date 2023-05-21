@@ -110,8 +110,6 @@ public class Task {
 
         if (deadline != null && !deadline.equals("null")) {
             this.deadlineDatePicker.setValue(LocalDate.from(LocalDateTime.parse(deadline, formatter)));
-        } else {
-            this.deadlineDatePicker.setValue(LocalDate.now());
         }
         this.labels = new ArrayList<>();
     }
@@ -128,8 +126,6 @@ public class Task {
 
         if (deadline != null && !deadline.equals("null")) {
             this.deadlineDatePicker.setValue(LocalDate.from(LocalDateTime.parse(deadline, formatter)));
-        } else {
-            this.deadlineDatePicker.setValue(LocalDate.now());
         }
         this.labels = new ArrayList<>();
     }
