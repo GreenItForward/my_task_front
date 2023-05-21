@@ -281,10 +281,11 @@ public class Task {
             userId = getAssignedTo().getId();
         }
 
+        String details = this.getDetails().replaceAll("\\r?\\n", "\\\\n");
         return "{" +
                 "\"id\":" + id +
                 ", \"title\":\"" + title.getValue() + '\"' +
-                ", \"description\":\"" + this.getDetails() + '\"' +
+                ", \"description\":\"" + details + '\"' +
                 ", \"status\":\"" + status + '\"' +
                 ", \"userID\":" + userId +
                 ", \"deadline\":\"" + deadlineDatePicker.getValue() + '\"' +
