@@ -81,7 +81,7 @@ public class UserService {
         return userInfo;
     }
 
-    protected static HBox createAssignedUserInfo(Task task, Consumer<HBox> onDelete) {
+    protected static HBox createAssignedUserInfo(Task task) {
         List<User> allUsers = ShowTabController.getInstance().getAllUsers();
 
         ComboBox<User> userComboBox = new ComboBox<>();
@@ -137,13 +137,8 @@ public class UserService {
         });
 
 
-        Button deleteButton = new Button("Supprimer");
         HBox userInfo = new HBox(10);
-
-
-        deleteButton.setOnAction(e -> onDelete.accept(userInfo));
-
-        userInfo.getChildren().addAll(userComboBox, deleteButton);
+        userInfo.getChildren().addAll(userComboBox);
 
         return userInfo;
     }

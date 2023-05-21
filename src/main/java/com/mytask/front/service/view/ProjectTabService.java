@@ -158,14 +158,7 @@ public class ProjectTabService {
         userContainer.setSpacing(10);
         userContainer.setStyle("-fx-padding: 10;");
 
-        Consumer<HBox> onDelete = userInfo -> {
-            ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
-            if (AlertService.isConfirmed(result)) {
-                userContainer.getChildren().remove(userInfo);
-            }
-        };
-
-        userContainer.getChildren().add(UserService.createAssignedUserInfo(task, onDelete));
+        userContainer.getChildren().add(UserService.createAssignedUserInfo(task));
 
         return userContainer;
     }
