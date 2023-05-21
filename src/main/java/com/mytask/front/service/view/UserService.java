@@ -1,8 +1,10 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.controller.ShowTabController;
+import com.mytask.front.model.Task;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.RoleApiClient;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.enums.ERole;
 import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.Button;
@@ -13,6 +15,7 @@ import javafx.util.StringConverter;
 import org.json.JSONException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class UserService {
@@ -78,7 +81,7 @@ public class UserService {
         return userInfo;
     }
 
-    protected static HBox createAssignedUserInfo(User user, Consumer<HBox> onDelete) {
+    protected static HBox createAssignedUserInfo(Task task, Consumer<HBox> onDelete) {
         List<User> allUsers = ShowTabController.getInstance().getAllUsers();
 
         ComboBox<User> userComboBox = new ComboBox<>();
@@ -98,21 +101,41 @@ public class UserService {
             }
         });
 
-        userComboBox.setValue(user);
+        userComboBox.setValue(task.getAssignedTo());
 
         userComboBox.setOnAction(e -> {
             User selectedUser = userComboBox.getValue();
-            System.out.println("Selected User: " + selectedUser.getPrenom());
-            // TODO :  met à jour l'utilisateur assigné à la tâche
-            if (selectedUser.getPrenom().isEmpty()) {
-                System.out.println("Selected User is null");
-                // TODO :  supprime l'utilisateur assigné à la tâche
-            } else {
-                System.out.println("Selected User is not null");
-                // TODO :  met à jour l'utilisateur assigné à la tâche
-            }
+            List<Task> tasks = ShowTabController.getInstance().getProject().getTasks();
 
+            Optional<Task> taskToUpdate = tasks.stream()
+                    .filter(t -> t.getId() == task.getId())
+                    .findFirst();
+
+            if (taskToUpdate.isPresent()) {
+                if (selectedUser.getPrenom().isEmpty()) {
+                    TaskApiClient.getInstance().updateTask(task);
+                    taskToUpdate.get().setAssignedTo("");
+                } else {
+                    TaskApiClient.getInstance().updateTask(task, selectedUser.getId());
+                    taskToUpdate.get().setAssignedTo(String.valueOf(selectedUser.getId()));
+                }
+
+                ShowTabController.getInstance().setCurrentTask(task);
+
+
+                ShowTabController.getInstance().getProject().deleteTask(task);
+
+                try {
+                    ShowTabController.getInstance().resetController();
+                } catch (JSONException ex) {
+                    throw new RuntimeException(ex);
+                }
+                ShowTabController.getInstance().refreshTasks();
+            } else {
+                // TODO: Gérer le cas où la tâche n'est pas trouvée
+            }
         });
+
 
         Button deleteButton = new Button("Supprimer");
         HBox userInfo = new HBox(10);

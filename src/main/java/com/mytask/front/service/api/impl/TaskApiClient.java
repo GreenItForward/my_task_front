@@ -13,21 +13,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static com.mytask.front.utils.enums.EPath.*;
 
 public class TaskApiClient implements TaskApiClientInterface {
     private final HttpClient httpClient;
@@ -104,18 +97,58 @@ public class TaskApiClient implements TaskApiClientInterface {
 
     @Override
     public Task getTaskById(int id) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public void updateTask(Task task) {
         HttpResponse<String> response = null;
+        Task task = null;
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:3000/api/task"))
-                .PUT(HttpRequest.BodyPublishers.ofString(task.toJSON()))
+                .uri(URI.create("http://localhost:3000/api/task/" + id))
+                .GET()
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
                 .build();
+
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                String responseBody = response.body();
+                JSONObject jsonObject = new JSONObject(responseBody);
+
+                String titre = jsonObject.getString("titre");
+                String description = jsonObject.getString("description");
+                EStatus status = EStatus.getStatusEnum(jsonObject.getString("status"));
+                int projectId = jsonObject.getInt("projectId");
+
+                if (!jsonObject.isNull("userId")) {
+                    Integer userId = jsonObject.getInt("userId");
+                    task = new Task(id, titre, description, status, userId, projectId);
+                } else {
+                    task = new Task(id, titre, description, status, projectId);
+                }
+            } else {
+                System.err.println("Get task failed: " + response.statusCode());
+            }
+        } catch (IOException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+        return task;
+    }
+
+    @Override
+    public void updateTask(Task task, Integer userId) {
+        if (userId == null) {
+            userId = -1;
+        }
+
+
+        HttpResponse<String> response = null;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/task"))
+                .PUT(HttpRequest.BodyPublishers.ofString(task.toJSON(userId)))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (tasksList.contains(task)) {
@@ -131,7 +164,10 @@ public class TaskApiClient implements TaskApiClientInterface {
                 System.out.println(response.body());
             }
         }
+    }
 
+    public void updateTask(Task task) {
+        updateTask(task, task.getAssignedTo().getId());
     }
 
     @Override

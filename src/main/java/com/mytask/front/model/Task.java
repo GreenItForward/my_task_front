@@ -6,6 +6,8 @@ import com.mytask.front.utils.enums.EStatus;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 import java.time.LocalDate;
@@ -15,6 +17,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Task {
     private int id;
@@ -33,6 +36,7 @@ public class Task {
 
     private HBox taskBox;
     private HBox labelBox;
+    private TextField assignedToField;
 
 
     public Task() {
@@ -142,17 +146,34 @@ public class Task {
         this.title.set(title);
     }
 
-    public User getAssignedTo() {
+    public User getAssignedTo(Integer userId) {
         if (assignedTo.get() == null || assignedTo.get().equals("")) {
             return new User();
         }
 
         try {
-            return AuthApiClient.getInstance().getUserById(Integer.parseInt(assignedTo.get()));
+            Integer id = Objects.requireNonNullElseGet(userId, () -> {
+                if (assignedTo.get().matches("\\d+")) {
+                    return Integer.parseInt(assignedTo.get());
+                } else {
+                    throw new RuntimeException("assignedTo is not a number: " + assignedTo.get());
+                }
+            });
+            if(id == 0) {
+                return new User();
+            }
+
+            return AuthApiClient.getInstance().getUserById(id);
         } catch (AuthException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("GetAssignedTo failed: "+e);
         }
     }
+
+
+    public User getAssignedTo() {
+        return getAssignedTo(null);
+    }
+
 
     public StringProperty assignedToProperty() {
         return assignedTo;
@@ -255,16 +276,28 @@ public class Task {
         }
     }
 
-    public String toJSON() {
+    public String toJSON(Integer userId) {
+        if (userId != null) {
+            this.assignedTo = new SimpleStringProperty(String.valueOf(userId));
+        }
+
+        if (userId == null) {
+            userId = getAssignedTo().getId();
+        }
+
         return "{" +
                 "\"id\":" + id +
                 ", \"title\":\"" + title.getValue() + '\"' +
                 ", \"description\":\"" + this.getDetails() + '\"' +
                 ", \"status\":\"" + status + '\"' +
-                ", \"userID\":" + getAssignedTo().getId() +
+                ", \"userID\":" + userId +
                 ", \"deadline\":\"" + deadlineDatePicker.getValue() + '\"' +
                 ", \"projectID\":" + projectID +
                 '}';
+    }
+
+    public String toJSON() {
+        return toJSON(null);
     }
 
     public String createTaskJson() {
@@ -291,6 +324,7 @@ public class Task {
                 ", labelBox=" + labelBox +
                 '}';
     }
+
 }
 
 

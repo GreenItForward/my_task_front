@@ -4,10 +4,7 @@ import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.model.User;
-import com.mytask.front.service.api.impl.LabelApiClient;
-import com.mytask.front.service.api.impl.RoleApiClient;
-import com.mytask.front.service.api.impl.TaskApiClient;
-import com.mytask.front.service.api.impl.TaskLabelApiClient;
+import com.mytask.front.service.api.impl.*;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.TabService;
@@ -207,8 +204,6 @@ public class ShowTabController {
 
         TextField assignedToField = TabService.createAssignedToField();
 
-
-
         assignedToField.textProperty().bindBidirectional(new SimpleStringProperty(task.getAssignedTo().getPrenom()));
         VBox titleAndTags = new VBox(colorTags, titleLabel, deadlineBox, assignedToField);
 
@@ -276,8 +271,7 @@ public class ShowTabController {
                     String targetParentId = column.getId();
                     Task task = (Task) draggedTask.getUserData();
                     task.setStatus(targetParentId);
-                    TaskApiClient.getInstance().updateTask(task);
-
+                    TaskApiClient.getInstance().updateTask(task, task.getAssignedTo().getId());
                 } else {
                     event.setDropCompleted(false);
                 }
@@ -286,8 +280,6 @@ public class ShowTabController {
 
         }
     }
-
-
 
         private void configureTaskDragAndDrop(HBox taskBox) {
         taskBox.setOnDragDetected(event -> {
@@ -320,7 +312,6 @@ public class ShowTabController {
         HBox colorTags = TabService.createColorTags(Task);
         taskBox.getChildren().add(colorTags);
 
-       // Task.getLabels().forEach(label -> taskLabelApi.updateLabelToTask(Task, label)); // à utiliser quand on aura l'API pour mettre à jour les labels d'une tache
         TaskLabelApiClient taskLabelApi = TaskLabelApiClient.getInstance();
         taskLabelApi.updateLabelToTask(Task, label);
 
@@ -413,5 +404,6 @@ public class ShowTabController {
         }
 
     }
+
 }
 
