@@ -54,8 +54,12 @@ public class UserService {
 
         roleComboBox.setOnAction(e -> {
             if (roleComboBox.getValue().equals(EString.SUPPRIMER.toString())) {
+                try {
+                    RoleApiClient.getInstance().excludeUser(user.getId(), ShowTabController.getInstance().getProject().getId());
+                } catch (RuntimeException ex) {
+                    throw new RuntimeException(ex);
+                }
                 onDelete.accept(userInfo);
-                // TODO
             } else {
                 try {
                     RoleApiClient.getInstance().changeRole(user.getId(), ShowTabController.getInstance().getProject().getId(),

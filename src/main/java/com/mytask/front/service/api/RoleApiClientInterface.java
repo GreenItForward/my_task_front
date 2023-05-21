@@ -12,4 +12,5 @@ public interface RoleApiClientInterface {
     ERole changeRole(int userIdToChange, int projectId, String role) throws JSONException;
     List<User> getUsersByProject(int projectId) throws JSONException;
     ERole getRoleByProject(int projectId) throws JSONException;
+    void excludeUser(int userIdToExclude, int projectId);
 }

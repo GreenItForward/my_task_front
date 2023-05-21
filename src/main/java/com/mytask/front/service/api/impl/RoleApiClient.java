@@ -197,4 +197,26 @@ public class RoleApiClient implements RoleApiClientInterface {
         return ERole.findByName(responseBody);
     }
 
+
+    @Override
+    public void excludeUser(int userIdToExclude, int projectId) {
+        HttpResponse<String> response = null;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3000/api/user-project/project/" + projectId + "/user/" + userIdToExclude))
+                .DELETE()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
+
+        try {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (response == null || response.statusCode() != 200) {
+            throw new RuntimeException("Exclude user failed: "+ response.body() + response.statusCode());
+        }
+    }
 }
