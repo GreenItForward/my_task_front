@@ -261,9 +261,9 @@ public class Task {
                 ", \"title\":\"" + title.getValue() + '\"' +
                 ", \"description\":\"" + this.getDetails() + '\"' +
                 ", \"status\":\"" + status + '\"' +
+                ", \"userID\":" + getAssignedTo().getId() +
                 ", \"deadline\":\"" + deadlineDatePicker.getValue() + '\"' +
                 ", \"projectID\":" + projectID +
-                //    ", \"assignedTo\":\"" + assignedTo + '\"' +
                 '}';
     }
 
