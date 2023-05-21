@@ -74,6 +74,7 @@ public class CreateTabController {
         joinTableBtn.setOnAction(event -> {
             try {
                 joinTable();
+                resetFields(joinCodeTextField);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }

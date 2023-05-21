@@ -10,6 +10,7 @@ import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
 import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.ERole;
 import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -87,6 +88,40 @@ public class ProjectTabService {
 
         Button editLabelsButton = new Button(EString.EDIT_LABELS.toString());
         editLabelsButton.getStyleClass().add("button-edit-labels");
+
+        Button deleteOrLeaveButton = new Button("");
+        if (UserService.getCurrentUser().getRole().equals(ERole.ADMINISTRATEUR.getValue())) {
+            deleteOrLeaveButton.setText(EString.DELETE_PROJECT.toString());
+            deleteOrLeaveButton.setOnAction(e -> {
+                ProjectApiClient.getInstance().deleteProject(project);
+                ShowAllTabController.getInstance().updateProjectList();
+                try {
+                    ShowAllTabController.getInstance().setProjects(ProjectApiClient.getInstance().getProjectByUser());
+                } catch (JSONException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                ProjectTabService.getInstance().closeCurrentPopup(deleteOrLeaveButton.getScene().getWindow());
+                screenService.setScreen(EPage.SHOW_ALL_TAB);
+
+            });
+        } else {
+            deleteOrLeaveButton.setText(EString.LEAVE_PROJECT.toString());
+            deleteOrLeaveButton.setOnAction(e -> {
+                ProjectApiClient.getInstance().leaveProject(project);
+                ShowAllTabController.getInstance().updateProjectList();
+                try {
+                    ShowAllTabController.getInstance().setProjects(ProjectApiClient.getInstance().getProjectByUser());
+                } catch (JSONException ex) {
+                    throw new RuntimeException(ex);
+                }
+                ProjectTabService.getInstance().closeCurrentPopup(deleteOrLeaveButton.getScene().getWindow());
+                screenService.setScreen(EPage.SHOW_ALL_TAB);
+            });
+        }
+
+        editLabelsButton.getStyleClass().add("button-edit-labels");
+
         Button saveButton = new Button(EString.SAVE.toString());
         saveButton.getStyleClass().add("button-save");
 
@@ -107,7 +142,7 @@ public class ProjectTabService {
         listenerDisableButton(descriptionField, saveButton);
 
         editLabelsButton.setOnAction(e -> PopupService.getInstance().showEditLabelPopup((Stage) editLabelsButton.getScene().getWindow()));
-        projectContainer.getChildren().addAll(nameField, descriptionField, editLabelsButton, saveButton);
+        projectContainer.getChildren().addAll(nameField, descriptionField, editLabelsButton, saveButton, deleteOrLeaveButton);
 
         return projectContainer;
     }

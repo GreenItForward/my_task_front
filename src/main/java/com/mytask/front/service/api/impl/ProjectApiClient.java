@@ -142,8 +142,15 @@ public class ProjectApiClient implements ProjectApiClientInterface {
     }
 
     @Override
-    public void deleteProject(int id) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+    public void deleteProject(Project project) {
+        HttpRequest request = HttpClientApi.createDeleteRequest("http://localhost:3000/api/project/delete/" + project.getId(), token);
+        HttpClientApi.sendRequestAndPrintResponse(httpClient, request);
+    }
+
+    @Override
+    public void leaveProject(Project project) {
+        HttpRequest request = HttpClientApi.createDeleteRequest("http://localhost:3000/api/project/leave/" + project.getId(), token);
+        HttpClientApi.sendRequestAndPrintResponse(httpClient, request);
     }
 
 }

@@ -3,7 +3,6 @@ package com.mytask.front.utils.enums;
 public enum EString {
     // Buttons
     BACK("Retour"),
-
     CLOSE("Fermer"),
     BACK_TO_MENU("Retour au menu"),
     CREATE_TAB("Créer un tableau"),
@@ -18,11 +17,11 @@ public enum EString {
     CHANGE_ASSIGNED_LABELS("Changer les étiquettes assignées"),
     EDIT_LABELS("Modifier les étiquettes"),
     DELETE_TASK("Supprimer la tâche"),
-
     SAVE("Sauvegarder"),
     UPDATE("Modifier"),
     DELETE("Supprimer"),
-
+    DELETE_PROJECT("Supprimer le tableau"),
+    LEAVE_PROJECT("Quitter le tableau"),
     // Labels
     MY_TABS("Mes tableaux"),
     LABEL_JOIN_TAB("Entrez le code du tableau que vous souhaitez rejoindre :"),
