@@ -18,6 +18,19 @@ public enum EStatus {
         }
     }
 
+    public static EStatus getStatusEnum(String status) {
+        switch (status) {
+            case "TODO":
+                return TODO;
+            case "IN PROGRESS":
+                return IN_PROGRESS;
+            case "DONE":
+                return DONE;
+            default:
+                return null;
+        }
+    }
+    
     private String value;
 
     EStatus() {

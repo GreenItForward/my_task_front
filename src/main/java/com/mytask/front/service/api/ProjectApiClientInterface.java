@@ -10,5 +10,6 @@ public interface ProjectApiClientInterface {
     Project getProjectById(int id);
     ArrayList<Project> getProjectByUser() throws JSONException;
     void updateProject(Project project);
-    void deleteProject(int id);
+    void deleteProject(Project project);
+    void leaveProject(Project project);
 }

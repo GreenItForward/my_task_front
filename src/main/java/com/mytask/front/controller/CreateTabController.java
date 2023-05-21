@@ -2,9 +2,12 @@ package com.mytask.front.controller;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.UserProject;
 import com.mytask.front.service.api.impl.LabelApiClient;
 import com.mytask.front.service.api.impl.ProjectApiClient;
-import com.mytask.front.service.view.TabService;
+import com.mytask.front.service.api.impl.RoleApiClient;
+import com.mytask.front.service.view.ProjectTabService;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.enums.EString;
@@ -39,6 +42,7 @@ public class CreateTabController {
     private HBox labelHBox;
 
     LabelApiClient labelApiClient;
+    RoleApiClient roleApiClient;
 
     @FXML
     public void initialize() {
@@ -67,6 +71,14 @@ public class CreateTabController {
             }
         });
         addLabelBtn.setOnAction(event -> addLabel());
+        joinTableBtn.setOnAction(event -> {
+            try {
+                joinTable();
+                resetFields(joinCodeTextField);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void setTextForUIElements() {
@@ -118,6 +130,27 @@ public class CreateTabController {
         labelApiClient.addLabel(labelModel);
         createRectangle(labelModel);
         resetFields(labelTextField);
+    }
+
+    private void joinTable() throws JSONException {
+        ProjectApiClient projectApiClient = ProjectApiClient.getInstance();
+        RoleApiClient roleApiClient = RoleApiClient.getInstance();
+
+        joinCodeTextField.setText(joinCodeTextField.getText().trim());
+        if (joinCodeTextField.getText().isEmpty()) {
+            setErrorMessage(joinCodeTextField);
+        }
+
+        UserProject userProject = roleApiClient.joinProject(joinCodeTextField.getText());
+        UserService.setCurrentUser(userProject.getUser());
+        Project project = userProject.getProject();
+        ShowTabController.getInstance().setProject(project);
+        ShowTabController.getInstance().resetController();
+        ShowTabController.getInstance().refreshTasks();
+        Project.setTasks(new ArrayList<>());
+        ShowAllTabController.getInstance().setProjects(projectApiClient.getProjectByUser());
+        ShowAllTabController.getInstance().updateProjectList();
+        ProjectTabService.getInstance().openProject(project);
     }
 
     private void setErrorMessage(TextField textField) {

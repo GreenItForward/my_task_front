@@ -2,6 +2,7 @@ package com.mytask.front.utils;
 
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
+import com.mytask.front.model.User;
 import com.mytask.front.service.ExportService;
 
 import java.io.File;
@@ -59,6 +60,9 @@ public class CsvExportHelper {
     }
 
     private static void addTaskToCsv(FileWriter csvWriter, Task task, Project project) throws IOException {
+        User assignedUser = task.getAssignedTo();
+        String assignedUsername = (assignedUser == null || assignedUser.getPrenom().isEmpty()) ? "Unassigned" : assignedUser.getPrenom();
+
         csvWriter.append(String.valueOf(task.getId()));
         csvWriter.append(",");
         csvWriter.append(task.getTitle());
@@ -71,7 +75,7 @@ public class CsvExportHelper {
         csvWriter.append(",");
         csvWriter.append(project.getNom());
         csvWriter.append(",");
-        csvWriter.append(task.getAssignedTo());
+        csvWriter.append(assignedUsername);
         csvWriter.append("\n");
     }
 }

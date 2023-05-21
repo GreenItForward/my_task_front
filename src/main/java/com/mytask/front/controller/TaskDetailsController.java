@@ -3,6 +3,7 @@ package com.mytask.front.controller;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.AppService;
+import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.service.view.PopupService;
 import com.mytask.front.service.view.ProjectTabService;
 import com.mytask.front.service.view.TabService;
@@ -62,7 +63,7 @@ public class TaskDetailsController {
     }
 
     private void configureButtons() {
-        changeAssignedMembersBtn.setOnAction(event -> TabService.showMembers((Stage) changeAssignedMembersBtn.getScene().getWindow()));
+        changeAssignedMembersBtn.setOnAction(event -> TabService.showAssignedMembers((Stage) changeAssignedMembersBtn.getScene().getWindow(), TaskApiClient.getInstance().getTaskById(task.getId())));
         changeAssignedLabelsBtn.setOnAction(event -> TabService.showLabels((Stage) changeAssignedLabelsBtn.getScene().getWindow(), task));
         deleteTaskBtn.setOnAction(event -> {
             if (task == null) {

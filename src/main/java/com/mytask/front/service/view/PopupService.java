@@ -114,8 +114,13 @@ public class PopupService {
     }
 
     public void showMemberPopup(Stage primaryStage) {
-        VBox userContainer = projectTabService.createMemberContent();
+        VBox userContainer = projectTabService.createMemberContent(ShowTabController.getInstance().getProject());
         setPopupScreen(primaryStage, EPopup.MEMBERS, userContainer);
+    }
+
+    public void showAssignedMemberPopup(Stage primaryStage, Task task) {
+        VBox userContainer = projectTabService.createAssignedMemberContent(task);
+        setPopupScreen(primaryStage, EPopup.ASSIGNED_MEMBERS, userContainer);
     }
 
     public static void showProjectSettingsPopup(Stage window, Project project) {
@@ -175,6 +180,7 @@ public class PopupService {
                         ex.printStackTrace();
                     }
                     LabelService.getInstance().createEditLabelContent();
+                    LabelApiClient.getInstance().resetAllLabels();
                     projectTabService.openProject(project);
                 }
             }

@@ -1,6 +1,7 @@
 package com.mytask.front.model;
 
 import com.mytask.front.utils.enums.EAuthEndpoint;
+import com.mytask.front.utils.enums.ERole;
 
 public class User {
     private int id;
@@ -8,6 +9,7 @@ public class User {
     private String nom;
     private String prenom;
     private String password;
+    private ERole role;
     private String token;
 
     public User() {
@@ -17,6 +19,7 @@ public class User {
         this.prenom = "";
         this.password = "";
         this.token = "";
+        this.role = ERole.MEMBRE;
     }
 
     public User(String email, String nom, String prenom, String password) {
@@ -28,6 +31,16 @@ public class User {
         this.token = "";
     }
 
+    public User(int id, String email, String nom, String prenom, String password, ERole role, String token) {
+        this.id = id;
+        this.email = email;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.password = password;
+        this.role = role;
+        this.token = token;
+    }
+
     public User(String email, String password) {
         this.id = 0;
         this.email = email;
@@ -35,6 +48,14 @@ public class User {
         this.nom = "";
         this.prenom = "";
         this.token = "";
+    }
+
+    public User(int id, String nom, String prenom, String email, ERole role) {
+        this.id = id;
+        this.email = email;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.role = role;
     }
 
     public String getEmail() {
@@ -80,6 +101,10 @@ public class User {
     public int getId() { return id; }
 
     public void setId(int id) { this.id = id; }
+
+    public String getRole() { return role.toString(); }
+
+    public void setRole(ERole role) { this.role = role; }
 
     public String toJSON(String endpoint) {
         String result = "{\"email\":\"" + this.email + "\",\"password\":\"" + this.password;

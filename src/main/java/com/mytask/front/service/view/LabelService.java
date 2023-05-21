@@ -140,6 +140,8 @@ public class LabelService {
                 modifiableLabels.set(index, label);
                 ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
                 LabelApiClient.getInstance().updateLabel(label);
+                TabService.refreshTab();
+                ShowTabController.getInstance().refreshTasks();
             }
         }));
 
@@ -155,6 +157,7 @@ public class LabelService {
             modifiableLabels.set(indexColorPicker, label);
             ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
             LabelApiClient.getInstance().updateLabel(label);
+            TabService.refreshTab();
         });
 
         labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
