@@ -2,11 +2,11 @@ package com.mytask.front.service;
 
 import com.mytask.front.service.api.TaskApiClientInterface;
 import com.mytask.front.service.api.impl.TaskApiClient;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
+import com.mytask.front.service.view.AlertService;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 public class AppService {
     public static String colorToHexString(Color color) {
@@ -34,7 +34,27 @@ public class AppService {
         });
     }
 
+    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
+        button.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                actionOnEntree.run();
+                e.consume();
+            }
+        });
+    }
+
     public static TaskApiClient getTaskApiClient() {
         return TaskApiClient.getInstance();
     }
+
+    public static void setListenerOnStage(Stage stage) {
+        stage.setOnCloseRequest(e -> {
+            e.consume();
+            ButtonType quitter = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION,"Quitter", "Êtes-vous sûr de vouloir quitter l'application ?");
+            if(AlertService.isConfirmed(quitter)) {
+                stage.close();
+            }
+        });
+    }
+  
 }

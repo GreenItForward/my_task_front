@@ -62,7 +62,7 @@ public class LabelApiClient implements LabelApiClientInterface {
                     label = new LabelModel(jsonObject.getInt("id"), jsonObject.getString("nom"), jsonObject.getString("couleur"), jsonObject.getJSONObject("project").getInt("id"));
                     labels.add(label);
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             }
         }
@@ -102,7 +102,7 @@ public class LabelApiClient implements LabelApiClientInterface {
                 if (!responseBody.contains("Forbidden")) {
                     System.out.println(responseBody);
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             }
         }
@@ -135,7 +135,7 @@ public class LabelApiClient implements LabelApiClientInterface {
                     }
 
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             }
         }
@@ -149,6 +149,12 @@ public class LabelApiClient implements LabelApiClientInterface {
         HttpRequest request = HttpClientApi.createDeleteRequest("http://localhost:3000/api/label/" + label.getId(), token);
         HttpClientApi.sendRequestAndPrintResponse(httpClient, request);
         labels.remove(label);
+    }
+
+    // resetAllLabels
+    @Override
+    public void resetAllLabels() {
+        labels.clear();
     }
 
     public void updateToken(String token) {
@@ -182,7 +188,7 @@ public class LabelApiClient implements LabelApiClientInterface {
                         labels.add(new LabelModel(label.getInt("id"), label.getString("nom"), label.getString("couleur"), label.getJSONObject("project").getInt("id")));
                     }
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             } else {
                 System.err.println("Get project failed, status code: " + response.statusCode() + "\body: " + response.body());

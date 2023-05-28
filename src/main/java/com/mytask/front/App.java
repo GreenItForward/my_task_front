@@ -1,10 +1,14 @@
 package com.mytask.front;
 
 import com.mytask.front.controller.*;
+import com.mytask.front.service.AppService;
+import com.mytask.front.service.view.AlertService;
+import com.mytask.front.service.view.PopupService;
 import com.mytask.front.service.view.TabService;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
 import javafx.application.Application;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,6 +27,8 @@ public class App extends Application {
         // Configurer la scène initiale
         EPage initialPage = EPage.CONNECTION;
         screenService.configureInitialScreen(initialPage);
+
+        AppService.setListenerOnStage(stage);
         stage.show();
     }
 

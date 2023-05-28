@@ -1,10 +1,10 @@
 package com.mytask.front.service.api.impl;
 
 import com.mytask.front.service.view.UserService;
-import com.mytask.front.utils.enums.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.AuthApiClientInterface;
+import com.mytask.front.utils.enums.EAuthEndpoint;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -73,7 +73,7 @@ public class AuthApiClient implements AuthApiClientInterface {
         HttpResponse<String> response;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/auth/getUser"))
-                .POST(HttpRequest.BodyPublishers.ofString("{\"token\":\"" + token + "\"}"))
+                .GET()
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer "+token)
                 .build();
@@ -84,6 +84,9 @@ public class AuthApiClient implements AuthApiClientInterface {
 
             if (statusCode >= 200 && statusCode < 300) {
                 User user = new User();
+                if (jsonResponse.has("id")) {
+                    user.setId(jsonResponse.getInt("id"));
+                }
                 if (jsonResponse.has("email")) {
                     user.setEmail(jsonResponse.getString("email").replaceAll("[\\[\\]\"]", ""));
                 }

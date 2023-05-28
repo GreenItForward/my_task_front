@@ -7,14 +7,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class HttpClientApi {
-    public static HttpRequest createDeleteRequest(String url, String token) {
-        return HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .DELETE()
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + token)
-                .build();
-    }
 
     public static void sendRequestAndPrintResponse(HttpClient httpClient, HttpRequest request) {
         HttpResponse<String> response = null;
@@ -51,5 +43,14 @@ public class HttpClientApi {
                 System.out.println(response.body());
             }
         }
+    }
+
+    public static HttpRequest createDeleteRequest(String s, String token) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create(s))
+                .DELETE()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .build();
     }
 }

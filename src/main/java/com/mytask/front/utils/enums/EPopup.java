@@ -11,7 +11,8 @@ public enum EPopup {
     TABLE_LIST("tables_list_popup", "Liste des tableaux", 420, 500),
     LABELS("labels", "Gestion des labels", 450, 500),
     PROJECT_SETTINGS("project_settings", "Paramètres du tableau", 450, 500),
-    EXPORT("export", "Exporter le tableau", 450, 500);
+    EXPORT("export", "Exporter le tableau", 450, 500),
+    ASSIGNED_MEMBERS("assigned_members", "Membres assignés", 450, 500);
 
     private String fxmlName;
     private String windowTitle;

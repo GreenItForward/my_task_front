@@ -3,6 +3,7 @@ package com.mytask.front.service.view;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
+import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.enums.EString;
@@ -159,6 +160,10 @@ public class TabService {
         popupService.showMemberPopup(primaryStage);
     }
 
+    public static void showAssignedMembers(Stage primaryStage, Task task) {
+        popupService.showAssignedMemberPopup(primaryStage, task);
+    }
+
     public static void showInviteCode(Stage primaryStage) {
         popupService.showInviteCodePopup(primaryStage);
     }
@@ -181,7 +186,7 @@ public class TabService {
 
         // lorsque l'utilisateur appuie sur Entrée après avoir modifié le texte, on ajoute une nouvelle tâche
         addTaskField.setOnAction(event -> {
-            String taskText = addTaskField.getText();
+            String taskText = addTaskField.getText().trim();
             if (!taskText.isBlank() && !taskText.equals(EString.ADD_TASK.toString())) {
                 Task taskNew = new Task();
                 taskList.setUserData(taskNew);
@@ -231,5 +236,14 @@ public class TabService {
         doneTasksList.setUserData(null);
 
         ShowTabController.getInstance().setCurrentTask(null);
+    }
+
+    public static void refreshTab() {
+        try {
+            ShowTabController.getInstance().resetController();
+        } catch (JSONException ex) {
+            throw new RuntimeException(ex);
+        }
+        ShowTabController.getInstance().refreshTasks();
     }
 }

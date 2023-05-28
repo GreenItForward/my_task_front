@@ -3,7 +3,6 @@ package com.mytask.front.utils.enums;
 public enum EString {
     // Buttons
     BACK("Retour"),
-
     CLOSE("Fermer"),
     BACK_TO_MENU("Retour au menu"),
     CREATE_TAB("Créer un tableau"),
@@ -18,11 +17,11 @@ public enum EString {
     CHANGE_ASSIGNED_LABELS("Changer les étiquettes assignées"),
     EDIT_LABELS("Modifier les étiquettes"),
     DELETE_TASK("Supprimer la tâche"),
-
     SAVE("Sauvegarder"),
     UPDATE("Modifier"),
     DELETE("Supprimer"),
-
+    DELETE_PROJECT("Supprimer le tableau"),
+    LEAVE_PROJECT("Quitter le tableau"),
     // Labels
     MY_TABS("Mes tableaux"),
     LABEL_JOIN_TAB("Entrez le code du tableau que vous souhaitez rejoindre :"),
@@ -57,10 +56,7 @@ public enum EString {
     // Formatters
     DATE_FORMAT("yyyy-MM-dd"),
 
-
     // Roles and actions
-    ADMINISTRATEUR("Administrateur"),
-    MEMBRE("Membre"),
     SUPPRIMER("Supprimer"),
     AJOUTER("Ajouter"),
 
@@ -97,8 +93,8 @@ public enum EString {
 
     public static String[] getRoleStrings() {
         return new String[]{
-                ADMINISTRATEUR.toString(),
-                MEMBRE.toString(),
+                ERole.ADMINISTRATEUR.getValue(),
+                ERole.MEMBRE.getValue(),
                 SUPPRIMER.toString()
         };
     }

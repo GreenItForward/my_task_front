@@ -58,7 +58,7 @@ public class LabelService {
             LabelModel label = new LabelModel("", Color.WHITE);
 
             label.setProjectId(ShowTabController.getInstance().getProject().getId());
-            label.setNom(" ");
+            label.setNom("undefined");
             try {
                 label = LabelApiClient.getInstance().createLabel(label);
             } catch (JSONException ex) {
@@ -70,15 +70,7 @@ public class LabelService {
 
             modifiableLabels.add(label);
         });
-
-        // enregistrer les modifications
-        Button saveButton = new Button(EString.SAVE.toString());
-        saveButton.getStyleClass().add("button-save");
-        saveButton.setOnAction(e -> {
-            //   originalLabels.clear();
-            //  originalLabels.addAll(modifiableLabels);
-        });
-
+        
         addLabelContainer.getChildren().addAll(labelTitle, addLabelButton);
         labelContainer.getChildren().addAll(addLabelContainer);
 
@@ -148,6 +140,8 @@ public class LabelService {
                 modifiableLabels.set(index, label);
                 ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
                 LabelApiClient.getInstance().updateLabel(label);
+                TabService.refreshTab();
+                ShowTabController.getInstance().refreshTasks();
             }
         }));
 
@@ -163,6 +157,7 @@ public class LabelService {
             modifiableLabels.set(indexColorPicker, label);
             ShowTabController.getInstance().getProject().setLabels(modifiableLabels);
             LabelApiClient.getInstance().updateLabel(label);
+            TabService.refreshTab();
         });
 
         labelInfo.getChildren().addAll(nameLabel, colorPicker, deleteButton);
@@ -175,8 +170,7 @@ public class LabelService {
     }
 
     public List<LabelModel> resetAllLabels() {
-        List<LabelModel> labels = new ArrayList<>();
-        return labels;
+        return new ArrayList<>();
     }
 
     protected static void toggleLabel(CheckBox toggleCheckBox, Task task, LabelModel label) {

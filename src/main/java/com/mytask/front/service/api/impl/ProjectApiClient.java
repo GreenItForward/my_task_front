@@ -61,10 +61,8 @@ public class ProjectApiClient implements ProjectApiClientInterface {
             if (response != null && response.statusCode() == 201) {
                 String responseBody = response.body();
                 if (!responseBody.contains("Forbidden")) {
-                    JSONObject responseObject = new JSONObject(responseBody);
-                    JSONObject projectJson = responseObject;
-                    JSONObject user = responseObject.getJSONObject("user");
-
+                    JSONObject projectJson = new JSONObject(responseBody);
+                    JSONObject user = projectJson.getJSONObject("user");
                     int idUser = user.getInt("id");
                     int idProject = projectJson.getInt("id");
 
@@ -123,7 +121,7 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                     }
 
                 } else {
-                    System.err.println("Get project failed: Forbidden");
+                    System.err.println("Forbidden");
                 }
             } else {
                 System.err.println("Get project failed, status code: " + response.statusCode() + "\body: "+ response.body());
@@ -145,8 +143,15 @@ public class ProjectApiClient implements ProjectApiClientInterface {
     }
 
     @Override
-    public void deleteProject(int id) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+    public void deleteProject(Project project) {
+        HttpRequest request = HttpClientApi.createDeleteRequest("http://localhost:3000/api/project/delete/" + project.getId(), token);
+        HttpClientApi.sendRequestAndPrintResponse(httpClient, request);
+    }
+
+    @Override
+    public void leaveProject(Project project) {
+        HttpRequest request = HttpClientApi.createDeleteRequest("http://localhost:3000/api/project/leave/" + project.getId(), token);
+        HttpClientApi.sendRequestAndPrintResponse(httpClient, request);
     }
 
 }

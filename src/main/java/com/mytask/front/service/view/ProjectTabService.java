@@ -4,10 +4,13 @@ import com.mytask.front.controller.ShowAllTabController;
 import com.mytask.front.controller.ShowTabController;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
+import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.ProjectApiClient;
 import com.mytask.front.service.api.impl.TaskApiClient;
 import com.mytask.front.utils.AppUtils;
 import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.ERole;
 import com.mytask.front.utils.enums.EString;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -16,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.json.JSONException;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -40,7 +42,6 @@ public class ProjectTabService {
         System.out.println("Ouverture du projet " + project.getNom());
 
         screenService = ScreenService.getInstance(null);
-
 
         if (Project.getTasks() != null) {
             Project.getTasks().clear();
@@ -87,6 +88,40 @@ public class ProjectTabService {
 
         Button editLabelsButton = new Button(EString.EDIT_LABELS.toString());
         editLabelsButton.getStyleClass().add("button-edit-labels");
+
+        Button deleteOrLeaveButton = new Button("");
+        if (UserService.getCurrentUser().getRole().equals(ERole.ADMINISTRATEUR.getValue())) {
+            deleteOrLeaveButton.setText(EString.DELETE_PROJECT.toString());
+            deleteOrLeaveButton.setOnAction(e -> {
+                ProjectApiClient.getInstance().deleteProject(project);
+                ShowAllTabController.getInstance().updateProjectList();
+                try {
+                    ShowAllTabController.getInstance().setProjects(ProjectApiClient.getInstance().getProjectByUser());
+                } catch (JSONException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                ProjectTabService.getInstance().closeCurrentPopup(deleteOrLeaveButton.getScene().getWindow());
+                screenService.setScreen(EPage.SHOW_ALL_TAB);
+
+            });
+        } else {
+            deleteOrLeaveButton.setText(EString.LEAVE_PROJECT.toString());
+            deleteOrLeaveButton.setOnAction(e -> {
+                ProjectApiClient.getInstance().leaveProject(project);
+                ShowAllTabController.getInstance().updateProjectList();
+                try {
+                    ShowAllTabController.getInstance().setProjects(ProjectApiClient.getInstance().getProjectByUser());
+                } catch (JSONException ex) {
+                    throw new RuntimeException(ex);
+                }
+                ProjectTabService.getInstance().closeCurrentPopup(deleteOrLeaveButton.getScene().getWindow());
+                screenService.setScreen(EPage.SHOW_ALL_TAB);
+            });
+        }
+
+        editLabelsButton.getStyleClass().add("button-edit-labels");
+
         Button saveButton = new Button(EString.SAVE.toString());
         saveButton.getStyleClass().add("button-save");
 
@@ -107,7 +142,7 @@ public class ProjectTabService {
         listenerDisableButton(descriptionField, saveButton);
 
         editLabelsButton.setOnAction(e -> PopupService.getInstance().showEditLabelPopup((Stage) editLabelsButton.getScene().getWindow()));
-        projectContainer.getChildren().addAll(nameField, descriptionField, editLabelsButton, saveButton);
+        projectContainer.getChildren().addAll(nameField, descriptionField, editLabelsButton, saveButton, deleteOrLeaveButton);
 
         return projectContainer;
     }
@@ -121,8 +156,8 @@ public class ProjectTabService {
         Label inviteCodeLabel = new Label(EString.INVITE_CODE.toString());
         Label inviteLabel = new Label("");
         Button generateInviteCodeButton = new Button(EString.GENERATE_INVITE_CODE.toString());
-        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(AppUtils.generateRandomInviteCode()));
 
+        generateInviteCodeButton.setOnAction(e -> inviteLabel.setText(ShowTabController.getInstance().getProject().getCodeJoin()));
         Button copyInviteCodeButton = new Button(EString.COPY_INVITE_CODE.toString());
         copyInviteCodeButton.setOnAction(e -> AppUtils.copyToClipboard(inviteLabel));
 
@@ -133,16 +168,12 @@ public class ProjectTabService {
         return inviteCodeContainer;
     }
 
-    protected VBox createMemberContent() {
+    protected VBox createMemberContent(Project project) {
         VBox userContainer = new VBox();
         userContainer.setSpacing(10);
         userContainer.setStyle("-fx-padding: 10;");
 
-        // Exemple de données utilisateur (on le récupèrera de l'api)
-        List<String[]> users = Arrays.asList(
-                new String[]{"Ronan (vous)", "ronan@gmail.com", "Administrateur"},
-                new String[]{"John", "johndoe@gmail.com", "Membre"}
-        );
+        List<User> users = ShowTabController.getInstance().getAllUsers();
 
         Consumer<HBox> onDelete = userInfo -> {
             ButtonType result = AlertService.showAlertConfirmation(AlertService.EAlertType.CONFIRMATION, EString.DELETE_USER_TITLE.toString(), EString.DELETE_USER_CONFIRMATION.toString());
@@ -152,6 +183,16 @@ public class ProjectTabService {
         };
 
         users.forEach(user -> userContainer.getChildren().add(UserService.createUserInfo(user, onDelete)));
+
+        return userContainer;
+    }
+
+    protected VBox createAssignedMemberContent(Task task) {
+        VBox userContainer = new VBox();
+        userContainer.setSpacing(10);
+        userContainer.setStyle("-fx-padding: 10;");
+
+        userContainer.getChildren().add(UserService.createAssignedUserInfo(task));
 
         return userContainer;
     }

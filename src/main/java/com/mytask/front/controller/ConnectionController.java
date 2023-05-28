@@ -1,13 +1,13 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.utils.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.User;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.UserService;
-import com.mytask.front.utils.EPage;
-import com.mytask.front.utils.EString;
+import com.mytask.front.utils.enums.EAuthEndpoint;
+import com.mytask.front.utils.enums.EPage;
+import com.mytask.front.utils.enums.EString;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,6 +15,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+
+import static com.mytask.front.service.AppService.activerToucheEntree;
 
 
 public class ConnectionController {
@@ -75,14 +77,6 @@ public class ConnectionController {
         gestionBoutons();
     }
 
-    public static void activerToucheEntree(Button button, Runnable actionOnEntree) {
-        button.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                actionOnEntree.run();
-                e.consume();
-            }
-        });
-    }
 
     private void gestionBoutons() {
         activerToucheEntree(seconnecter, this::seConnecter);

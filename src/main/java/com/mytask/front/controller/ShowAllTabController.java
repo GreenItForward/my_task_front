@@ -2,8 +2,10 @@ package com.mytask.front.controller;
 
 import com.mytask.front.model.Project;
 import com.mytask.front.service.api.impl.ProjectApiClient;
+import com.mytask.front.service.api.impl.RoleApiClient;
 import com.mytask.front.service.view.ProjectTabService;
 import com.mytask.front.service.view.ShowAllTabService;
+import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.enums.EString;
@@ -79,22 +81,15 @@ public class ShowAllTabController {
 
 
     private void configureButtons() {
-        tablesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                Project project = (Project) tablesListView.getSelectionModel().getSelectedItem();
-                tableTitleLabel.setText(project.getNom());
-                tableDescriptionLabel.setText(project.getDescription());
-                openTableBtn.setDisable(false);
-            } else {
-                tableTitleLabel.setText("");
-                tableDescriptionLabel.setText("");
-                openTableBtn.setDisable(true);
-            }
-        });
-
+        configureListView();
         openTableBtn.setOnAction(e -> {
             Project selectedProject = (Project) tablesListView.getSelectionModel().getSelectedItem();
             if (selectedProject != null) {
+                try {
+                    UserService.getCurrentUser().setRole(RoleApiClient.getInstance().getRoleByProject(selectedProject.getId()));
+                } catch (JSONException ex) {
+                    throw new RuntimeException(ex);
+                }
                 ProjectTabService projectTabService = ProjectTabService.getInstance();
                 projectTabService.openProject(selectedProject);
             }
@@ -107,6 +102,34 @@ public class ShowAllTabController {
         });
     }
 
+    private void configureListView() {
+        tablesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updateTableInfo(newValue);
+        });
+
+        tablesListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Project selectedProject = (Project) tablesListView.getSelectionModel().getSelectedItem();
+                if (selectedProject != null) {
+                    ProjectTabService projectTabService = ProjectTabService.getInstance();
+                    projectTabService.openProject(selectedProject);
+                }
+            }
+        });
+    }
+
+    private void updateTableInfo(Object newValue) {
+        if (newValue != null) {
+            Project project = (Project) newValue;
+            tableTitleLabel.setText(project.getNom());
+            tableDescriptionLabel.setText(project.getDescription());
+            openTableBtn.setDisable(false);
+        } else {
+            tableTitleLabel.setText("");
+            tableDescriptionLabel.setText("");
+            openTableBtn.setDisable(true);
+        }
+    }
 
 
     private void setTextForUIElements() {
@@ -131,23 +154,17 @@ public class ShowAllTabController {
     }
 
     public void updateProjectList() {
-        // Récupérer à nouveau la liste des projets depuis l'API
         try {
             projects = projectApiClient.getProjectByUser();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        // Effacer la liste actuelle et ajouter les nouveaux projets
         ObservableList<Project> observableProjects = FXCollections.observableArrayList(projects);
         tablesListView.setItems(observableProjects);
-
-        // Réinitialiser les labels et désactiver le bouton "Ouvrir"
         tableTitleLabel.setText("");
         tableDescriptionLabel.setText("");
         openTableBtn.setDisable(true);
-
-        // Désélectionner l'élément actuellement sélectionné
         tablesListView.getSelectionModel().clearSelection();
     }
 

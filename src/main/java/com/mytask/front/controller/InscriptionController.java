@@ -1,10 +1,10 @@
 package com.mytask.front.controller;
 
-import com.mytask.front.utils.enums.EAuthEndpoint;
 import com.mytask.front.exception.AuthException;
 import com.mytask.front.service.api.impl.AuthApiClient;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.service.view.UserService;
+import com.mytask.front.utils.enums.EAuthEndpoint;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.utils.enums.EString;
 import com.mytask.front.model.User;
@@ -15,6 +15,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+
+import static com.mytask.front.service.AppService.activerToucheEntree;
 
 public class InscriptionController {
     @FXML
@@ -64,6 +66,7 @@ public class InscriptionController {
                 error.setText(e.getMessage());
             }
         });
+        gestionBoutons();
     }
 
     private void resetFields(TextField textField) {
@@ -78,19 +81,6 @@ public class InscriptionController {
         password.setText("");
     }
 
-    public void activerToucheEntree(Button button, Runnable actionOnEntree) {
-        button.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                actionOnEntree.run();
-                e.consume();
-            }
-        });
-
-        activerToucheEntree(sinscrire, () -> sinscrire.fire());
-        activerToucheEntree(seconnecter, () -> seconnecter.fire());
-
-        gestionBoutons();
-    }
 
     private void gestionBoutons() {
         activerToucheEntree(seconnecter, this::seConnecter);
