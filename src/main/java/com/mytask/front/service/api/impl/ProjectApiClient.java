@@ -2,10 +2,12 @@ package com.mytask.front.service.api.impl;
 
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
+import com.mytask.front.model.Task;
 import com.mytask.front.service.api.ProjectApiClientInterface;
 import com.mytask.front.service.view.ShowAllTabService;
 import com.mytask.front.service.view.UserService;
 import com.mytask.front.utils.HttpClientApi;
+import com.mytask.front.utils.enums.EStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +63,6 @@ public class ProjectApiClient implements ProjectApiClientInterface {
                 if (!responseBody.contains("Forbidden")) {
                     JSONObject projectJson = new JSONObject(responseBody);
                     JSONObject user = projectJson.getJSONObject("user");
-
                     int idUser = user.getInt("id");
                     int idProject = projectJson.getInt("id");
 

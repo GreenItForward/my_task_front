@@ -1,5 +1,6 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.exception.AuthException;
 import com.mytask.front.model.LabelModel;
 import com.mytask.front.model.Project;
 import com.mytask.front.model.Task;
@@ -209,7 +210,6 @@ public class ShowTabController {
 
         ImageView editImageView = TabService.createEditImageView();
         editImageView.setOnMouseClicked(e -> PopupService.showTaskDetailPopup((Stage) editImageView.getScene().getWindow(), task));
-
         taskBox.setOnMouseEntered(e -> {
                 editImageView.setVisible(true);
                 taskBox.setCursor(Cursor.HAND);
@@ -404,6 +404,5 @@ public class ShowTabController {
         }
 
     }
-
 }
 
