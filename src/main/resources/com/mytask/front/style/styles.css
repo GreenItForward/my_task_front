@@ -16,3 +16,8 @@
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
+
+.errorLabel {
+    -fx-text-fill: red;
+    -fx-font-size: 12px;
+}

@@ -1,5 +1,7 @@
 package com.mytask.front.utils.enums;
 
+import com.mytask.front.model.LabelModel;
+
 public enum EString {
     // Buttons
     BACK("Retour"),
@@ -79,7 +81,9 @@ public enum EString {
     CREATE_TAB_LOG("Créer tableau"),
     SHOW_TABLES("Afficher les tableaux"),
     DISCONNECT_LOG("Déconnexion de l'utilisateur"),
-    ERROR("Erreur");
+    ERROR("Erreur"),
+    NO_TABLES_FOUND("Aucun tableau trouvé");
+
     private String string;
 
     EString(String string) {
