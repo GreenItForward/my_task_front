@@ -3,7 +3,7 @@ package com.mytask.front.utils.enums;
 public enum EPage {
     SHOW_ALL_TAB("show_all_tab", "", 1280, 720),
     SHOW_TAB("show_tab", "", 1280, 720),
-    INDEX("index", "", 400, 400),
+    INDEX("index", "", 600, 600),
     CREATE_TAB("create_tab", "", 1280, 720),
     CONNECTION("connection", "", 1280, 720),
     INSCRIPTION("inscription", "", 1280, 720),

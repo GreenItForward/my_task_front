@@ -1,5 +1,8 @@
 package com.mytask.front.controller;
 
+import com.mytask.front.exception.AuthException;
+import com.mytask.front.model.UserSettingModel;
+import com.mytask.front.service.api.impl.UserSettingApiClient;
 import com.mytask.front.service.view.ScreenService;
 import com.mytask.front.utils.enums.EPage;
 import javafx.event.ActionEvent;
@@ -36,8 +39,7 @@ public class ParamController {
     private ScreenService screenService;
     private String background;
 
-    private ParamController() {
-    }
+    private ParamController() { }
 
     public static ParamController getInstance() {
         if (instance == null) {
@@ -59,27 +61,24 @@ public class ParamController {
     }
 
     public void applySettings(ActionEvent event) {
-        // Changer la couleur d'arrière-plan
         Color color = colorPicker.getValue();
         String rgb = String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
 
+
         if (rgb != null && !rgb.isEmpty()) {
-         //   rootBox.setStyle("-fx-background-color: " + rgb + ";");
-        //    background = "-fx-background-color: " + rgb + ";";
+            rootBox.setStyle("-fx-background-color: " + rgb + ";");
+            background = "-fx-background-color: " + rgb + ";";
         }
 
         String imageURL = backgroundImageURL.getText();
         if (imageURL != null && !imageURL.isEmpty()) {
             rootBox.setStyle(rootBox.getStyle() + "-fx-background-image: url('" + imageURL + "');");
-            System.out.println(imageURL);
             background = "-fx-background-image: url('" + imageURL + "');";
-            System.out.println(background);
         }
 
-        // Modifier la résolution de la page
         String resolution = resolutionPicker.getValue();
         if (resolution != null) {
             String[] dimensions = resolution.split("x");
@@ -87,9 +86,28 @@ public class ParamController {
             scene.getWindow().setHeight(Double.parseDouble(dimensions[1]));
         }
 
+        try {
+            System.out.println("background: " + background);
+            UserSettingApiClient.getInstance().postUserSetting(new UserSettingModel(background));
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            UserSettingModel setting = UserSettingApiClient.getInstance().getUserSettings();
+            System.out.println("setting: " + setting);
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public String getBackgroundStyle() {
         return background;
+    }
+
+    public void setBackgroundStyle(String background) {
+        this.background = background;
+        rootBox.setStyle(background);
     }
 }
