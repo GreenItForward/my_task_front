@@ -31,7 +31,6 @@
                 <String fx:value="800x600" />
                 <String fx:value="1024x768" />
                 <String fx:value="1280x720" />
-                <!-- Ajoutez plus de résolutions si nécessaire -->
             </FXCollections>
         </items>
     </ComboBox>

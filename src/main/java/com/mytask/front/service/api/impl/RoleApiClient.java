@@ -67,7 +67,6 @@ public class RoleApiClient implements RoleApiClientInterface {
             return null;
         }
         JSONObject responseJson = new JSONObject(responseBody);
-        System.out.println(responseJson);
         JSONObject userJson = responseJson.getJSONObject("user");
         JSONObject projectJson = responseJson.getJSONObject("project");
 
@@ -102,7 +101,6 @@ public class RoleApiClient implements RoleApiClientInterface {
                 ",\"role\":\"" + role +
                 "\"}";
 
-        System.out.println("body:"+ body);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:3000/api/user-project/change-role"))
                 .PUT(HttpRequest.BodyPublishers.ofString(body))

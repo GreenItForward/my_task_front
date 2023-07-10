@@ -56,6 +56,7 @@ public class ParamController {
         applyButton.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 screenService = ScreenService.getInstance((Stage) applyButton.getScene().getWindow());
+                scene = newValue;
             }
         });
     }
@@ -79,15 +80,7 @@ public class ParamController {
             background = "-fx-background-image: url('" + imageURL + "');";
         }
 
-        String resolution = resolutionPicker.getValue();
-        if (resolution != null) {
-            String[] dimensions = resolution.split("x");
-            scene.getWindow().setWidth(Double.parseDouble(dimensions[0]));
-            scene.getWindow().setHeight(Double.parseDouble(dimensions[1]));
-        }
-
         try {
-            System.out.println("background: " + background);
             UserSettingApiClient.getInstance().postUserSetting(new UserSettingModel(background));
         } catch (AuthException e) {
             throw new RuntimeException(e);
@@ -95,7 +88,6 @@ public class ParamController {
 
         try {
             UserSettingModel setting = UserSettingApiClient.getInstance().getUserSettings();
-            System.out.println("setting: " + setting);
         } catch (AuthException e) {
             throw new RuntimeException(e);
         }
@@ -110,4 +102,5 @@ public class ParamController {
         this.background = background;
         rootBox.setStyle(background);
     }
+
 }

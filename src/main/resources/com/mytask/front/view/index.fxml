@@ -31,12 +31,12 @@
                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
             </VBox.margin>
         </Button>
-        <Button fx:id="se_deconnecter" mnemonicParsing="false" styleClass="btn" text="Se Déconnecter">
+        <Button fx:id="parametre_utilisateur" mnemonicParsing="false" styleClass="btn" text="Paramètres">
             <VBox.margin>
                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
             </VBox.margin>
         </Button>
-        <Button fx:id="parametre_utilisateur" mnemonicParsing="false" styleClass="btn" text="Paramètres">
+        <Button fx:id="se_deconnecter" mnemonicParsing="false" styleClass="btn" text="Se Déconnecter">
             <VBox.margin>
                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
             </VBox.margin>
