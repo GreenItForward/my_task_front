@@ -63,6 +63,7 @@ public class ConnectionController {
                     screenService.setScreen(EPage.INDEX);
                     screenService.loadScreen(EPage.SHOW_ALL_TAB, ShowAllTabController::getInstance);
                     screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
+                    screenService.loadScreen(EPage.PARAM, ParamController::getInstance);
                 }
             } catch (AuthException e) {
                 System.out.println(e.getMessage());

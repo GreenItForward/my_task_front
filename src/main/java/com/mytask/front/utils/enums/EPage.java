@@ -6,7 +6,8 @@ public enum EPage {
     INDEX("index", "", 400, 400),
     CREATE_TAB("create_tab", "", 1280, 720),
     CONNECTION("connection", "", 1280, 720),
-    INSCRIPTION("inscription", "", 1280, 720);
+    INSCRIPTION("inscription", "", 1280, 720),
+    PARAM("param", "", 1280, 720);
 
 
     private String fxmlName;

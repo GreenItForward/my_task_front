@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import java.net.URL?>
+
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<VBox prefHeight="866.0" prefWidth="1268.0" spacing="20" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mytask.front.controller.ParamController" fx:id="rootBox">
+    <Label text="Changer la couleur d'arrière-plan:"/>
+    <ColorPicker fx:id="colorPicker"/>
+    <Label text="Changer l'image d'arrière-plan (insérer l'URL):"/>
+    <TextField fx:id="backgroundImageURL"/>
+    <Label text="Choisir la résolution de la page:"/>
+    <ComboBox fx:id="resolutionPicker">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="800x600" />
+                <String fx:value="1024x768" />
+                <String fx:value="1280x720" />
+                <!-- Ajoutez plus de résolutions si nécessaire -->
+            </FXCollections>
+        </items>
+    </ComboBox>
+    <Button text="Appliquer les modifications" fx:id="applyButton"/>
+    <Button text="Revenir en arrière"  fx:id="backToMenuBtn"/>
+</VBox>
+
+

@@ -23,6 +23,8 @@ public class IndexController {
     private Button se_deconnecter;
 
     @FXML
+    private Button parametre_utilisateur;
+    @FXML
     private Button quitter;
 
     private ScreenService screenService;
@@ -48,6 +50,12 @@ public class IndexController {
         se_deconnecter.setOnAction(event -> {
             System.out.println(EString.DISCONNECT_LOG.toString());
             screenService.setScreen(EPage.CONNECTION);
+        });
+
+
+        parametre_utilisateur.setOnAction(event -> {
+            System.out.println(EString.PARAM_LOG.toString());
+            screenService.setScreen(EPage.PARAM);
         });
 
         quitter.setOnAction(event -> Platform.exit());
