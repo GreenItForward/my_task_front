@@ -80,10 +80,10 @@ public enum EString {
     SHOW_TAB_LOG("Voir tableau"),
     CREATE_TAB_LOG("Créer tableau"),
     SHOW_TABLES("Afficher les tableaux"),
+    PARAM_LOG("Afficher les paramêtres"),
     DISCONNECT_LOG("Déconnexion de l'utilisateur"),
     ERROR("Erreur"),
     NO_TABLES_FOUND("Aucun tableau trouvé");
-
     private String string;
 
     EString(String string) {

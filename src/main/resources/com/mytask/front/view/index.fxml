@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import java.net.URL?>
-<VBox alignment="CENTER" prefHeight="400" prefWidth="400" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.mytask.front.controller.IndexController">
+<VBox alignment="CENTER" prefHeight="400" prefWidth="400" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.mytask.front.controller.IndexController" fx:id="rootBox">
     <stylesheets>
         <URL value="@../style/styles.css" />
         <URL value="@../style/index.css" />
@@ -27,6 +27,11 @@
             </VBox.margin>
         </Button>
         <Button fx:id="creer_tableau" mnemonicParsing="false" styleClass="btn" text="Créer un tableau">
+            <VBox.margin>
+                <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
+            </VBox.margin>
+        </Button>
+        <Button fx:id="parametre_utilisateur" mnemonicParsing="false" styleClass="btn" text="Paramètres">
             <VBox.margin>
                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0" />
             </VBox.margin>

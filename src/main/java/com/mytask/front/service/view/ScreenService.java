@@ -1,6 +1,7 @@
 package com.mytask.front.service.view;
 
 import com.mytask.front.App;
+import com.mytask.front.controller.ParamController;
 import com.mytask.front.utils.enums.EIcon;
 import com.mytask.front.utils.enums.EPage;
 import com.mytask.front.utils.enums.EPath;
@@ -22,6 +23,7 @@ public class ScreenService {
 
     public final Map<EPage, Node> screens = new EnumMap<>(EPage.class);
     private final Stage stage;
+    private static ParamController paramController;
 
     private ScreenService(Stage stage) {
         this.stage = stage;
@@ -31,6 +33,7 @@ public class ScreenService {
     public static ScreenService getInstance(Stage stage) {
         if (instance == null) {
             instance = new ScreenService(stage);
+            paramController = ParamController.getInstance();
         }
         return instance;
     }
@@ -55,6 +58,8 @@ public class ScreenService {
             stage.setWidth(page.getWidth());
             stage.setHeight(page.getHeight());
             stage.centerOnScreen();
+            screen.setStyle(paramController.getBackgroundStyle());
+
         } else {
             throw new IllegalArgumentException("Screen not found: " + page);
         }
@@ -66,6 +71,7 @@ public class ScreenService {
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream(EIcon.GIF.getImagePath()))));
         stage.centerOnScreen();
         stage.setResizable(false);
+        stage.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource(EPath.CSS.getPath() + "background.css")).toExternalForm());
         stage.show();
     }
 
