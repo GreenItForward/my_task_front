@@ -19,12 +19,13 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ShowAllTabController {
 
     @FXML
-    private Label myTablesLabel, tableInfoLabel, descriptionLabel, tableTitleLabel, tableDescriptionLabel;
+    private Label myTablesLabel, tableInfoLabel, descriptionLabel, tableTitleLabel, tableDescriptionLabel, errorLabel;
 
     @FXML
     private Button backToMenuBtn, openTableBtn;
@@ -60,7 +61,11 @@ public class ShowAllTabController {
 
     private void initData() throws JSONException {
         this.projectApiClient = ProjectApiClient.getInstance();
+
         projects = projectApiClient.getProjectByUser();
+        if (projects.isEmpty()) {
+            errorLabel.setText(EString.NO_TABLES_FOUND.toString());
+        }
         ShowAllTabService.getInstance().setProjects(projects);
 
         ObservableList<Project> observableProjects = FXCollections.observableArrayList(projects);
@@ -157,7 +162,7 @@ public class ShowAllTabController {
         try {
             projects = projectApiClient.getProjectByUser();
         } catch (JSONException e) {
-            e.printStackTrace();
+            errorLabel.setText(e.getMessage());
         }
 
         ObservableList<Project> observableProjects = FXCollections.observableArrayList(projects);
