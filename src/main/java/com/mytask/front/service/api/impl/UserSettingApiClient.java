@@ -57,8 +57,13 @@ public class UserSettingApiClient implements UserSettingApiClientInterface {
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
-            JSONObject jsonResponse = new JSONObject(response.body());
-
+            JSONObject jsonResponse;
+            if(response.body() != null && !response.body().isEmpty()) {
+                jsonResponse = new JSONObject(response.body());
+            } else {
+                System.out.println("The response body is empty or null.");
+                return null;
+            }
             if (statusCode >= 200 && statusCode < 300) {
                 UserSettingModel userSettingModel = new UserSettingModel();
                 if (jsonResponse.has("id")) {
@@ -97,10 +102,8 @@ public class UserSettingApiClient implements UserSettingApiClientInterface {
                 .build();
 
         try {
-            System.out.println(userSettingModel.toJSON());
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
-            System.out.println(statusCode);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

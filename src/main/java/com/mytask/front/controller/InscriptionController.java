@@ -62,7 +62,6 @@ public class InscriptionController {
                     screenService.loadScreen(EPage.SHOW_TAB, ShowTabController::getInstance);
                 }
             } catch (AuthException e) {
-                System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }
         });

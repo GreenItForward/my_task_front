@@ -58,10 +58,6 @@ public class TaskLabelApiClient implements TaskLabelApiClientInterface {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
-        } finally {
-            if (response != null) {
-                System.out.println(response.body());
-            }
         }
     }
 

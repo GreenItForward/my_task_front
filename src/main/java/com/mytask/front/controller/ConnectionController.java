@@ -66,7 +66,6 @@ public class ConnectionController {
                     screenService.loadScreen(EPage.PARAM, ParamController::getInstance);
                 }
             } catch (AuthException e) {
-                System.out.println(e.getMessage());
                 error.setText(e.getMessage());
             }
         });

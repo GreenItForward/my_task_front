@@ -51,7 +51,6 @@ public class AuthApiClient implements AuthApiClientInterface {
             int statusCode = response.statusCode();
 
             if (statusCode >= 200 && statusCode < 300) {
-                System.out.println(response.body());
                 return response.body();
             }
 

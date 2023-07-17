@@ -44,13 +44,15 @@ public class IndexController {
         try {
             userSettingModel = userSettingApiClient.getUserSettings();
         } catch (AuthException e) {
-            throw new RuntimeException(e);
+            userSettingModel = new UserSettingModel();
         }
 
-        Platform.runLater(() -> {
-            ParamController.getInstance().setBackgroundStyle(userSettingModel.getBackground());
-            rootBox.setStyle(userSettingModel.getBackground());
-        });
+        if (userSettingModel != null) {
+            Platform.runLater(() -> {
+                ParamController.getInstance().setBackgroundStyle(userSettingModel.getBackground());
+                rootBox.setStyle(userSettingModel.getBackground());
+            });
+        }
 
         bienvenue.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

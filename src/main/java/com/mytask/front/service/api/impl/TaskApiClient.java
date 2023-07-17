@@ -53,14 +53,12 @@ public class TaskApiClient implements TaskApiClientInterface {
                 .header("Authorization", "Bearer " + token)
                 .build();
 
-        System.out.println(task.createTaskJson());
         try {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException |InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
-            System.out.println(response.statusCode());
             if (response != null && response.statusCode() == 201) {
                 String responseBody = response.body();
                 if (!responseBody.contains("Forbidden")) {
@@ -159,10 +157,6 @@ public class TaskApiClient implements TaskApiClientInterface {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
-        } finally {
-            if (response != null) {
-                System.out.println(response.body());
-            }
         }
     }
 
@@ -182,7 +176,6 @@ public class TaskApiClient implements TaskApiClientInterface {
                 .header("Authorization", "Bearer " + token)
                 .build();
         try {
-            // System.out.println("Sending request to http://localhost:3000/api/task/project/" + project.getId()); // DEBUG
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
